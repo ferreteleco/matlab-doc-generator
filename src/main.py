@@ -1,65 +1,37 @@
-import os
-import os.path
+from scanFromFiles import *
+import timeit
 
-# Here the files will be allocated prior to opean each one ans get the parameters
-def forMatlabFiles(pathVar, recur):
+# TODO next, open each file and fill an array of objects of class 'function' or class 'script'
+# TODO define class 'script'
+# TODO implement some flag do decide if the code is processed
+# TODO and appended or not (different parsing function)
+# TODO set properties for lists in class Function in order to return strings instead of lists
+# TODO parse iparams and oparams to get sub-elements (type, desc...)
+# TODO consider scripts
 
-    # Do Debug
-    print('First step')
+def main():
 
-    #############################################################################################
-    chainOfFiles = []           # Array that will store the list of files
-    chainOfDirs = []            # Array that will store the paths of the files in chainOfFiles
+    start = timeit.timeit()
+    pathvar = "..\\testDir"
+    var = 'mat'
 
-    # Now iterate through the directories and, if 'recursive' is enabled, also through subdirectories
-    # searching for m files
+    try:
 
-    # If the search is not recursive
-    if recur == 0:
+        ({'mat': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=1, verbose=1)
 
-        for _, _, files in os.walk(pathVar):
-            for name in files:
-                if name.endswith(('.m')):
-                   # if not(name in chainOfFiles):
-                        chainOfFiles.append(name)
-                        chainOfDirs.append(pathVar)
+    except KeyError:
 
-    # In other case, it is recursive
-    else:
+        print('ERROR: Default gateway')
 
-        for root, dirs, files in os.walk(pathVar):
-            for name in files:
-                if name.endswith(('.m')):
-                    # print(os.path.join(root,name))
-                    if not(name in chainOfFiles):
-                        chainOfFiles.append(name)
-                        chainOfDirs.append(root)
+    end = timeit.timeit()
 
-
-    # DoDebug
-    print(chainOfDirs)
-    print(chainOfFiles)
-
-    #############################################################################################
-
-    #@TODO put the code above in a different functions file
-    #@TODO next, open each file and fill an array of objects of class 'function' or class 'script'
-    #@TODO define class 'function' and class 'script'
-
-
-def forOthers():
-
-    print('junk')
+    print('Took ', end - start, ' seconds')
 
 
 if __name__ == "__main__":
 
-    pathVar = '.\Dir'
-    var = 'mat'
-    recur = 0
+    main()
 
-    try:
 
-        ({'mat': forMatlabFiles, 'ker': forOthers}[var]) (pathVar,recur)
-    except:
-        print('Default gateway')
+
+

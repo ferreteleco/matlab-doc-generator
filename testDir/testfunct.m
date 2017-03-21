@@ -1,0 +1,29 @@
+function [param1, param2, paramn] = testfunct(in1, in2, in3)
+%testfunctn Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+%eiusmod tempor incididunt ut labore et dolore magna aliqua.
+%%
+%   @summ Ut enim ad minim veniam, quis nostrud exercitation ullamco
+%   laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+%   reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+%%
+%   @ref http://google.com
+%%
+%   - Inputs
+%     @iparam [type] in1 description of param 1
+%     @iparam [type] in2 description of param 2, much longer than previous one so it
+%     has to be wrapped
+%     @iparam [type] in3 description of param 3
+%%
+%   - Outputs
+%     @oparam [type] out1 description of param 1
+%     @oparam [type] out2 description of param 2, much longer than previous one so it
+%     has to be wrapped
+%%
+%   @author Andres Ferreiro
+%   @company Galician Research and Development Center in Advanced Telecommunications
+%   @date 17/03/17
+%   @version 1.0
+%%
+%%%
+
+end
