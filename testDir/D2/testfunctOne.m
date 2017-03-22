@@ -2,7 +2,7 @@ function [param1, param2, paramn] = testfunctOne(in1, in2, in3)
 %testfunction Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 %eiusmod tempor incididunt ut labore et dolore magna aliqua.
 %%
-%   description Ut enim ad minim veniam, quis nostrud exercitation ullamco
+%   @desc Ut enim ad minim veniam, quis nostrud exercitation ullamco
 %   laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
 %   reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 %%

@@ -1,29 +1,21 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This README is intended to summarize the development of the DocGenerator application.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
+* This repository will be used mainly or development purposes, but also as a way to distribute the application it i'm able to make it work.
+* 1.0 BETA
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
+* Summary of set up TBD
+* Configuration TBD
+* Dependencies TBD
+* Deployment instructions TBD
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* Andrés Ferreiro González
+* andres.ferreiro.glez@gmail.com

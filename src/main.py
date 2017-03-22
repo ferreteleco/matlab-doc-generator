@@ -1,31 +1,26 @@
 from scanFromFiles import *
-import timeit
+import time
 
-# TODO next, open each file and fill an array of objects of class 'function' or class 'script'
-# TODO define class 'script'
-# TODO implement some flag do decide if the code is processed
-# TODO and appended or not (different parsing function)
-# TODO set properties for lists in class Function in order to return strings instead of lists
-# TODO consider scripts
-# TODO bug timeit negative values for end - start
-# TODO HTML template
+# TODO HTML template use Jinja2 http://kagerato.net/articles/software/libraries/jinja-quickstart.html
+# TODO Test With my own files in gridInspector
+# TODO reformat verbose to show better the infomation
 
 
 def main():
 
-    start = timeit.timeit()
+    start = time.time()
     pathvar = "..\\testDir"
-    var = 'mat'
+    var = 'mfiles'
 
     try:
 
-        ({'mat': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=0, verbose=1)
+        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=1, appendcode=True, usage=True, verbose=1)
 
     except KeyError:
 
         print('ERROR: Default gateway')
 
-    end = timeit.timeit()
+    end = time.time()
 
     print('\nTook', end - start, 'seconds')
 
@@ -33,7 +28,3 @@ def main():
 if __name__ == "__main__":
 
     main()
-
-
-
-
