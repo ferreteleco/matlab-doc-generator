@@ -38,7 +38,7 @@ def formatlabfiles(pathvar, recur=0, verbose=False):
             for name in files:
                 if name.endswith('.m'):
                     if verbose:
-                        print('Fetching', os.path.join(root,name), '...')
+                        print('Fetching', os.path.join(root, name), '...')
                     if not(name in chainoffiles):
                         chainoffiles.append(name)
                         chainofdirs.append(root)
@@ -55,12 +55,12 @@ def __scanforfiles(chainoffiles, chainofdirs, verbose=False):
 
     index = 0
     # List of 'function' objects
-    func = []
+    listoffunctions = []
     # Loop over all previously fetched files
     for fil in chainoffiles:
 
         if verbose:
-            print('Opening file ', os.path.join(chainofdirs[index], fil), '...')
+            print('Opening file', os.path.join(chainofdirs[index], fil), '...')
 
         # Open each file and get the header, specified by '%%%'
         fileid = open(os.path.join(chainofdirs[index], fil), 'r')
@@ -79,13 +79,14 @@ def __scanforfiles(chainoffiles, chainofdirs, verbose=False):
         # Parse each function header
         fun = __parsefunct(chunks, verbose=verbose)
         fun.name = fil[0:len(fil) - 2]
-        func.append(fun)
+        listoffunctions.append(fun)
 
         # And, at last, close the file
         fileid.close()
 
-    for f in func:
-        print(f.name)
+    for funct in listoffunctions:
+        for param in funct.oparams:
+            print(param.name, param.typ, ' '.join(param.desc))
 
 
 # This function parses the lines in the input list
@@ -190,7 +191,7 @@ def __parsefunct(chunks, verbose=False):
                 try:
 
                         ({'@desc': fun.adddesc, '@summ': fun.addsumm, '@ref': fun.addref,
-                            '@iparam': fun.addiparam, '@oparam': fun.addoparam}[current])(token)
+                            '@iparam': fun.updateiparam, '@oparam': fun.updateoparam}[current])(token)
 
                 except KeyError:
 

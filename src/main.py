@@ -6,8 +6,10 @@ import timeit
 # TODO implement some flag do decide if the code is processed
 # TODO and appended or not (different parsing function)
 # TODO set properties for lists in class Function in order to return strings instead of lists
-# TODO parse iparams and oparams to get sub-elements (type, desc...)
 # TODO consider scripts
+# TODO bug timeit negative values for end - start
+# TODO HTML template
+
 
 def main():
 
@@ -17,7 +19,7 @@ def main():
 
     try:
 
-        ({'mat': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=1, verbose=1)
+        ({'mat': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=0, verbose=1)
 
     except KeyError:
 
@@ -25,7 +27,7 @@ def main():
 
     end = timeit.timeit()
 
-    print('Took ', end - start, ' seconds')
+    print('\nTook', end - start, 'seconds')
 
 
 if __name__ == "__main__":

@@ -62,14 +62,18 @@ class FuncDefinition:
             self.version = version
 
         if iparams is None:
-            self.iparams = []
+            self.iparams = [ParamDefinition()]
         else:
-            self.iparams = [iparams]
+            tokens = iparams.split(' ')
+            self.iparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+                                            desc=''.join(tokens[2:len(tokens)]))]
 
         if oparams is None:
-            self.oparams = []
+            self.oparams = [ParamDefinition()]
         else:
-            self.oparams = [oparams]
+            tokens = oparams.split(' ')
+            self.oparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+                                            desc=''.join(tokens[2:len(tokens)]))]
 
         if summ is None:
             self.summ = []
@@ -93,11 +97,25 @@ class FuncDefinition:
 
     def addiparam(self, param):
 
-        self.iparams.append(param)
+        tokens = param.split(' ', 2)
+        par = ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+                              desc=''.join(tokens[2:len(tokens)]))
+        self.iparams.append(par)
+
+    def updateiparam(self, param):
+
+        self.iparams[len(self.iparams)-1].updatedesc(param)
 
     def addoparam(self, param):
 
-        self.oparams.append(param)
+        tokens = param.split(' ', 2)
+        par = ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+                              desc=''.join(tokens[2:len(tokens)]))
+        self.oparams.append(par)
+
+    def updateoparam(self, param):
+
+            self.oparams[len(self.oparams)-1].updatedesc(param)
 
     def addref(self, param):
 
@@ -114,3 +132,27 @@ class FuncDefinition:
     def addsumm(self, param):
 
         self.summ.append(param)
+
+
+class ParamDefinition:
+
+    def __init__(self, name=None, typ=None, desc=None):
+
+        if name is None:
+            self.name = ''
+        else:
+            self.name = name
+
+        if typ is None:
+            self.typ = ''
+        else:
+            self.typ = typ
+
+        if desc is None:
+            self.desc = []
+        else:
+            self.desc = [desc]
+
+    def updatedesc(self, param):
+
+        self.desc.append(param)
