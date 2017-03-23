@@ -1,9 +1,14 @@
 from scanFromFiles import *
 import time
 
+# TODO update the header in test files
+# TODO comment regex in scanFromFiles
+# TODO test all fields of lists
 # TODO HTML template use Jinja2 http://kagerato.net/articles/software/libraries/jinja-quickstart.html
 # TODO Test With my own files in gridInspector
 # TODO reformat verbose to show better the infomation
+# TODO http://nuitka.net/pages/overview.html
+# TODO support for matlab classes
 
 
 def main():

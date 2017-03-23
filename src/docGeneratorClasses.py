@@ -121,8 +121,8 @@ class FuncDefinition:
 
         try:
             tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
-                                  desc=''.join(tokens[2:len(tokens)]))
+            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=tokens[0].replace('(', '').replace(')', ''),
+                                  desc=''.join(tokens[2:]))
             self._iparams.append(par)
         except IndexError:
             self._iparams.append(ParamDefinition())
@@ -141,8 +141,8 @@ class FuncDefinition:
 
         try:
             tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
-                                  desc=''.join(tokens[2:len(tokens)]))
+            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=tokens[0].replace('(', '').replace(')', ''),
+                                  desc=''.join(tokens[2:]))
             self._oparams.append(par)
         except IndexError:
             self._oparams.append(ParamDefinition())
@@ -539,7 +539,7 @@ class ParamDefinition:
     # This method updates the description of a param by appending it new lines.
     def updatedesc(self, param):
 
-        self._desc.append(param)
+        self._desc.append(param.replace('--->', '\t\t\t\t\t\t\t').replace('-->', '\t\t\t\t\t ').replace('->', '\t\t'))
 
     @property
     def name(self):
@@ -559,7 +559,7 @@ class ParamDefinition:
 
     @property
     def desc(self):
-        return ' '.join(self._desc)
+        return self._desc
 
     @desc.setter
     def desc(self, desc):

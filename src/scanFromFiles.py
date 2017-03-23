@@ -2,6 +2,7 @@ import os
 import os.path
 from docGeneratorClasses import *
 import itertools
+import re
 
 
 # @desc Here the .m files will be allocated prior to opean each one and get the parameters
@@ -15,13 +16,13 @@ import itertools
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 20/03/17
-# @version 1.2
+# @version 1.3
 ###
 def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=False):
 
     if verbose:
-        print('Beginning with process')
-        print('Step 1: Searching in directories')
+        print('\nEVENT!!!! Beginning process...\n')
+        print('Step 1) Searching in directories:\n')
 
     chainoffiles = []           # Array that will store the list of files
     chainofdirs = []            # Array that will store the paths of the files in chainOfFiles
@@ -36,7 +37,7 @@ def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=Fals
             for name in files:
                 if name.endswith('.m'):
                     if verbose:
-                        print('Fetching', name, '...')
+                        print('\t- Fetching ', name, '...', sep='')
                     if not (name in chainoffiles):
                         chainoffiles.append(name)
                         chainofdirs.append(pathvar)
@@ -48,13 +49,28 @@ def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=Fals
             for name in files:
                 if name.endswith('.m'):
                     if verbose:
-                        print('Fetching', os.path.join(root, name), '...')
+                        print('\t- Fetching ', os.path.join(root, name), '...', sep='')
                     if not(name in chainoffiles):
                         chainoffiles.append(name)
                         chainofdirs.append(root)
 
+    if verbose:
+        print('\nEVENT!!!! Fetching process finished, found: ', len(chainoffiles), ' elements in ',
+              len(set(chainofdirs)), ' directories\n', sep='')
+
     # Once fetching finishes, begin scanning files
-    __scanformfiles(chainoffiles, chainofdirs, appendcode=appendcode, usage=usage, verbose=verbose)
+    listoffunctions, listofscripts = __scanformfiles(chainoffiles, chainofdirs, appendcode=appendcode, usage=usage,
+                                                     verbose=verbose)
+
+    listmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
+
+    # # DoDebug
+    # for fun in listmod:
+    #     print(fun.name)
+    #     print(fun.author)
+    #     for param in fun.oparams:
+    #         print('[', param.typ, ']', param.name)
+    #         print('\n'.join(param.desc))
 
 
 # @desc Here there will be a loop over all .m files for getting the information of them
@@ -72,6 +88,9 @@ def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=Fals
 ###
 def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False):
 
+    if verbose:
+        print('Step 2) Loading files to memory:\n')
+
     index = 0
     # List of 'function' objects
     listoffunctions = []
@@ -82,7 +101,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
     for fil in chainoffiles:
 
         if verbose:
-            print('Opening file', os.path.join(chainofdirs[index], fil), '...')
+            print('\t- Opening file ', os.path.join(chainofdirs[index], fil), '...', sep='')
 
         # Open each file and get the header, specified by '%%%'
         fileid = open(os.path.join(chainofdirs[index], fil), 'r')
@@ -147,19 +166,74 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 
             listoffunctions.append(fun)
 
+    if verbose:
+        print('\nEVENT!!!! Loading process finished\n')
+
     if usage:
 
         listoffunctions, listofscripts = __checkusage(listoffunctions, listofscripts, verbose=verbose)
 
-    # DoDebug
-    for fun in listoffunctions:
-        print(fun.name)
-        print(fun.author)
-        for param in fun.iparams:
-            print('[', param.typ, ']', param.name)
-            print(param.desc)
+    # # DoDebug
+    # for fun in listoffunctions:
+    #     # print(fun.name)
+    #     # print(fun.author)
+    #     for param in fun.oparams:
+    #         # print('[', param.typ, ']', param.name)
+    #         print('\n'.join(param.desc))
 
     return listoffunctions, listofscripts
+
+
+# This function adds highlighting and font color for types found in parameters description of the function or class
+# given lists
+##
+# @iparam listin
+# @iparam which
+# @iparam verbose
+##
+# @oparam modifiedlist
+##
+# @author Andres Ferreiro Gonzalez
+# @company Own
+# @date 23/03/17
+# @version 1.0
+def __preformparameters(listin, which='...', verbose=False):
+
+    if verbose:
+        print('Step 4) Preformatting ', which, ' parameters description...\n', sep='')
+
+    for index, clas in enumerate(listin):
+
+        if verbose:
+            print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name, '...', sep='')
+
+        for oparam in clas.oparams:
+            for idx, line in enumerate(oparam.desc):
+                p = re.compile('\( ( [^}^\s]* ) \)', re.VERBOSE)
+                linemod = p.sub(r'<b><font color="#0000FF">(\1)</font></b>', line)
+                p = re.compile('\[ ( [^} ]* )\]', re.VERBOSE)
+                linemod = p.sub(r'[<s>\1</s>]', linemod)
+                p = re.compile('{ ( [^}^A-Z ]* ) }', re.VERBOSE)
+                linemod = p.sub(r'<i>{\1}</i>', linemod)
+                p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
+                linemod = p.sub(r'<b>\1:</b>', linemod)
+                oparam.desc[idx] = linemod
+
+        for iparam in clas.iparams:
+            for idx, line in enumerate(iparam.desc):
+
+                p = re.compile('\( ( [^}^' ']* ) \)', re.VERBOSE)
+                linemod = p.sub(r'<b><font color="#0000FF">(\1)</font></b>', line)
+                p = re.compile('\[ ( [^} ]* )\]', re.VERBOSE)
+                linemod = p.sub(r'[<s>\1</s>]', linemod)
+                p = re.compile('{ ( [^}^A-Z ]* ) }', re.VERBOSE)
+                linemod = p.sub(r'<i>{\1}</i>', linemod)
+                p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
+                linemod = p.sub(r'<b>\1:</b>', linemod)
+
+                iparam.desc[idx] = linemod
+
+    return listin
 
 
 # @desc This function checks if the usage between functions and scripts, as 'mutual calls'
@@ -182,7 +256,7 @@ def __checkusage(listoffunctions, listofscripts, verbose=False):
     ind = 0
 
     if verbose:
-        print('Checking mutual ussage between', len(merged), "files")
+        print('Step 3) Checking mutual ussage among ', len(merged), ' files:\n', sep='')
         ind = 0
 
     for x, y in itertools.permutations(merged, 2):
@@ -193,10 +267,11 @@ def __checkusage(listoffunctions, listofscripts, verbose=False):
 
         if verbose:
             ind += 1
+            print('\t- Checked ', ind, '-th combination of files', sep='')
 
     if verbose:
 
-        print('Checked', ind, 'combinations between files')
+        print('\nEVENT!!!! All combinations between files checked\n')
 
     listoffunctions = merged[0:len(listoffunctions)]
     listofscripts = merged[len(listoffunctions):len(merged)]
@@ -222,7 +297,7 @@ def __parsemscript(chunks, verbose=False):
     current = '@desc'
 
     if verbose:
-        print('Parsing file...')
+        print('\t- Parsing...')
 
     for line in chunks:
 
@@ -293,7 +368,7 @@ def __parsemscript(chunks, verbose=False):
                 except KeyError:
 
                     if verbose:
-                        print('Error during parse of last highlighed file, skipping it and moving forward')
+                        print('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
                     continue
     return scr
 
@@ -315,7 +390,7 @@ def __parsemfunct(chunks, verbose=False):
     current = 'function'
 
     if verbose:
-        print('Parsing file...')
+        print('\t- Parsing...')
 
     # Loop through the lines of the header searching for predefined tags and storing the relevant information in a
     # 'function' object

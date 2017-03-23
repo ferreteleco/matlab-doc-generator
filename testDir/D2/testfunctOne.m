@@ -9,16 +9,16 @@ function [param1, param2, paramn] = testfunctOne(in1, in2, in3)
 %   @ref http://google.com
 %%
 %   - Inputs
-%     @iparam [type] in1 description of param 1
-%     @iparam [type] in2 description of param 2, much longer than previous one so it
+%     @iparam [type] in1: description of param 1
+%     @iparam [type] in2: description of param 2, much longer than previous one so it
 %     has to be wrapped
-%     @iparam [type] in3 description of param 3
+%     @iparam [type] in3: description of param 3
 %%
 %   - Outputs
-%     @oparam [type] in1 description of param 1
-%     @oparam [type] in2 description of param 2, much longer than previous one so it
+%     @oparam (type) out1: description of param 1
+%     @oparam (type) out2: description of param 2, much longer than previous one so it
 %     has to be wrapped
-%     @oparam [type] in3 description of param 3
+%     @oparam (type) out3: description of param 3
 %%
 %   @author Andres Ferreiro
 %   @company Galician Research and Development Center in Advanced Telecommunications
