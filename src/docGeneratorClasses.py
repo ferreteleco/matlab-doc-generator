@@ -1,4 +1,5 @@
 import time
+import re
 
 
 # This class is used to store the data extracted from the different headers analized for functions
@@ -32,7 +33,7 @@ import time
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 21/03/17
-# @version 1.2
+# @version 1.3
 ###
 class FuncDefinition:
 
@@ -120,9 +121,12 @@ class FuncDefinition:
     def addiparam(self, param):
 
         try:
+
+            pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+            var = ''.join(pin.findall(param))
+
             tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=tokens[0].replace('(', '').replace(')', ''),
-                                  desc=''.join(tokens[2:]))
+            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''.join(tokens[2:]))
             self._iparams.append(par)
         except IndexError:
             self._iparams.append(ParamDefinition())
@@ -140,9 +144,14 @@ class FuncDefinition:
     def addoparam(self, param):
 
         try:
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=tokens[0].replace('(', '').replace(')', ''),
-                                  desc=''.join(tokens[2:]))
+
+            pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+            typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
+
+            par = ParamDefinition(name=nam, typ=typ, desc=param[indx+1:])
             self._oparams.append(par)
         except IndexError:
             self._oparams.append(ParamDefinition())

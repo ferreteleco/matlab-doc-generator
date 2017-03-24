@@ -19,7 +19,7 @@ def main():
 
     try:
 
-        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=1, appendcode=True, usage=True, verbose=1)
+        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=False, appendcode=True, usage=True, verbose=1)
 
     except KeyError:
 

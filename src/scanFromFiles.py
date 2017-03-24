@@ -18,7 +18,7 @@ import re
 # @date 20/03/17
 # @version 1.3
 ###
-def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=False):
+def formatlabfiles(pathvar, recur=False, appendcode=False, usage=False, verbose=False):
 
     if verbose:
         print('\nEVENT!!!! Beginning process...\n')
@@ -31,7 +31,7 @@ def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=Fals
     # searching for m files
 
     # If the search is not recursive
-    if recur == 0:
+    if not recur:
 
         for files in next(os.walk(pathvar)):
             for name in files:
@@ -64,13 +64,13 @@ def formatlabfiles(pathvar, recur=0, appendcode=False, usage=False, verbose=Fals
 
     listmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
 
-    # # DoDebug
-    # for fun in listmod:
-    #     print(fun.name)
-    #     print(fun.author)
-    #     for param in fun.oparams:
-    #         print('[', param.typ, ']', param.name)
-    #         print('\n'.join(param.desc))
+    # DoDebug
+    for fun in listmod:
+        print(fun.name)
+        print(fun.author)
+        for param in fun.oparams:
+            print('[', param.typ, ']', param.name)
+            print('\n'.join(param.desc))
 
 
 # @desc Here there will be a loop over all .m files for getting the information of them
@@ -196,7 +196,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 23/03/17
-# @version 1.0
+# @version 1.1
 def __preformparameters(listin, which='...', verbose=False):
 
     if verbose:
@@ -209,28 +209,26 @@ def __preformparameters(listin, which='...', verbose=False):
 
         for oparam in clas.oparams:
             for idx, line in enumerate(oparam.desc):
-                p = re.compile('\( ( [^}^\s]* ) \)', re.VERBOSE)
-                linemod = p.sub(r'<b><font color="#0000FF">(\1)</font></b>', line)
-                p = re.compile('\[ ( [^} ]* )\]', re.VERBOSE)
-                linemod = p.sub(r'[<s>\1</s>]', linemod)
-                p = re.compile('{ ( [^}^A-Z ]* ) }', re.VERBOSE)
-                linemod = p.sub(r'<i>{\1}</i>', linemod)
+                p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
+                p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
+                linemod = p.sub(r'{<s>\1</s>}', linemod)
+                p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
+                linemod = p.sub(r'(<i>\1</i>)', linemod)
                 p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
                 linemod = p.sub(r'<b>\1:</b>', linemod)
                 oparam.desc[idx] = linemod
 
         for iparam in clas.iparams:
             for idx, line in enumerate(iparam.desc):
-
-                p = re.compile('\( ( [^}^' ']* ) \)', re.VERBOSE)
-                linemod = p.sub(r'<b><font color="#0000FF">(\1)</font></b>', line)
-                p = re.compile('\[ ( [^} ]* )\]', re.VERBOSE)
-                linemod = p.sub(r'[<s>\1</s>]', linemod)
-                p = re.compile('{ ( [^}^A-Z ]* ) }', re.VERBOSE)
-                linemod = p.sub(r'<i>{\1}</i>', linemod)
+                p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
+                p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
+                linemod = p.sub(r'{<s>\1</s>}', linemod)
+                p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
+                linemod = p.sub(r'(<i>\1</i>)', linemod)
                 p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
                 linemod = p.sub(r'<b>\1:</b>', linemod)
-
                 iparam.desc[idx] = linemod
 
     return listin
