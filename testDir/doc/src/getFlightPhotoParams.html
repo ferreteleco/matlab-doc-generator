@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getFlightPhotoParams</title>
+  <meta name="keywords" content="getFlightPhotoParams">
+  <meta name="description" content="getFlightPhotoParams computes required parameters for planning a flight that makes use of a">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; getFlightPhotoParams.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getFlightPhotoParams
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>getFlightPhotoParams computes required parameters for planning a flight that makes use of a</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">getFlightPhotoParams computes required parameters for planning a flight that makes use of a
+camera as payload.
+   
+%--------------------------------------------------------------------------------------------------
+   @desc Taking into acount the parameters of the camera to be used and other user-defined ones,  
+   this function obtains some vital parameters needed to perform other route planning
+   tasks.
+    
+   All its imputs are needed, taking into account that the first two are structures, and
+   its fields must be the same as defined here.
+    
+%--------------------------------------------------------------------------------------------------
+   The inputs of this function are:
+   
+   - @iparam [struct] camera: it is a struct with the following parameters:
+       -&gt; [String] model: string containing camera name               
+       -&gt; [float] focallen: focal length of the camera {mm}
+       -&gt; [int] imwidth: width of the image {px}
+       -&gt; [int] imheight: height of the image {px}
+       -&gt; [float] sensorwidth: physical width of the sensor {mm}
+       -&gt; [float] sensorheight: physical height of the sensor {mm}
+
+   - @iparam [int] cameraPos: defines the orientation of the camera on board the airborne
+   patform:
+       -&gt; Landscape: 1    
+       -&gt; Portrait:  2
+
+   - @iparam [float] detSize: minimum object size to allow detection {cm}
+   - @iparam [float] nPx: number of pixels needed to allow detection {px}
+   - @iparam [float] overlap: percentage of overlap between consecutive photos {%}
+   - @iparam [float] sidelap: percentage of overlap between strips {%}
+   
+%--------------------------------------------------------------------------------------------------
+   The output of this function is:</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="launchFlightPlan.html" class="code" title="">launchFlightPlan</a>	@desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions</li><li><a href="onComputeClick.html" class="code" title="function [ results ] = onComputeClick( log, display, inputs, polygon, camerasSet )">onComputeClick</a>	onComputeClick executes the callback for the compute button in the GridInspector GUI.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap)</a>
+0002 <span class="comment">%getFlightPhotoParams computes required parameters for planning a flight that makes use of a</span>
+0003 <span class="comment">%camera as payload.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0006 <span class="comment">%   @desc Taking into acount the parameters of the camera to be used and other user-defined ones,</span>
+0007 <span class="comment">%   this function obtains some vital parameters needed to perform other route planning</span>
+0008 <span class="comment">%   tasks.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   All its imputs are needed, taking into account that the first two are structures, and</span>
+0011 <span class="comment">%   its fields must be the same as defined here.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0014 <span class="comment">%   The inputs of this function are:</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   - @iparam [struct] camera: it is a struct with the following parameters:</span>
+0017 <span class="comment">%       -&gt; [String] model: string containing camera name</span>
+0018 <span class="comment">%       -&gt; [float] focallen: focal length of the camera {mm}</span>
+0019 <span class="comment">%       -&gt; [int] imwidth: width of the image {px}</span>
+0020 <span class="comment">%       -&gt; [int] imheight: height of the image {px}</span>
+0021 <span class="comment">%       -&gt; [float] sensorwidth: physical width of the sensor {mm}</span>
+0022 <span class="comment">%       -&gt; [float] sensorheight: physical height of the sensor {mm}</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   - @iparam [int] cameraPos: defines the orientation of the camera on board the airborne</span>
+0025 <span class="comment">%   patform:</span>
+0026 <span class="comment">%       -&gt; Landscape: 1</span>
+0027 <span class="comment">%       -&gt; Portrait:  2</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   - @iparam [float] detSize: minimum object size to allow detection {cm}</span>
+0030 <span class="comment">%   - @iparam [float] nPx: number of pixels needed to allow detection {px}</span>
+0031 <span class="comment">%   - @iparam [float] overlap: percentage of overlap between consecutive photos {%}</span>
+0032 <span class="comment">%   - @iparam [float] sidelap: percentage of overlap between strips {%}</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0035 <span class="comment">%   The output of this function is:</span>
+0036 
+0037 <span class="comment">%   - @oparam [struct] photoParams: it is a struct that contains the following:</span>
+0038 <span class="comment">%         -&gt; [float] cmpixel: centimeters per pixels ratio to be achieved {cm/px}</span>
+0039 <span class="comment">%         -&gt; [float] flyAlt: flight altitude in meters {m}</span>
+0040 <span class="comment">%         -&gt; [float] B: distance between photographs in meters {m}</span>
+0041 <span class="comment">%         -&gt; [float] A: separation between lines in meters {m}</span>
+0042 <span class="comment">%         -&gt; [float] mHeight: image height at ground in meters {m}</span>
+0043 <span class="comment">%         -&gt; [float] mWidth: image height at ground in meters {m}</span>
+0044 <span class="comment">%         -&gt; [float] fovhdeg: height of the field of view in degrees {deg}</span>
+0045 <span class="comment">%         -&gt; [float] fovwdeg: width of the field of view in degrees {deg}</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0048 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0049 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0050 <span class="comment">%   ** @date 22/02/2017</span>
+0051 <span class="comment">%   ** @version 1.2</span>
+0052 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0053 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0054 
+0055 
+0056 <span class="keyword">if</span> nargin &lt; 6
+0057     
+0058         error(<span class="string">'Not enough input arguments. Type &quot;help getFlightPhotoParams&quot; in the command prompt for more info about function usage.'</span>);
+0059         
+0060 <span class="keyword">elseif</span> nargin &gt; 6
+0061     
+0062             error(<span class="string">'Too many input arguments. Type &quot;help getFlightPhotoParams&quot; in the command prompt for more info about function usage.'</span>);
+0063 
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% Output struct definition</span>
+0067 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0068 photoParams = struct(<span class="string">'cmpixel'</span>, 0, <span class="string">'flyAlt'</span>, 0, <span class="string">'B'</span>, 0, <span class="string">'A'</span>, 0, <span class="string">'mHeight'</span>, 0, <span class="string">'mWidth'</span>, 0, <span class="string">'fovhdeg'</span>, 0,<span class="keyword">...</span>
+0069     <span class="string">'fovwdeg'</span>, 0);
+0070 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0071 
+0072 <span class="comment">% BEGIN COMPUTATIONS</span>
+0073 
+0074 photoParams.cmpixel = detSize/nPx;                              <span class="comment">% Cm per pixel in order to achieve target detection</span>
+0075 
+0076 <span class="comment">% Determine flight altitude</span>
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078 photoParams.mHeight = round(photoParams.cmpixel*camera.imheight/100,1);      <span class="comment">% Image height at ground [m]</span>
+0079 photoParams.mWidth = round(photoParams.cmpixel*camera.imwidth/100,1);        <span class="comment">% Image width at ground [m]</span>
+0080 flscale = photoParams.mHeight*1000/camera.sensorheight;                      <span class="comment">% Flight scale denominator [mm / mm]</span>
+0081 photoParams.flyAlt = round(flscale*camera.focallen/1000,2);                  <span class="comment">% Flight altitude [m]</span>
+0082 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0083 
+0084 
+0085 <span class="comment">% Determine spacing B (Distance between photographs) and distance A (Separation between lines)</span>
+0086 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0087 <span class="keyword">if</span> cameraPos == 1     
+0088 
+0089     photoParams.B = round( ( 1 - ( overlap/100 ) )*photoParams.mHeight, 1 );               <span class="comment">% Distance between photographs [m]</span>
+0090     photoParams.A = round( ( 1 - ( sidelap/100 ) )*photoParams.mWidth, 1 );                <span class="comment">% Separation between lines [m]</span>
+0091     
+0092     photoParams.fovwdeg = 2*atan2d(camera.sensorwidth,(2 * camera.focallen));
+0093     photoParams.fovhdeg = 2*atan2d(camera.sensorheight, (2 * camera.focallen));
+0094 <span class="keyword">else</span>
+0095     
+0096     photoParams.B = round( ( 1 - ( overlap/100 ) )*photoParams.mWidth, 1 );                <span class="comment">% Distance between photographs [m]</span>
+0097     photoParams.A = round( ( 1 - ( sidelap/100 ) )*photoParams.mHeight, 1 );               <span class="comment">% Separation between lines [m]</span>
+0098     
+0099     photoParams.fovwdeg = 2*atan2d(camera.sensorheight,(2 * camera.focallen));
+0100     photoParams.fovhdeg = 2*atan2d(camera.sensorwidth, (2 * camera.focallen));
+0101 <span class="keyword">end</span>
+0102 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0103 
+0104 <span class="keyword">end</span>
+0105</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

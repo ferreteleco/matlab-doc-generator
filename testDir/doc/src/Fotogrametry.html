@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Fotogrametry</title>
+  <meta name="keywords" content="Fotogrametry">
+  <meta name="description" content="@desc This script is used fot testing ad development of the photogrametry parameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; Fotogrametry.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>Fotogrametry
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>@desc This script is used fot testing ad development of the photogrametry parameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">   @desc This script is used fot testing ad development of the photogrametry parameters
+   used along the grid computations of gridInspector
+
+%--------------------------------------------------------------------------------------------------
+   @ref https://es.mathworks.com/help/matlab/script-based-unit-tests.html
+
+%--------------------------------------------------------------------------------------------------
+   @author Andres Ferreiro Gonzalez (@aferreiro)
+   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)
+   @date 20/02/17
+   @version 1.0
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%   @desc This script is used fot testing ad development of the photogrametry parameters</span>
+0002 <span class="comment">%   used along the grid computations of gridInspector</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @ref https://es.mathworks.com/help/matlab/script-based-unit-tests.html</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0008 <span class="comment">%   @author Andres Ferreiro Gonzalez (@aferreiro)</span>
+0009 <span class="comment">%   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)</span>
+0010 <span class="comment">%   @date 20/02/17</span>
+0011 <span class="comment">%   @version 1.0</span>
+0012 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0013 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0014 clear all
+0015 close all
+0016 clc
+0017 
+0018 fprintf(<span class="string">'\n********************************************************************************\n'</span>);
+0019 fprintf(<span class="string">'***************************SCRIPT Fotogrametría Test****************************\n'</span>);
+0020 fprintf(<span class="string">'********************************************************************************\n'</span>);
+0021 
+0022 
+0023 <span class="comment">% Selector de cámara, 0 = vertical, 1 = horizontal</span>
+0024 camara = 1;
+0025 
+0026 focallen = 5;                                      <span class="comment">% distancia focal [mm]</span>
+0027 imgwidth = 4608;                                   <span class="comment">% anchura de la imagen [píxels]</span>
+0028 imgheight = 3456;                                  <span class="comment">% altura de la imagen [píxels]</span>
+0029 
+0030 
+0031 sensorw = 6.16;                                    <span class="comment">% ancho del sensor [mm]</span>
+0032 sensorh = 4.62;                                    <span class="comment">% alto del sensor [mm]</span>
+0033 
+0034 
+0035 <span class="comment">% Solapamiento [%]</span>
+0036 overlap = 80;                                   <span class="comment">% de frente</span>
+0037 sidelap = 40;                                   <span class="comment">% lateral</span>
+0038 
+0039 flyalt = 30;                                       <span class="comment">% altura de vuelo [m]</span>
+0040 
+0041 
+0042 flscale = (1000 * flyalt) / focallen;               <span class="comment">% escala [mm / mm]</span>
+0043 
+0044 
+0045 fprintf(<span class="string">'\n--------------------------------------------------------------------------------\n'</span>);
+0046 fprintf(<span class="string">'---&gt; Scale: %2.2f [mm/mm]\n'</span>, flscale);
+0047 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0048 
+0049 <span class="comment">% Footprint (FOV) [m]</span>
+0050 viewwidth = (sensorw * flscale / 1000);
+0051 viewheight = (sensorh * flscale / 1000);
+0052 
+0053 fprintf(<span class="string">'---&gt; Footprint width: %2.2f [m]\n'</span>, viewwidth);
+0054 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0055 fprintf(<span class="string">'---&gt; Footprint height: %2.2f [m]\n'</span>, viewheight);
+0056 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0057 
+0058 <span class="comment">% Footprint (FOV) [deg.]</span>
+0059 
+0060 fovh = 2*atan2d(sensorw,(2 * focallen));
+0061 
+0062 fovv = 2*atan2d(sensorh, (2 * focallen));
+0063 
+0064 fprintf(<span class="string">'---&gt; Footprint width: %2.2f [degrees]\n'</span>, fovh);
+0065 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0066 fprintf(<span class="string">'---&gt; Footprint height: %2.2f [degrees]\n'</span>, fovv);
+0067 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0068 
+0069 <span class="comment">% Centímetros por píxel en ancho y en alto</span>
+0070 cmpixelh = ((viewheight/imgheight)*100);              <span class="comment">% centímetros por píxel [cm/píxel]</span>
+0071 cmpixelw = ((viewwidth/imgwidth)*100);
+0072 
+0073 fprintf(<span class="string">'---&gt; Centimeters per píxel: %2.2f [cm/píxel]\n'</span>, cmpixelh);
+0074 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0075 
+0076 <span class="comment">% Centímetros cuadrados por píxel</span>
+0077 
+0078 cm2 = cmpixelh*cmpixelw;
+0079 
+0080 fprintf(<span class="string">'---&gt; Square centimeters per píxel: %2.2f [cm^2/píxel]\n'</span>, cm2);
+0081 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0082 
+0083 
+0084 <span class="keyword">if</span> camara == 0     
+0085 
+0086     spacing = ((1 - (overlap / 100)) * viewheight);
+0087     distance = ((1 - (sidelap / 100)) * viewwidth);
+0088 <span class="keyword">else</span>
+0089     
+0090     spacing = ((1 - (overlap / 100)) * viewwidth);
+0091     distance = ((1 - (sidelap / 100)) * viewheight);
+0092 <span class="keyword">end</span>
+0093 
+0094 fprintf(<span class="string">'---&gt; Distance between images: %2.2f [m]\n'</span>, spacing);
+0095 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0096 fprintf(<span class="string">'---&gt; Distance between lines: %2.2f [m]\n'</span>, distance);
+0097 fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0098  
+0099  <span class="comment">%@todo</span>
+0100  <span class="comment">% - seleccionar las coordenadas TM apropiadas en base a la lat, long</span>
+0101  <span class="comment">% - calcular número de fotos, número de pasadas, tiempo de vuelo y distancia recorrida</span>
+0102  <span class="comment">% - calcular intervalo de tiempo entre fotos</span>
+0103  <span class="comment">% - implementar pruebas sobre esto</span>
+0104</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

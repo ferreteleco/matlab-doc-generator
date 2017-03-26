@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of launchFlightPlan</title>
+  <meta name="keywords" content="launchFlightPlan">
+  <meta name="description" content="@desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; launchFlightPlan.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>launchFlightPlan
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>@desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">   @desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions
+%--------------------------------------------------------------------------------------------------
+   @author Andres Ferreiro Gonzalez (@aferreiro)
+   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)
+   @date 14/03/17
+   @version 1.0
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeGrid.html" class="code" title="function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )">computeGrid</a>	computeGrid computes the grid required to cover the specified polygon.</li><li><a href="getFlightPhotoParams.html" class="code" title="function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap)">getFlightPhotoParams</a>	getFlightPhotoParams computes required parameters for planning a flight that makes use of a</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%   @desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions</span>
+0002 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0003 <span class="comment">%   @author Andres Ferreiro Gonzalez (@aferreiro)</span>
+0004 <span class="comment">%   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)</span>
+0005 <span class="comment">%   @date 14/03/17</span>
+0006 <span class="comment">%   @version 1.0</span>
+0007 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0008 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0009 
+0010 clear all
+0011 close all
+0012 clc
+0013 
+0014 <span class="comment">% polygon = [539944.015 539859.175 539859.423 539943.445; 4687039.714 4687039.664 4687101.704 4687102.237];</span>
+0015 <span class="comment">% polygon = [539859.168 539935.677 539971.455 539924.661 ; 4687039.661 4687029.326 4687035.254 4687101.229 ];</span>
+0016 polygon = [533439.931 535154.159 538452.027 540741.769 540967.782 538125.585; <span class="keyword">...</span>
+0017     4693510.197 4694831.204 4691632.382 4691591.817 4689308.522 4689281.51];
+0018 <span class="comment">% %</span>
+0019 <span class="comment">% polygon = [539193.654490281    539634.708703415 540803.934315498 540299.808344306;...</span>
+0020 <span class="comment">%     4687267.55544982 4686797.99921270 4687593.76861077 4687960.69257814];</span>
+0021 
+0022 flag = 0;
+0023 
+0024 <span class="comment">% 1. DEFINE CAMERA PARAMETERS AS A STRUCT</span>
+0025 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0026 camera = struct(<span class="string">'model'</span>, <span class="string">'Nikon aw100'</span>, <span class="string">'focallen'</span>, 5, <span class="string">'imwidth'</span>, 4608, <span class="string">'imheight'</span>, 3456, <span class="keyword">...</span>
+0027     <span class="string">'sensorwidth'</span>, 6.16, <span class="string">'sensorheight'</span>, 4.62);
+0028 
+0029 
+0030 <span class="comment">% 2. DEFINE ADDITIONAL MISSION PARAMETERS RELATED WITH PHOTOGRAMETRY</span>
+0031 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0032 overlap = 60;                                           <span class="comment">% Overlap between consecutive photos [%]</span>
+0033 sidelapIter = 25;                                  <span class="comment">% Overlap between strips [%]</span>
+0034 
+0035 <span class="comment">% Position of the camera in the RPAS, Landscape or Portrait</span>
+0036 cameraPos = struct(<span class="string">'Landscape'</span>, 1, <span class="string">'Portrait'</span>, 2);
+0037 
+0038 detSize = 40 ;             <span class="comment">% Size of object to be detected [cm]</span>
+0039 nPx = 2;                    <span class="comment">% Number of Píxels to allow detection</span>
+0040 
+0041 dprev = 1e24;
+0042 
+0043 <span class="keyword">for</span> ll = 1 : length(sidelapIter)
+0044 
+0045 <span class="comment">% 3. COMPUTE PHOTOGRAMETRY PARAMETERS PRIOR TO FLIGHT PLANNING</span>
+0046 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0047 
+0048 [ photoParamsIter ] = <a href="getFlightPhotoParams.html" class="code" title="function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap)">getFlightPhotoParams</a>( camera, cameraPos.Landscape, detSize, nPx, overlap, sidelapIter(ll));
+0049 
+0050 
+0051 <span class="comment">% 4. COMPUTE THE ROUTE THAT COVERS THE AREA OF INTEREST</span>
+0052 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0053 
+0054 StartPos = <span class="string">'BottomRight'</span>;
+0055 <span class="comment">% cryteria = 'Pol';</span>
+0056 cryteria = <span class="string">'MinD'</span>;
+0057 
+0058 [ GridIter, flagIter, outerBoxIter, PolyBoundsIter ] = <a href="computeGrid.html" class="code" title="function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )">computeGrid</a>( polygon, photoParamsIter, StartPos, cryteria );
+0059 
+0060 dnext = GridIter.distanceOverPath;
+0061 
+0062 
+0063 <span class="keyword">if</span> flagIter &amp;&amp; dnext &lt;= dprev
+0064     
+0065     photoParams = photoParamsIter;
+0066     Grid = GridIter;
+0067     outerBox = outerBoxIter;
+0068     PolyBounds =PolyBoundsIter;
+0069     dprev = dnext;
+0070     sidelap = sidelapIter(ll);
+0071     flag = 1;
+0072 
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="keyword">end</span>
+0076 
+0077 <span class="keyword">if</span> flag == 1
+0078     
+0079     
+0080     <span class="comment">% 5. SHOW RESULTS</span>
+0081     <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0082 
+0083     <span class="comment">% plot the outer grid</span>
+0084 
+0085     figure()                                           <span class="comment">% Create new figure</span>
+0086 
+0087     h = line([outerBox.BottomLeft(1) outerBox.BottomRight(1)], [outerBox.BottomLeft(2) <span class="keyword">...</span>
+0088         outerBox.BottomRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'g'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0089 
+0090     hold on
+0091     line([outerBox.TopLeft(1) outerBox.TopRight(1)], [outerBox.TopLeft(2) <span class="keyword">...</span>
+0092         outerBox.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'g'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0093 
+0094     line([outerBox.BottomLeft(1) outerBox.TopLeft(1)], [outerBox.BottomLeft(2) <span class="keyword">...</span>
+0095         outerBox.TopLeft(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'g'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0096 
+0097     line([outerBox.BottomRight(1) outerBox.TopRight(1)], [outerBox.BottomRight(2) <span class="keyword">...</span>
+0098         outerBox.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'g'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0099 
+0100     grid minor
+0101 
+0102     <span class="comment">% Plot the polygon</span>
+0103 
+0104     plot(PolyBounds.vertex(:,1), PolyBounds.vertex(:,2),<span class="string">'b--*'</span>, <span class="string">'linewidth'</span>,3, <span class="string">'markersize'</span>, 10,<span class="string">'Markerfacecolor'</span>, <span class="string">'b'</span>);
+0105 
+0106     <span class="comment">% Plot the outer grid Waypoints</span>
+0107     hold on
+0108 
+0109     plot(outerBox.WPaux(:,1), outerBox.WPaux(:,2), <span class="string">'m-o'</span>, <span class="string">'linewidth'</span>, 2,<span class="string">'MarkerSize'</span>,10, <span class="string">'MarkerFaceColor'</span>, <span class="string">'m'</span>)
+0110     plot(outerBox.WPaux(1,1), outerBox.WPaux(1,2), <span class="string">'k-x'</span>, <span class="string">'linewidth'</span>, 2,<span class="string">'MarkerSize'</span>,10, <span class="string">'MarkerFaceColor'</span>, <span class="string">'k'</span>)
+0111     
+0112     
+0113      line([PolyBounds.BottomLeft(1) PolyBounds.BottomRight(1)], [PolyBounds.BottomLeft(2) <span class="keyword">...</span>
+0114         PolyBounds.BottomRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'c'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0115 
+0116     hold on
+0117     line([PolyBounds.TopLeft(1) PolyBounds.TopRight(1)], [PolyBounds.TopLeft(2) <span class="keyword">...</span>
+0118         PolyBounds.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'c'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0119 
+0120     line([PolyBounds.BottomLeft(1) PolyBounds.TopLeft(1)], [PolyBounds.BottomLeft(2) <span class="keyword">...</span>
+0121         PolyBounds.TopLeft(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'c'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0122 
+0123     line([PolyBounds.BottomRight(1) PolyBounds.TopRight(1)], [PolyBounds.BottomRight(2) <span class="keyword">...</span>
+0124         PolyBounds.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,<span class="string">'c'</span>, <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0125     
+0126 
+0127     <span class="comment">% Plot the final grid</span>
+0128 
+0129     plot(Grid.Path.x, Grid.Path.y, <span class="string">'r-s'</span>, <span class="string">'linewidth'</span>, 3, <span class="string">'Markersize'</span>, 10, <span class="string">'markerfacecolor'</span>, <span class="string">'r'</span>);
+0130     plot(Grid.Path.x(1), Grid.Path.y(1), <span class="string">'k-x'</span>, <span class="string">'linewidth'</span>, 3, <span class="string">'Markersize'</span>, 10, <span class="string">'markerfacecolor'</span>, <span class="string">'k'</span>);
+0131 
+0132 
+0133 
+0134     fprintf(<span class="string">'\n--------------------------------------------------------------------------------\n'</span>);
+0135     fprintf(<span class="string">'---&gt; Flight Altitude: %2.2f [m]\n'</span>, photoParamsIter.flyAlt);
+0136     fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0137 
+0138     fprintf(<span class="string">'\n--------------------------------------------------------------------------------\n'</span>);
+0139     fprintf(<span class="string">'---&gt; Covered Area: %2.2f [m^2]\n'</span>, Grid.area);
+0140     fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0141 
+0142     fprintf(<span class="string">'\n--------------------------------------------------------------------------------\n'</span>);
+0143     fprintf(<span class="string">'---&gt; Distance: %2.2f [m]\n'</span>, Grid.distanceOverPath);
+0144     fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0145     
+0146     fprintf(<span class="string">'\n--------------------------------------------------------------------------------\n'</span>);
+0147     fprintf(<span class="string">'---&gt; Sidelap used for minumum distance travelling: %2.2f [%%]\n'</span>, sidelap);
+0148     fprintf(<span class="string">'--------------------------------------------------------------------------------\n'</span>);
+0149     
+0150 <span class="keyword">else</span> 
+0151     
+0152     <span class="comment">% Bad, shouldn't happen</span>
+0153     string = <span class="string">'Please consider the following:'</span>;
+0154     string1 = sprintf(<span class="string">'Error: \n - Try again in a while.\n - Change detection size and / or detection pixels. \n - Modify the polygon that defines the survey area.'</span>);
+0155     
+0156     error(<span class="string">'Something went very very wrong while computing grid.\n%s\n%s'</span>, string, string1);
+0157     
+0158 <span class="keyword">end</span>
+0159     
+0160 
+0161</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

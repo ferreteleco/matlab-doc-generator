@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getPolyCenter</title>
+  <meta name="keywords" content="getPolyCenter">
+  <meta name="description" content="getPolyCenter computes the centroid of the polygon specified by vertex.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; getPolyCenter.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getPolyCenter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>getPolyCenter computes the centroid of the polygon specified by vertex.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ center ] = getPolyCenter( vertex, coord ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">getPolyCenter computes the centroid of the polygon specified by vertex.
+   
+%-------------------------------------------------------------------------------------------------- 
+   @desc Computes the centroid of the polygon specified by vertex.
+   It supports the use of both geographical or UTM coordinates, as well as any other
+   cartesian system.
+
+%--------------------------------------------------------------------------------------------------
+   @ref http://foro.gabrielortiz.com/index.asp?Topic_ID=5168
+
+%--------------------------------------------------------------------------------------------------
+   The inputs of this function are:
+   
+   - @iparam [float] vertex: matrix containing the coordinatesof the polygon's vertices
+   'closed' (the last coordinate of the vertices and the first are the same one) {m}
+
+   - @iparam [String] coord: String that defines te input coordinates
+       -&gt; 'UTM': input as UTM coordinates (default)
+       -&gt; 'Geo': input as geographical coordinates
+   
+%--------------------------------------------------------------------------------------------------
+   The output of this function is:
+   - @oparam [float] env:coordinates of the rectangle's vertices 'closed' (the last
+   coordinate of the vertices and the first are the same one) {m or deg}
+
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 17/03/2017
+   ** @version 1.1
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>	getPolyArea returns the area of a polygon.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getPolyBounds.html" class="code" title="function [ PolyBounds ] = getPolyBounds(polyx, polyy)">getPolyBounds</a>	getPolyBounds returns the bounds of a polygon defined by its vertices X - Y coordinates.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ center ] = getPolyCenter( vertex, coord )</a>
+0002 <span class="comment">%getPolyCenter computes the centroid of the polygon specified by vertex.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @desc Computes the centroid of the polygon specified by vertex.</span>
+0006 <span class="comment">%   It supports the use of both geographical or UTM coordinates, as well as any other</span>
+0007 <span class="comment">%   cartesian system.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0010 <span class="comment">%   @ref http://foro.gabrielortiz.com/index.asp?Topic_ID=5168</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0013 <span class="comment">%   The inputs of this function are:</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   - @iparam [float] vertex: matrix containing the coordinatesof the polygon's vertices</span>
+0016 <span class="comment">%   'closed' (the last coordinate of the vertices and the first are the same one) {m}</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   - @iparam [String] coord: String that defines te input coordinates</span>
+0019 <span class="comment">%       -&gt; 'UTM': input as UTM coordinates (default)</span>
+0020 <span class="comment">%       -&gt; 'Geo': input as geographical coordinates</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0023 <span class="comment">%   The output of this function is:</span>
+0024 <span class="comment">%   - @oparam [float] env:coordinates of the rectangle's vertices 'closed' (the last</span>
+0025 <span class="comment">%   coordinate of the vertices and the first are the same one) {m or deg}</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0028 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0029 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0030 <span class="comment">%   ** @date 17/03/2017</span>
+0031 <span class="comment">%   ** @version 1.1</span>
+0032 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0033 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0034 
+0035 
+0036 <span class="keyword">if</span> nargin &lt; 1
+0037     
+0038         error(<span class="string">'Not enough input arguments. Type &quot;help getPolyCenter&quot; in the command prompt for more info about function usage.'</span>);
+0039         
+0040 <span class="keyword">elseif</span> nargin &gt; 2
+0041     
+0042         error(<span class="string">'Too many input arguments. Type &quot;help getPolyCenter&quot; in the command prompt for more info about function usage.'</span>);
+0043         
+0044 <span class="keyword">elseif</span> nargin == 1
+0045     
+0046     coord = <span class="string">'UTM'</span>;
+0047 <span class="keyword">end</span>
+0048 
+0049 
+0050 <span class="comment">% If it has negative coordinates, shift to positive and tat the end undo the shift</span>
+0051 <span class="keyword">if</span> strcmp(coord, <span class="string">'Geo'</span>)
+0052     
+0053     vertex = vertex + 100000;
+0054 <span class="keyword">end</span>
+0055 
+0056 <span class="comment">% Area of the polygon</span>
+0057 [ A ] = <a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>( vertex );
+0058 
+0059 center(1) = abs(1/(6*A)*sum((vertex(1:end-1,1) + vertex(2:<span class="keyword">end</span>,1)).*(vertex(1:end-1,1).*vertex(2:<span class="keyword">end</span>,2) - vertex(2:<span class="keyword">end</span>,1).*vertex(1:end-1,2))));
+0060 center(2) = abs(1/(6*A)*sum((vertex(1:end-1,2) + vertex(2:<span class="keyword">end</span>,2)).*(vertex(1:end-1,1).*vertex(2:<span class="keyword">end</span>,2) - vertex(2:<span class="keyword">end</span>,1).*vertex(1:end-1,2))));
+0061 
+0062 <span class="keyword">if</span> strcmp(coord, <span class="string">'Geo'</span>)
+0063     
+0064     center = center - 100000;
+0065 <span class="keyword">end</span>
+0066 
+0067 <span class="keyword">end</span>
+0068</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

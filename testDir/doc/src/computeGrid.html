@@ -1,0 +1,698 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeGrid</title>
+  <meta name="keywords" content="computeGrid">
+  <meta name="description" content="computeGrid computes the grid required to cover the specified polygon.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; computeGrid.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeGrid
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>computeGrid computes the grid required to cover the specified polygon.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">computeGrid computes the grid required to cover the specified polygon. 
+
+%--------------------------------------------------------------------------------------------------
+   @desc Computes the grid required to cover the specified polygon returning the waypoints
+   needed to cover it among other parameters that are defined below.
+
+   Take into account that there is one structure defined as input parameter, and all the
+   fields must be included.
+
+   This function was designed to manage UTM coordinates and it does not suport the use of
+   geographical coordinates. Future releases may allow it, but that is not the case.
+
+%--------------------------------------------------------------------------------------------------
+   The inputs for this funtion are:
+
+   - @iparam [float] polygon: matrix that defines the UTM coordinates of the polygon to be
+     surveyed. Eastings in Row 1 and Northings in Row 2 {m}
+
+   - @iparam [struct] photoParams: it is a struct that contains the following:
+
+       -&gt; [float] cmpixel: centimeters per pixels ratio to be achieved {cm/px}
+       -&gt; [float] flyAlt: flight altitude in meters {m}
+       -&gt; [float] B: distance between photographs in meters {m}
+       -&gt; [float] A: separation between lines in meters {m}
+       -&gt; [float] mHeight: image height at ground in meters {m}
+       -&gt; [float] mWidth: image height at ground in meters {m}
+       -&gt; [float] fovhdeg: height of the field of view in degrees {deg}
+       -&gt; [float] fovwdeg: width of the field of view in degrees {deg}
+
+   - @iparam [String] StartPos: it is a string that defines the initial location of the survey over the
+     grid. (Optional) Values:
+
+       -&gt; 'BottomLeft': bottom left side of the grid
+       -&gt; 'BotomRight': bottom right side of thr grid (optional)
+       -&gt; 'TopRight': top right side of the grid
+       -&gt; 'TopLeft': top left side of the grid
+
+   - @iparam [String] cryteria: string that defines te criteria used to survey the polygon.
+     values {optional}
+
+       -&gt; 'MinD': minimun distance between strips (optional)
+       -&gt; 'Pol': connect strips trancing lines over polygon's faces
+
+%--------------------------------------------------------------------------------------------------
+   The outputs for this function are:
+
+   - @oparam [struct] Grid: structure containing the parameters of the generated grid
+
+       -&gt; [float] area: area of the grid in square meters {m^2}
+       -&gt; [int]   noStrips: number of strips that covers the polygon
+       -&gt; [float] distanceOverPath: distance travelled to cover the area of the polygon {m^2}
+       -&gt; [struct] Path: struct containing the coordinates of the waypoints that define the grid.
+               --&gt; [float] x: vector of Eastings of the waypoints in UTM {m}
+               --&gt; [float] y: vector of Northings of the waypoints in UTM {m}
+
+   - @oparam [int] flag: it indicates whether the computed grid  is correct (1) for the
+     given polygon, or has warnings (2) or it is not correct (0)
+
+   - @oparam [struct] externalBounds: structure containing the external bounds used as
+   auxiliary material to compute the grid (optional)
+
+       -&gt; [float] TopRight: vector of UTM coordinates of the top right corner of the
+       -&gt; rectangle that circumbscribes the polygon plus more {m}
+
+       -&gt; [float] TopLeft:  vector of UTM coordinates of the top left corner of the
+       -&gt; rectangle that circumbscribes the polygon plus more {m}
+
+       -&gt; [float] BottomRight: vector of UTM coordinates of the bottom right corner of
+       -&gt; the rectangle that circumbscribes the polygon plus more {m}
+
+       -&gt; [float] BottomLeft: vector of UTM coordinates of the bottom left corner of the
+       -&gt; rectangle that circumbscribes the polygon plus more {m}
+
+       -&gt; [float] Width: width of the rectangle that circumbscribes the polygon plus more {m}
+
+       -&gt; [float] Height: height of the rectangle that circumbscribes the polygon plus
+       -&gt; more {m}
+
+       -&gt; [float] vertex: matrix of vertices of the bounding box plus more {m}
+
+       -&gt; [float] WPaux: matrix of waypoints of the external grid covering the bounding
+       -&gt; box plus more {m}
+
+   - @oparam [struct] polyBounds: it is a structure (optional) containing the following fields:
+
+       -&gt; [float] TopLeft: vector containing the coordinates of the top left corner of
+       -&gt; the polygon {m} 
+
+       -&gt; [float] TopRight: vector containing the coordinates of the top right corner of
+       -&gt; the polygon {m} 
+
+       -&gt; [float] BottomLeft: vector containing the coordinates of the bottom left corner
+       -&gt; of the polygon {m} 
+
+       -&gt; [float] BottomRight: vector containing the coordinates of the bottom right
+       -&gt; corner of the polygon {m}
+
+       -&gt; [float] diagDist: diagonal distance of the rectangle circumbscribing the polygon {m} 
+
+       -&gt; [float] midWidth: half the width of the rectangle circumbscribing the polygon {m}
+
+       -&gt; [float] midHeight: half the height of the rectangle circumbscribing the polygon {m} 
+
+       -&gt; [float] vertex: matrix containing the coordinates of the polygon's vertices
+       -&gt; 'closed' (the last coordinate of the vertices and the first are the same one) {m} 
+
+       -&gt; [float] Width: width of the rectangle that circumbscribes the polygon {m} 
+
+       -&gt; [float] Height: height of the rectangle that circumbscribes the polygon {m} 
+
+       -&gt; [float] Rectvertex: matrix containing the coordinates of the polygon's Bounding
+       -&gt; Box vertices 'closed' (the last coordinate of the vertices and the first are the
+       -&gt; same one) {m} 
+
+       -&gt; [float] polyCenter: centroid of the polygon, vector containing x and y
+       -&gt; coordinates {m} 
+
+       -&gt; [float] minAngle: angle of rotation of the polygon of the polygon's vertices
+       -&gt;(a.c.sorted) {deg}
+
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 22/02/2017
+   ** @version 1.8
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="findLineIntersection.html" class="code" title="function [ intersx, intersy ] = findLineIntersection( start1, end1, start2, end2 )">findLineIntersection</a>	findLineIntersection returns the coordinates of the intersection of two lines.</li><li><a href="getAngleOfLongestSide.html" class="code" title="function [ angleLS, distLS, index ] = getAngleOfLongestSide( lats, lons, mode )">getAngleOfLongestSide</a>	getAngleOfLongestSide gets the angle of the longest side of a plygon defined by its</li><li><a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>	getBearing gets the bearing between two locations.</li><li><a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>	getDistance returns the distance between two locations in the suface of the Earth.</li><li><a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>	getPolyArea returns the area of a polygon.</li><li><a href="getPolyBounds.html" class="code" title="function [ PolyBounds ] = getPolyBounds(polyx, polyy)">getPolyBounds</a>	getPolyBounds returns the bounds of a polygon defined by its vertices X - Y coordinates.</li><li><a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>	newPos gives the solution to the direct geodesic problem.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="launchFlightPlan.html" class="code" title="">launchFlightPlan</a>	@desc Script used for debugging o the ComputeGrid and getFlightPhotoParams functions</li><li><a href="onComputeClick.html" class="code" title="function [ results ] = onComputeClick( log, display, inputs, polygon, camerasSet )">onComputeClick</a>	onComputeClick executes the callback for the compute button in the GridInspector GUI.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )</a>
+0002 <span class="comment">%computeGrid computes the grid required to cover the specified polygon.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @desc Computes the grid required to cover the specified polygon returning the waypoints</span>
+0006 <span class="comment">%   needed to cover it among other parameters that are defined below.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Take into account that there is one structure defined as input parameter, and all the</span>
+0009 <span class="comment">%   fields must be included.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   This function was designed to manage UTM coordinates and it does not suport the use of</span>
+0012 <span class="comment">%   geographical coordinates. Future releases may allow it, but that is not the case.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0015 <span class="comment">%   The inputs for this funtion are:</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   - @iparam [float] polygon: matrix that defines the UTM coordinates of the polygon to be</span>
+0018 <span class="comment">%     surveyed. Eastings in Row 1 and Northings in Row 2 {m}</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   - @iparam [struct] photoParams: it is a struct that contains the following:</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%       -&gt; [float] cmpixel: centimeters per pixels ratio to be achieved {cm/px}</span>
+0023 <span class="comment">%       -&gt; [float] flyAlt: flight altitude in meters {m}</span>
+0024 <span class="comment">%       -&gt; [float] B: distance between photographs in meters {m}</span>
+0025 <span class="comment">%       -&gt; [float] A: separation between lines in meters {m}</span>
+0026 <span class="comment">%       -&gt; [float] mHeight: image height at ground in meters {m}</span>
+0027 <span class="comment">%       -&gt; [float] mWidth: image height at ground in meters {m}</span>
+0028 <span class="comment">%       -&gt; [float] fovhdeg: height of the field of view in degrees {deg}</span>
+0029 <span class="comment">%       -&gt; [float] fovwdeg: width of the field of view in degrees {deg}</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   - @iparam [String] StartPos: it is a string that defines the initial location of the survey over the</span>
+0032 <span class="comment">%     grid. (Optional) Values:</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%       -&gt; 'BottomLeft': bottom left side of the grid</span>
+0035 <span class="comment">%       -&gt; 'BotomRight': bottom right side of thr grid (optional)</span>
+0036 <span class="comment">%       -&gt; 'TopRight': top right side of the grid</span>
+0037 <span class="comment">%       -&gt; 'TopLeft': top left side of the grid</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   - @iparam [String] cryteria: string that defines te criteria used to survey the polygon.</span>
+0040 <span class="comment">%     values {optional}</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%       -&gt; 'MinD': minimun distance between strips (optional)</span>
+0043 <span class="comment">%       -&gt; 'Pol': connect strips trancing lines over polygon's faces</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0046 <span class="comment">%   The outputs for this function are:</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%   - @oparam [struct] Grid: structure containing the parameters of the generated grid</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%       -&gt; [float] area: area of the grid in square meters {m^2}</span>
+0051 <span class="comment">%       -&gt; [int]   noStrips: number of strips that covers the polygon</span>
+0052 <span class="comment">%       -&gt; [float] distanceOverPath: distance travelled to cover the area of the polygon {m^2}</span>
+0053 <span class="comment">%       -&gt; [struct] Path: struct containing the coordinates of the waypoints that define the grid.</span>
+0054 <span class="comment">%               --&gt; [float] x: vector of Eastings of the waypoints in UTM {m}</span>
+0055 <span class="comment">%               --&gt; [float] y: vector of Northings of the waypoints in UTM {m}</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%   - @oparam [int] flag: it indicates whether the computed grid  is correct (1) for the</span>
+0058 <span class="comment">%     given polygon, or has warnings (2) or it is not correct (0)</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%   - @oparam [struct] externalBounds: structure containing the external bounds used as</span>
+0061 <span class="comment">%   auxiliary material to compute the grid (optional)</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%       -&gt; [float] TopRight: vector of UTM coordinates of the top right corner of the</span>
+0064 <span class="comment">%       -&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">%       -&gt; [float] TopLeft:  vector of UTM coordinates of the top left corner of the</span>
+0067 <span class="comment">%       -&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0068 <span class="comment">%</span>
+0069 <span class="comment">%       -&gt; [float] BottomRight: vector of UTM coordinates of the bottom right corner of</span>
+0070 <span class="comment">%       -&gt; the rectangle that circumbscribes the polygon plus more {m}</span>
+0071 <span class="comment">%</span>
+0072 <span class="comment">%       -&gt; [float] BottomLeft: vector of UTM coordinates of the bottom left corner of the</span>
+0073 <span class="comment">%       -&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">%       -&gt; [float] Width: width of the rectangle that circumbscribes the polygon plus more {m}</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">%       -&gt; [float] Height: height of the rectangle that circumbscribes the polygon plus</span>
+0078 <span class="comment">%       -&gt; more {m}</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">%       -&gt; [float] vertex: matrix of vertices of the bounding box plus more {m}</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">%       -&gt; [float] WPaux: matrix of waypoints of the external grid covering the bounding</span>
+0083 <span class="comment">%       -&gt; box plus more {m}</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">%   - @oparam [struct] polyBounds: it is a structure (optional) containing the following fields:</span>
+0086 <span class="comment">%</span>
+0087 <span class="comment">%       -&gt; [float] TopLeft: vector containing the coordinates of the top left corner of</span>
+0088 <span class="comment">%       -&gt; the polygon {m}</span>
+0089 <span class="comment">%</span>
+0090 <span class="comment">%       -&gt; [float] TopRight: vector containing the coordinates of the top right corner of</span>
+0091 <span class="comment">%       -&gt; the polygon {m}</span>
+0092 <span class="comment">%</span>
+0093 <span class="comment">%       -&gt; [float] BottomLeft: vector containing the coordinates of the bottom left corner</span>
+0094 <span class="comment">%       -&gt; of the polygon {m}</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">%       -&gt; [float] BottomRight: vector containing the coordinates of the bottom right</span>
+0097 <span class="comment">%       -&gt; corner of the polygon {m}</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">%       -&gt; [float] diagDist: diagonal distance of the rectangle circumbscribing the polygon {m}</span>
+0100 <span class="comment">%</span>
+0101 <span class="comment">%       -&gt; [float] midWidth: half the width of the rectangle circumbscribing the polygon {m}</span>
+0102 <span class="comment">%</span>
+0103 <span class="comment">%       -&gt; [float] midHeight: half the height of the rectangle circumbscribing the polygon {m}</span>
+0104 <span class="comment">%</span>
+0105 <span class="comment">%       -&gt; [float] vertex: matrix containing the coordinates of the polygon's vertices</span>
+0106 <span class="comment">%       -&gt; 'closed' (the last coordinate of the vertices and the first are the same one) {m}</span>
+0107 <span class="comment">%</span>
+0108 <span class="comment">%       -&gt; [float] Width: width of the rectangle that circumbscribes the polygon {m}</span>
+0109 <span class="comment">%</span>
+0110 <span class="comment">%       -&gt; [float] Height: height of the rectangle that circumbscribes the polygon {m}</span>
+0111 <span class="comment">%</span>
+0112 <span class="comment">%       -&gt; [float] Rectvertex: matrix containing the coordinates of the polygon's Bounding</span>
+0113 <span class="comment">%       -&gt; Box vertices 'closed' (the last coordinate of the vertices and the first are the</span>
+0114 <span class="comment">%       -&gt; same one) {m}</span>
+0115 <span class="comment">%</span>
+0116 <span class="comment">%       -&gt; [float] polyCenter: centroid of the polygon, vector containing x and y</span>
+0117 <span class="comment">%       -&gt; coordinates {m}</span>
+0118 <span class="comment">%</span>
+0119 <span class="comment">%       -&gt; [float] minAngle: angle of rotation of the polygon of the polygon's vertices</span>
+0120 <span class="comment">%       -&gt;(a.c.sorted) {deg}</span>
+0121 <span class="comment">%</span>
+0122 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0123 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0124 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0125 <span class="comment">%   ** @date 22/02/2017</span>
+0126 <span class="comment">%   ** @version 1.8</span>
+0127 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0128 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0129 
+0130 <span class="keyword">if</span> nargin &lt; 2
+0131     
+0132         error(<span class="string">'Not enough input arguments. Type &quot;help computeGrid&quot; in the command propt for more info about function usage.'</span>);
+0133         
+0134 <span class="keyword">elseif</span> nargin &gt; 4
+0135     
+0136         error(<span class="string">'Too many input arguments. Type &quot;help computeGrid&quot; in the command propt for more info about function usage.'</span>);
+0137 
+0138 <span class="keyword">elseif</span> nargin == 2
+0139     
+0140         cryteria = <span class="string">'MinD'</span>;
+0141         StartPos = <span class="string">'BottomRight'</span>;
+0142         
+0143 <span class="keyword">elseif</span> nargin == 3
+0144     
+0145         cryteria = <span class="string">'MinD'</span>;
+0146 
+0147 <span class="keyword">end</span>
+0148 
+0149 Grid = struct(<span class="string">'area'</span>, 0, <span class="string">'noStrips'</span>, 0, <span class="string">'distanceOverPath'</span>, 0, <span class="string">'Path'</span>, struct(<span class="string">'x'</span>, [], <span class="string">'y'</span>, []));
+0150 
+0151 
+0152 <span class="comment">% Coordinates that define the vertics of the polygon</span>
+0153 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0154 polyx = polygon(1,:);
+0155 polyy = polygon(2,:);
+0156 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0157 
+0158 
+0159 <span class="comment">% 2. Boundaries of the polygon</span>
+0160 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0161 [PolyBounds] = <a href="getPolyBounds.html" class="code" title="function [ PolyBounds ] = getPolyBounds(polyx, polyy)">getPolyBounds</a>(polyx, polyy);
+0162 
+0163 [ alpha, distLS,  indexLS] = <a href="getAngleOfLongestSide.html" class="code" title="function [ angleLS, distLS, index ] = getAngleOfLongestSide( lats, lons, mode )">getAngleOfLongestSide</a>( PolyBounds.Rectvertex(:,2), PolyBounds.Rectvertex(:,1), <span class="string">'UTM'</span> );
+0164 
+0165 alpha = mod(alpha,180);
+0166 
+0167 <span class="keyword">if</span> indexLS &gt; 1
+0168     
+0169     distSS = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(PolyBounds.Rectvertex(indexLS,2), PolyBounds.Rectvertex(indexLS,1),<span class="keyword">...</span>
+0170         PolyBounds.Rectvertex(indexLS-1,2), PolyBounds.Rectvertex(indexLS-1,1),<span class="string">'Pyt'</span>);
+0171     
+0172 <span class="keyword">else</span>
+0173     
+0174     distSS = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(PolyBounds.Rectvertex(<span class="keyword">end</span>,2), PolyBounds.Rectvertex(<span class="keyword">end</span>,1),<span class="keyword">...</span>
+0175        PolyBounds.Rectvertex(end-1,2), PolyBounds.Rectvertex(end-1,1),<span class="string">'Pyt'</span>);
+0176 <span class="keyword">end</span>
+0177 
+0178 
+0179 extent = ceil((photoParams.A/2) + distSS/2);
+0180 extent1 = ceil((photoParams.A/2) + distLS/2);
+0181 
+0182 [xx,yy] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(PolyBounds.midWidth, PolyBounds.midHeight, alpha - 90, extent);
+0183 [xx1,yy1] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(PolyBounds.midWidth, PolyBounds.midHeight, alpha + 90, extent);
+0184 
+0185 [x(1),y(1)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(xx, yy, alpha + 180, extent1);
+0186 [x(2),y(2)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(xx, yy, alpha, extent1);
+0187 
+0188 [x(3),y(3)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(xx1, yy1, alpha + 180, extent1);
+0189 [x(4),y(4)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(xx1, yy1, alpha, extent1);
+0190 
+0191 ang = atan2(x -PolyBounds.polyCenter(1), y - PolyBounds.polyCenter(2));
+0192 
+0193 [~,I] = sort(ang);
+0194 
+0195 x = x(I);
+0196 y = y(I);
+0197 x(end+1) = x(1);
+0198 y(end+1) = y(1);
+0199 
+0200 externalBounds.vertex = [x', y'];
+0201 
+0202 externalBounds.TopRight = [x(3) y(3)];
+0203 externalBounds.BottomRight = [x(4) y(4)];
+0204 externalBounds.TopLeft = [x(2) y(2)];
+0205 externalBounds.BottomLeft = [x(1) y(1)];
+0206 
+0207 externalBounds.Width = 2*extent;
+0208         
+0209 externalBounds.Height = 2*extent1;  
+0210 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0211 
+0212 <span class="comment">% Area of the polygon</span>
+0213 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0214 [ Grid.area ] = <a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>( PolyBounds.vertex );
+0215 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0216 
+0217 
+0218 <span class="comment">% 4. Get the start position over the outer box</span>
+0219 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0220 <span class="comment">% Here, if we previouslly measure the distance from previous WP in the route and the</span>
+0221 <span class="comment">% vertices of the polygon, we can know the point where begin the grid</span>
+0222 
+0223 noStripsGross = round( ((2*extent) / photoParams.A) ) + 1;  
+0224 
+0225 distLongTrip = 2*extent1;
+0226 
+0227 <span class="keyword">switch</span>(StartPos)
+0228     
+0229     <span class="keyword">case</span> <span class="string">'TopRight'</span>
+0230         RectStartPos = [ externalBounds.TopRight(1) externalBounds.TopRight(2) ];                 
+0231         bearingLongTrip = mod((alpha)+180, 360);   
+0232         bearingShortTrip =  mod((alpha)+90, 360);     
+0233                 
+0234     <span class="keyword">case</span> <span class="string">'TopLeft'</span>
+0235         
+0236         RectStartPos = [ externalBounds.TopLeft(1) externalBounds.TopLeft(2) ];        
+0237         bearingLongTrip = mod((alpha), 360);            
+0238         bearingShortTrip = mod(round(alpha)+90, 360);          
+0239         
+0240     <span class="keyword">case</span> <span class="string">'BottomRight'</span>
+0241         
+0242         RectStartPos = [ externalBounds.BottomRight(1) externalBounds.BottomRight(2) ];         
+0243         bearingLongTrip = mod((alpha)+180, 360);   
+0244         bearingShortTrip = mod(round(alpha)-90, 360);        
+0245         
+0246     <span class="keyword">case</span> <span class="string">'BottomLeft'</span>
+0247         
+0248         RectStartPos = [ externalBounds.BottomLeft(1) externalBounds.BottomLeft(2) ];         
+0249         bearingLongTrip = alpha;              
+0250         bearingShortTrip = mod(round(alpha)-90, 360);
+0251         
+0252     <span class="keyword">otherwise</span>
+0253         
+0254         error(<span class="string">'Unrecognized starting position. Type &quot;help computeGrid&quot; in the command propt for more info about function usage.'</span>);
+0255         
+0256 <span class="keyword">end</span>
+0257 
+0258 
+0259 <span class="comment">% 5. Compute the waypoints of the grid overing the outer rectangle that</span>
+0260 <span class="comment">%    circumscribes the polygon</span>
+0261 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0262 WPaux = zeros(2*noStripsGross, 2);
+0263 WPaux(1,:) = RectStartPos;
+0264 Current = RectStartPos;
+0265 
+0266 <span class="comment">% For the number of strips needed to cover the entire rectangle</span>
+0267 <span class="keyword">for</span> kk = 1 : noStripsGross
+0268     
+0269     [Next(1), Next(2)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(Current(1), Current(2), bearingLongTrip, distLongTrip, <span class="string">'GeoUTM'</span>);
+0270     WPaux(2*kk,:) = Next;
+0271     Current = Next;
+0272     
+0273     <span class="keyword">if</span> kk &lt; noStripsGross
+0274 
+0275         [Next(1), Next(2)] = <a href="newPos.html" class="code" title="function [ X, Y ] = newPos( x0, y0, bearing, dist, mode )">newPos</a>(Current(1), Current(2), bearingShortTrip, photoParams.A, <span class="string">'GeoUTM'</span>); 
+0276         WPaux(kk+(kk+1),:) = Next;
+0277         Current = Next;
+0278         bearingLongTrip = mod(bearingLongTrip + 180, 360);
+0279     <span class="keyword">end</span>
+0280  
+0281 <span class="keyword">end</span>
+0282 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0283 
+0284 
+0285 <span class="comment">% 6. Find intersections with the polygon lines defined by its vertices</span>
+0286 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0287 Path = struct(<span class="string">'x'</span>,[],<span class="string">'y'</span>,[]);
+0288 indexWP = 1;
+0289 
+0290 noStrips = 0;
+0291 distanceOfPath = 0;
+0292 
+0293 numberCrossings = zeros(length(PolyBounds.Rectvertex),1);
+0294 
+0295 <span class="keyword">for</span> mm = 1 : noStripsGross
+0296     
+0297     
+0298     indtemp = 1;
+0299     tempintx = [];
+0300     tempinty = [];
+0301     
+0302     <span class="keyword">for</span> ll = 1 : length(PolyBounds.Rectvertex)-1
+0303 
+0304     
+0305        
+0306         [ intersx, intersy ] = <a href="findLineIntersection.html" class="code" title="function [ intersx, intersy ] = findLineIntersection( start1, end1, start2, end2 )">findLineIntersection</a>( WPaux(mm + (mm-1),:), WPaux(2*mm,:),<span class="keyword">...</span>
+0307             PolyBounds.Rectvertex(ll,:), PolyBounds.Rectvertex(ll+1,:) );
+0308     
+0309         <span class="keyword">if</span> ~isnan(intersx)
+0310 
+0311             numberCrossings(ll,1) = numberCrossings(ll,1) +1;
+0312             tempintx(indtemp) = intersx;
+0313             tempinty(indtemp) = intersy;
+0314             
+0315             indtemp = indtemp + 1;
+0316                      
+0317         <span class="keyword">end</span>
+0318     <span class="keyword">end</span>
+0319     
+0320     <span class="comment">% If polygon and strip intersects</span>
+0321     <span class="keyword">if</span> ~isempty(tempintx)
+0322         
+0323         <span class="comment">% Get the index of the highest and lowest Y-coordinate intersections</span>
+0324         [~,Imin] = min(tempinty);
+0325         [~,Imax] = max(tempinty);
+0326         
+0327         <span class="comment">% If they are equals, take the highest and lowest X-coordinate intersections</span>
+0328         <span class="keyword">if</span> Imin == Imax
+0329             
+0330             [~,Imin] = min(tempintx);
+0331             [~,Imax] = max(tempintx);
+0332         <span class="keyword">end</span>
+0333         
+0334         <span class="comment">% Get the direction of movement over the final grid</span>
+0335         <span class="keyword">switch</span>(indexWP)
+0336             
+0337             <span class="keyword">case</span> 1      <span class="comment">% for the first strip, take always the direction of the waypoints over the outer grid</span>
+0338                 
+0339                  dir = sign(cosd(<a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>(WPaux(1,2), WPaux(1,1), WPaux(2,2), WPaux(2,1), <span class="string">'UTM'</span>)));
+0340                 
+0341             <span class="keyword">otherwise</span>   <span class="comment">% for the following,</span>
+0342                 
+0343                 <span class="keyword">switch</span>(cryteria)
+0344                     
+0345                     <span class="keyword">case</span> <span class="string">'MinD'</span>
+0346                         
+0347                         dist1 = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(tempinty(Imin), tempintx(Imin), Path.y(indexWP-1), Path.x(indexWP-1), <span class="string">'Pyt'</span>);
+0348                         dist2 = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(tempinty(Imax), tempintx(Imax), Path.y(indexWP-1), Path.x(indexWP-1),<span class="string">'Pyt'</span>);
+0349                         dir =  sign(dist2 - dist1);                                  
+0350                         
+0351                     <span class="keyword">case</span> <span class="string">'Pol'</span>
+0352                         
+0353                         dir = sign(-1*dir);
+0354                         
+0355                     <span class="keyword">otherwise</span>
+0356                                 
+0357                         error(<span class="string">'Unrecognized cryteria to perform the route. Type &quot;help computeGrid&quot; in the command propt for more info about function usage.'</span>);
+0358                         
+0359                 <span class="keyword">end</span>
+0360         <span class="keyword">end</span>
+0361 
+0362         <span class="comment">% Act depending on the value of the direction of movement</span>
+0363         <span class="keyword">switch</span>(dir)
+0364 
+0365             <span class="keyword">case</span> 0  <span class="comment">% Here, the movements in the  axis (perpendicular to North) are taken into account</span>
+0366                 
+0367                 <span class="keyword">switch</span>(indexWP)
+0368             
+0369                     <span class="keyword">case</span> 1
+0370                     
+0371                         dir = sign(sind(<a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>(WPaux(1,2), WPaux(1,1), WPaux(2,2), WPaux(2,1), <span class="string">'UTM'</span>)));
+0372 
+0373                     <span class="keyword">otherwise</span>
+0374 
+0375                         <span class="keyword">switch</span>(cryteria)
+0376                     
+0377                             <span class="keyword">case</span> <span class="string">'MinD'</span>
+0378                                 
+0379                                  dist1 = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(tempinty(Imin), tempintx(Imin), Path.y(indexWP-1), Path.x(indexWP-1), <span class="string">'Pyt'</span>);
+0380                                  dist2 = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(tempinty(Imax), tempintx(Imax), Path.y(indexWP-1), Path.x(indexWP-1),<span class="string">'Pyt'</span>);
+0381                                  dir =  sign(dist2 - dist1);
+0382 
+0383                             <span class="keyword">case</span> <span class="string">'Pol'</span>
+0384 
+0385                                 dir = sign(-1*dir);
+0386                                 
+0387                             <span class="keyword">otherwise</span>
+0388                                 
+0389                                 error(<span class="string">'Unrecognized cryteria to perform the route. Type &quot;help computeGrid&quot; in the command propt for more info about function usage.'</span>);
+0390                         
+0391                         <span class="keyword">end</span>
+0392 
+0393                 <span class="keyword">end</span>
+0394                 
+0395                 <span class="keyword">switch</span>(dir)
+0396                     
+0397                     <span class="keyword">case</span> 1  <span class="comment">% Moves from left to right</span>
+0398 
+0399                         Path.x(indexWP) = tempintx(Imin);
+0400                         Path.y(indexWP) = tempinty(Imin);
+0401 
+0402                         indexWP = indexWP + 1;
+0403 
+0404                         Path.x(indexWP) = tempintx(Imax);
+0405                         Path.y(indexWP) = tempinty(Imax);
+0406                         
+0407                         noStrips = noStrips + 1;
+0408 
+0409 
+0410                     <span class="keyword">case</span> -1 <span class="comment">% Moves from right to left</span>
+0411 
+0412                         Path.x(indexWP) = tempintx(Imax);
+0413                         Path.y(indexWP) = tempinty(Imax);
+0414 
+0415                         indexWP = indexWP + 1;
+0416                         
+0417                         Path.x(indexWP) = tempintx(Imin);
+0418                         Path.y(indexWP) = tempinty(Imin);
+0419                         
+0420                         noStrips = noStrips + 1;
+0421 
+0422                     <span class="keyword">otherwise</span>
+0423                         
+0424                     <span class="comment">% Bad, shouldn't happen</span>
+0425                     string = <span class="string">'If you please, show some code-monkey this info:'</span>;
+0426                     string1 = sprintf(<span class="string">'Error: \n - Zero exit value for direction of movement: %dth strip and %dth polygon face.'</span>,mm,ll);
+0427                     error(<span class="string">'Something went very bad while computing intersections between plygons.\n %s\n%s'</span>, string, string1);
+0428 
+0429                 <span class="keyword">end</span>
+0430  
+0431             <span class="keyword">case</span> 1 <span class="comment">% Moves from down to up</span>
+0432 
+0433                 Path.x(indexWP) = tempintx(Imin);
+0434                 Path.y(indexWP) = tempinty(Imin);
+0435 
+0436                 indexWP = indexWP + 1;
+0437 
+0438                 Path.x(indexWP) = tempintx(Imax);
+0439                 Path.y(indexWP) = tempinty(Imax);
+0440                
+0441                 noStrips = noStrips + 1;         
+0442 
+0443             <span class="keyword">case</span> -1 <span class="comment">% Moves from up to down</span>
+0444 
+0445                 Path.x(indexWP) = tempintx(Imax);
+0446                 Path.y(indexWP) = tempinty(Imax);
+0447 
+0448                 indexWP = indexWP + 1;
+0449 
+0450                 Path.x(indexWP) = tempintx(Imin);
+0451                 Path.y(indexWP) = tempinty(Imin);
+0452            
+0453                 noStrips = noStrips + 1;                                                               
+0454 
+0455             <span class="keyword">otherwise</span>
+0456 
+0457             <span class="comment">% Bad, shouldn't happen</span>
+0458             string = <span class="string">'If you please, show some code-monkey this info:'</span>;
+0459             string1 = sprintf(<span class="string">'Error: \n - Zero exit value for direction of movement: %dth strip and %dth polygon face.'</span>,mm,ll);
+0460             error(<span class="string">'Something went very bad while computing intersections between plygons.\n %s\n%s'</span>, string, string1);
+0461         <span class="keyword">end</span>   
+0462         
+0463         indexWP = indexWP + 1;
+0464     <span class="keyword">end</span>
+0465 <span class="keyword">end</span>
+0466 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0467 
+0468 <span class="comment">% 7. Get the distance over the path</span>
+0469 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0470 <span class="keyword">for</span> index = 2 : length(Path.x)
+0471 
+0472     distanceOfPath = distanceOfPath + <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(Path.y(index-1), Path.x(index-1),  Path.y(index), Path.x(index), <span class="string">'Pyt'</span>);
+0473     
+0474 <span class="keyword">end</span>
+0475 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0476 
+0477 <span class="comment">% Check if the route covers all the grid or not. This piece of code covers the case that</span>
+0478 <span class="comment">% the limits of the polygon aren't covered by finding the nearest vertex to the starting</span>
+0479 <span class="comment">% and ending points of the first and last strips over the polygon. Then, if the distance</span>
+0480 <span class="comment">% is smaller than half the width of a photograph, the route is correct.</span>
+0481 <span class="comment">%</span>
+0482 <span class="comment">% In addition it also tests if the number of crossings of the longest side perpendicular</span>
+0483 <span class="comment">% to the direction of movement is enough to cover it.</span>
+0484 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0485 INI1 = min(<a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(Path.y(1), Path.x(1), PolyBounds.Rectvertex(:,2), <span class="keyword">...</span>
+0486     PolyBounds.Rectvertex(:,1),<span class="string">'Pyt'</span>));
+0487 END1 = min(<a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(Path.y(2), Path.x(2), PolyBounds.Rectvertex(:,2),<span class="keyword">...</span>
+0488     PolyBounds.Rectvertex(:,1),<span class="string">'Pyt'</span>));
+0489 INI2 = min(<a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(Path.y(end-1), Path.x(end-1), PolyBounds.Rectvertex(:,2),<span class="keyword">...</span>
+0490     PolyBounds.Rectvertex(:,1),<span class="string">'Pyt'</span>));
+0491 END2 = min(<a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(Path.y(end), Path.x(end), PolyBounds.Rectvertex(:,2),<span class="keyword">...</span>
+0492     PolyBounds.Rectvertex(:,1),<span class="string">'Pyt'</span>));
+0493 
+0494 [maxa, I] = max(numberCrossings);
+0495 
+0496 dd = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(PolyBounds.Rectvertex(I,2), PolyBounds.Rectvertex(I,1), PolyBounds.Rectvertex(I+1,2),PolyBounds.Rectvertex(I+1,1), <span class="string">'Pyt'</span>);
+0497 
+0498 nSt = ceil(dd / photoParams.A);
+0499 
+0500 <span class="keyword">if</span> (INI1 &lt; photoParams.mWidth/2 &amp;&amp; END1 &lt; photoParams.mWidth/2) &amp;&amp; (INI2 &lt; photoParams.mWidth/2 &amp;&amp; <span class="keyword">...</span>
+0501         END2 &lt; photoParams.mWidth/2) &amp;&amp; (nSt &lt;= maxa)
+0502 
+0503     flag = 1;
+0504     
+0505 <span class="keyword">elseif</span> (INI1 &lt; photoParams.mWidth/2 &amp;&amp; END1 &lt; photoParams.mWidth/2) &amp;&amp; (INI2 &lt; photoParams.mWidth/2 &amp;&amp; <span class="keyword">...</span>
+0506         END2 &lt; photoParams.mWidth/2) || (nSt &lt;= maxa)
+0507     
+0508     flag = 2;
+0509     
+0510 <span class="keyword">else</span> 
+0511     
+0512     flag = 0;
+0513 <span class="keyword">end</span>
+0514 
+0515 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0516 
+0517 Grid.Path = Path;
+0518 Grid.noStrips = noStrips;
+0519 Grid.distanceOverPath = distanceOfPath;
+0520 externalBounds.WPaux = WPaux;
+0521 varargout{1} = externalBounds;
+0522 varargout{2} = PolyBounds;
+0523 
+0524 <span class="keyword">end</span>
+0525</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

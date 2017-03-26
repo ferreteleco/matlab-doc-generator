@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeGrid</title>
+  <meta name="keywords" content="{{name}}">
+  <meta name="description" content="{{name}} {{summary}}">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="" content="PyMDoc documentation generator for Matlab v1.0 &copy; 2017 Andres Ferreiro">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a name="_top"></a>
+<header>{% if project_logo %}<center><img src="{{project_logo}}" alt="Project Logo" style="width:10%;height:10%;">{% endif %} {% if project_name %}
+  <strong>{{project_name}}</strong>
+  {% endif %}</center></header>
+
+<article>
+<div><a href="../index.html">Home</a>/<a href="index.html">{{dir}}</a>/{{name}}.m</div>
+
+<h1>{{name}}</h1>
+<h2><a name="_summary"></a>Summary <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="box"><strong>{{summary}}</strong></div>
+
+<h2><a name="_usage"></a>Usage <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="box"><strong>{{usage}} </strong></div>
+
+<h2><a name="_description"></a>Description <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="fragment"><pre class="comment">{{description}}</pre></div>
+
+<h2><a name="_iparams"></a>Input parameters <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Here are the parameters used as inputs for this function:
+  {% for item in iparam %}
+      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] {{item.name}}: {{'\n'.join(item.desc)}}</li>
+  {% endfor %}
+</pre></div>
+
+<h2><a name="_oparams"></a>Output parameters <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Here are the parameters used as inputs for this function:
+  {% for item in oparam %}
+      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] {{item.name}}: {{'\n'.join(item.desc)}}</li>
+  {% endfor %}
+</pre></div>
+
+<h2><a name="_usedby"></a>Used by <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="box">
+  {% for item in usedby %}
+  <li>{{item}}</li>
+  {% endfor %}
+</div>
+
+<h2><a name="_uses"></a>Uses <a href="#_top"><img alt="^" border="0" src="./up.png"></a></h2>
+<div class="box">
+  {% for item in uses %}
+  <li>{{item}}</li>
+  {% endfor %}
+</div>
+
+</article>
+<footer><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
+</body>
+</html>

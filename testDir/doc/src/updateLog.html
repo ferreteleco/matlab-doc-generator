@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of updateLog</title>
+  <meta name="keywords" content="updateLog">
+  <meta name="description" content="updateLog updates the console log in the GridInspector Window.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; updateLog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>updateLog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>updateLog updates the console log in the GridInspector Window.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function updateLog( log, strin, multiline ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">updateLog updates the console log in the GridInspector Window.
+   
+%--------------------------------------------------------------------------------------------------   
+   @desc Updates the console log in the GridInspector Window.
+
+%--------------------------------------------------------------------------------------------------   
+   The inputs of this function are:
+
+   - @iparam [graphics handle] log: handle of log console 
+   - @iparam [String] strin: new information to be updated on log 
+   - @iparam [int] multiline: when enabled (1) does not display the trailing '-------' at the end
+   of a log. 
+
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 13/03/2017
+   ** @version 1.2
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dumpToFile.html" class="code" title="function dumpToFile( log )">dumpToFile</a>	dumpToFile dumps the console log into a .txt file.</li><li><a href="exportKML.html" class="code" title="function exportKML( log, PathName, FileName, results, openMap )">exportKML</a>	exportKML dumps the resulting grid in a kml file.</li><li><a href="gridInspector.html" class="code" title="function varargout = gridInspector(varargin)">gridInspector</a>	gridInspector MATLAB code for gridInspector.fig</li><li><a href="importCameras.html" class="code" title="function [ cameras, status ] = importCameras( log, path )">importCameras</a>	importCameras imports all the camera objects found in 'path'.</li><li><a href="importPolygon.html" class="code" title="function [ polygon, status ] = importPolygon( log, Path )">importPolygon</a>	importPolygon gets polygon boundaries from the file specified in path.</li><li><a href="onComputeClick.html" class="code" title="function [ results ] = onComputeClick( log, display, inputs, polygon, camerasSet )">onComputeClick</a>	onComputeClick executes the callback for the compute button in the GridInspector GUI.</li><li><a href="parseInputs.html" class="code" title="function [parsedInputs, status] = parseInputs( log, inputs, camerasSet )">parseInputs</a>	parseInputs parses the inputs provided in the GridInspector Window</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function updateLog( log, strin, multiline )</a>
+0002 <span class="comment">%updateLog updates the console log in the GridInspector Window.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @desc Updates the console log in the GridInspector Window.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0008 <span class="comment">%   The inputs of this function are:</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   - @iparam [graphics handle] log: handle of log console</span>
+0011 <span class="comment">%   - @iparam [String] strin: new information to be updated on log</span>
+0012 <span class="comment">%   - @iparam [int] multiline: when enabled (1) does not display the trailing '-------' at the end</span>
+0013 <span class="comment">%   of a log.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0016 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0017 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0018 <span class="comment">%   ** @date 13/03/2017</span>
+0019 <span class="comment">%   ** @version 1.2</span>
+0020 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0021 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0022 
+0023 
+0024 <span class="keyword">if</span> nargin &lt; 2
+0025     
+0026         error(<span class="string">'Not enough input arguments. Type &quot;help updateLog&quot; in the command prompt for more info about function usage.'</span>);
+0027         
+0028 <span class="keyword">elseif</span> nargin &gt; 3
+0029     
+0030         error(<span class="string">'Too many input arguments. Type &quot;help updateLog&quot; in the command prompt for more info about function usage.'</span>);
+0031             
+0032 <span class="keyword">elseif</span> nargin == 2
+0033     
+0034     multiline = 0;
+0035         
+0036 <span class="keyword">end</span>
+0037 
+0038 str = get(log, <span class="string">'String'</span>);
+0039 [rows,cols]=size(str);
+0040 
+0041 strin = sprintf(<span class="string">'@%02i%02i%02.0f:   %s'</span>,hour(now), minute(now), second(now), strin);
+0042 <span class="keyword">if</span> strfind(strin, <span class="string">'FATAL ERROR'</span>)
+0043     
+0044     strin = strcat(<span class="string">'&lt;HTML&gt;&lt;FONT color=&quot;orange&quot;&gt;&lt;b&gt;'</span>,strin,<span class="string">'&lt;/b&gt;&lt;/FONT&gt;&lt;/HTML&gt;'</span>);
+0045     strin = strrep(strin, <span class="string">' '</span>, <span class="string">'&amp;nbsp;'</span>); 
+0046     
+0047 <span class="keyword">elseif</span> strfind(strin, <span class="string">'EVENT'</span>)
+0048     
+0049     strin = strcat(<span class="string">'&lt;HTML&gt;&lt;FONT color=&quot;#00FF00&quot; &gt;&lt;b&gt;'</span>,strin,<span class="string">'&lt;/b&gt;&lt;/FONT&gt;&lt;/HTML&gt;'</span>);
+0050     strin = strrep(strin, <span class="string">' '</span>, <span class="string">'&amp;nbsp;'</span>); 
+0051     
+0052 <span class="keyword">elseif</span> strfind(strin, <span class="string">'WARNING'</span>)
+0053     
+0054     strin = strcat(<span class="string">'&lt;HTML&gt;&lt;FONT color=&quot;#FFFF00&quot;&gt;&lt;b&gt;'</span>,strin,<span class="string">'&lt;/b&gt;&lt;/FONT&gt;&lt;/HTML&gt;'</span>);
+0055     strin = strrep(strin, <span class="string">' '</span>, <span class="string">'&amp;nbsp;'</span>); 
+0056     
+0057 <span class="keyword">elseif</span> strfind(strin, <span class="string">'--DATA--'</span>)
+0058         
+0059     strin = strcat(<span class="string">'&lt;HTML&gt;&lt;FONT color=&quot;#FF00FF&quot;&gt;&lt;b&gt;'</span>,strin,<span class="string">'&lt;/b&gt;&lt;/FONT&gt;&lt;/HTML&gt;'</span>);
+0060     strin = strrep(strin, <span class="string">' '</span>, <span class="string">'&amp;nbsp;'</span>);
+0061 <span class="keyword">else</span>
+0062         
+0063     strin = strcat(<span class="string">'&lt;HTML&gt;'</span>,strin,<span class="string">'&lt;/HTML&gt;'</span>);
+0064     strin = strrep(strin, <span class="string">' '</span>, <span class="string">'&amp;nbsp;'</span>); 
+0065 
+0066 <span class="keyword">end</span>
+0067 <span class="keyword">if</span> isempty(str)
+0068 
+0069     <span class="keyword">switch</span>(multiline)
+0070         
+0071         <span class="keyword">case</span> 1 
+0072             
+0073             strout(1) = {strin};
+0074 
+0075         <span class="keyword">otherwise</span>
+0076             
+0077             strout(1) = {strin};
+0078             strout(2) = {<span class="string">''</span>};
+0079     <span class="keyword">end</span>
+0080 
+0081 <span class="keyword">else</span>
+0082     
+0083     strout = cell(1,rows);
+0084     <span class="keyword">for</span> ii=1:rows
+0085 
+0086         strout(ii) = str(ii,1:cols);  
+0087 
+0088     <span class="keyword">end</span>
+0089 
+0090    <span class="keyword">switch</span>(multiline)
+0091        
+0092        <span class="keyword">case</span> 1
+0093         
+0094            strout(end+1) = {strin};
+0095 
+0096        <span class="keyword">otherwise</span>
+0097            
+0098            strout(end+1) = {strin};
+0099            strout(end+1) = {<span class="string">''</span>};
+0100    <span class="keyword">end</span>
+0101     
+0102    strout=textwrap(log,strout);
+0103 <span class="keyword">end</span>
+0104 
+0105 set(log,<span class="string">'String'</span>,strout);
+0106 
+0107 len = length(get(log, <span class="string">'String'</span>));
+0108 
+0109 set(log, <span class="string">'Value'</span>, len);
+0110 set(log, <span class="string">'ListboxTop'</span>, len);
+0111 
+0112 
+0113 <span class="keyword">end</span>
+0114</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

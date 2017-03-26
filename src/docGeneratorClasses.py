@@ -37,8 +37,9 @@ import re
 ###
 class FuncDefinition:
 
-    def __init__(self, name=None, usage=None, desc=None, author=None, date=None, version=None, iparams=None,
-                 oparams=None, summ=None, refs=None, company=None, code=None, usedby=None, uses=None):
+    def __init__(self, name=None, usage=None, desc=None, author=None, date=None, version=None,
+                 iparams=None, oparams=None, summ=None, refs=None, company=None, code=None,
+                 usedby=None, uses=None):
 
         if name is None:
             self._name = ''
@@ -75,14 +76,16 @@ class FuncDefinition:
             self._iparams = []
         else:
             tokens = iparams.split(' ')
-            self._iparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+            self._iparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '')
+                                             .replace(']', ''),
                                              desc=''.join(tokens[2:len(tokens)]))]
 
         if oparams is None:
             self.oparams = []
         else:
             tokens = oparams.split(' ')
-            self._oparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '').replace(']', ''),
+            self._oparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '')
+                                             .replace(']', ''),
                                              desc=''.join(tokens[2:len(tokens)]))]
 
         if summ is None:
@@ -126,7 +129,8 @@ class FuncDefinition:
             var = ''.join(pin.findall(param))
 
             tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''.join(tokens[2:]))
+            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''
+                                  .join(tokens[2:]))
             self._iparams.append(par)
         except IndexError:
             self._iparams.append(ParamDefinition())
@@ -222,7 +226,7 @@ class FuncDefinition:
 
     @property
     def desc(self):
-        return ' '.join(self._desc)
+        return '\n'.join(self._desc)
 
     @desc.setter
     def desc(self, desc):
@@ -339,8 +343,8 @@ class FuncDefinition:
 ###
 class ScriptDefinition:
 
-    def __init__(self, name=None, desc=None, code=None, author=None, date=None, version=None, refs=None, uses=None,
-                 usedby=None, company=None):
+    def __init__(self, name=None, desc=None, code=None, author=None, date=None, version=None,
+                 refs=None, uses=None, usedby=None, company=None):
 
         if name is None:
             self._name = ''
@@ -482,7 +486,7 @@ class ScriptDefinition:
 
     @property
     def desc(self):
-        return ' '.join(self._desc)
+        return '\n'.join(self._desc)
 
     @desc.setter
     def desc(self, desc):
@@ -548,7 +552,8 @@ class ParamDefinition:
     # This method updates the description of a param by appending it new lines.
     def updatedesc(self, param):
 
-        self._desc.append(param.replace('--->', '\t\t\t\t\t\t\t').replace('-->', '\t\t\t\t\t ').replace('->', '\t\t'))
+        self._desc.append(param.replace('--->', '\t\t\t\t\t\t').replace('-->', '\t\t\t\t ')
+                          .replace('->', '\t\t'))
 
     @property
     def name(self):

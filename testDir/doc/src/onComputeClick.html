@@ -1,0 +1,481 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of onComputeClick</title>
+  <meta name="keywords" content="onComputeClick">
+  <meta name="description" content="onComputeClick executes the callback for the compute button in the GridInspector GUI.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; onComputeClick.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>onComputeClick
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>onComputeClick executes the callback for the compute button in the GridInspector GUI.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ results ] = onComputeClick( log, display, inputs, polygon, camerasSet ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">onComputeClick executes the callback for the compute button in the GridInspector GUI.
+
+%--------------------------------------------------------------------------------------------------
+   @desc this function serves as a suite of oerations which both computes a grid over a
+   polygon specified by its vertices and the flight params derived from the selected
+   camera payload and is used to display the results of that calculations.
+
+%--------------------------------------------------------------------------------------------------
+  The inputs of this function are:
+   
+   - @iparam [graphics handle] log: handle of log console 
+   - @iparam [struct] display: handles to graphical elements in the GUI
+       -&gt; [graphics handle] plot
+       -&gt; [graphics handle] checkButtons: buttons used to modifi the visualization on the
+       -&gt; GUI
+   - @iparam [float] polygon: vector with the polygon to be analized
+   - @iparam [struct] camerasSet: structure containing all available cameras
+   
+%--------------------------------------------------------------------------------------------------
+   The output for this function is:
+
+   - @oparam [struct] results: structure containing the obtained results:
+       -&gt; [struct] photoParams: it is a struct that contains the following:
+                       --&gt; [float] cmpixel: centimeters per pixels ratio to be achieved {cm/px}
+                       --&gt; [float] flyAlt: flight altitude in meters {m}
+                       --&gt; [float] B: distance between photographs in meters {m}
+                       --&gt; [float] A: separation between lines in meters {m}
+                       --&gt; [float] mHeight: image height at ground in meters {m}
+                       --&gt; [float] mWidth: image height at ground in meters {m}
+                       --&gt; [float] fovhdeg: height of the field of view in degrees {deg}
+                       --&gt; [float] fovwdeg: width of the field of view in degrees {deg}
+       -&gt; [struct] Grid: structure containing the parameters of the generated grid.
+                       --&gt; [float] area: area of the grid in square meters {m^2}
+                       --&gt; [int]   noStrips: number of strips that covers the polygon
+                       --&gt; [float] distanceOverPath: distance travelled to cover the area of the polygon {m^2}
+                       --&gt; [struct] Path: struct containing the coordinates of the waypoints that define the grid.
+                               ---&gt; [float] x: vector of Eastings of the waypoints in UTM {m}
+                               ---&gt; [float] y: vector of Northings of the waypoints in UTM {m}
+
+       -&gt; [struct] outerBox: structure containing the external bounds used as auxiliary
+       material to compute the grid 
+
+                   --&gt; [float] TopRight: vector of UTM coordinates of the top right corner of the
+                   --&gt; rectangle that circumbscribes the polygon plus more {m}
+
+                   --&gt; [float] TopLeft:  vector of UTM coordinates of the top left corner of the
+                   --&gt; rectangle that circumbscribes the polygon plus more {m}
+
+                   --&gt; [float] BottomRight: vector of UTM coordinates of the bottom right corner of
+                   --&gt; the rectangle that circumbscribes the polygon plus more {m}
+
+                   --&gt; [float] BottomLeft: vector of UTM coordinates of the bottom left corner of the
+                   --&gt; rectangle that circumbscribes the polygon plus more {m}
+
+                   --&gt; [float] Width: width of the rectangle that circumbscribes the polygon plus more {m}
+
+                   --&gt; [float] Height: height of the rectangle that circumbscribes the polygon plus
+                   --&gt; more {m}
+
+                   --&gt; [float] vertex: matrix of vertices of the bounding box plus more {m}
+
+                   --&gt; [float] WPaux: matrix of waypoints of the external grid covering the bounding
+                   --&gt; box plus more {m}
+
+       -&gt; [struct] polyBounds: it is a structure (optional) containing the following fields:
+
+                   --&gt; [float] TopLeft: vector containing the coordinates of the top left corner of
+                   --&gt; the polygon {m} 
+
+                   --&gt; [float] TopRight: vector containing the coordinates of the top right corner of
+                   --&gt; the polygon {m} 
+
+                   --&gt; [float] BottomLeft: vector containing the coordinates of the bottom left corner
+                   --&gt; of the polygon {m} 
+
+                   --&gt; [float] BottomRight: vector containing the coordinates of the bottom right
+                   --&gt; corner of the polygon {m}
+
+                   --&gt; [float] diagDist: diagonal distance of the rectangle circumbscribing the
+                   --&gt; polygon {m} 
+
+                   --&gt; [float] midWidth: half the width of the rectangle circumbscribing the polygon
+                   --&gt; {m}
+
+                   --&gt; [float] midHeight: half the height of the rectangle circumbscribing the polygon
+                   --&gt; {m} 
+
+                   --&gt; [float] vertex: matrix containing the coordinates of the polygon's vertices
+                   --&gt; 'closed' (the last coordinate of the vertices and the first are the same one)
+                   --&gt; {m} 
+
+                   --&gt; [float] Width: width of the rectangle that circumbscribes the polygon {m} 
+
+                   --&gt; [float] Height: height of the rectangle that circumbscribes the polygon {m} 
+
+                   --&gt; [float] Rectvertex: matrix containing the coordinates of the polygon's Bounding
+                   --&gt; Box vertices 'closed' (the last coordinate of the vertices and the first are the
+                   --&gt; same one) {m} 
+
+                   --&gt; [float] polyCenter: centroid of the polygon, vector containing x and y
+                   --&gt; coordinates {m} 
+
+                   --&gt; [float] minAngle: angle of rotation of the polygon of the polygon's vertices
+                   --&gt;(a.c.sorted) {deg}
+       -&gt; [int] Zone: UTM zone
+       -&gt; [char] Band: UTM Band
+
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 14/03/2017
+   ** @version 1.2
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeGrid.html" class="code" title="function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )">computeGrid</a>	computeGrid computes the grid required to cover the specified polygon.</li><li><a href="geoToUTM.html" class="code" title="function [ X, Y, varargout ] = geoToUTM( lat, lon, aprr )">geoToUTM</a>	geoToUTM transforms the input geographical coordinates to its UTM projection.</li><li><a href="getFlightPhotoParams.html" class="code" title="function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap)">getFlightPhotoParams</a>	getFlightPhotoParams computes required parameters for planning a flight that makes use of a</li><li><a href="parseInputs.html" class="code" title="function [parsedInputs, status] = parseInputs( log, inputs, camerasSet )">parseInputs</a>	parseInputs parses the inputs provided in the GridInspector Window</li><li><a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>	updateLog updates the console log in the GridInspector Window.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="gridInspector.html" class="code" title="function varargout = gridInspector(varargin)">gridInspector</a>	gridInspector MATLAB code for gridInspector.fig</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ results ] = onComputeClick( log, display, inputs, polygon, camerasSet )</a>
+0002 <span class="comment">%onComputeClick executes the callback for the compute button in the GridInspector GUI.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @desc this function serves as a suite of oerations which both computes a grid over a</span>
+0006 <span class="comment">%   polygon specified by its vertices and the flight params derived from the selected</span>
+0007 <span class="comment">%   camera payload and is used to display the results of that calculations.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0010 <span class="comment">%  The inputs of this function are:</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   - @iparam [graphics handle] log: handle of log console</span>
+0013 <span class="comment">%   - @iparam [struct] display: handles to graphical elements in the GUI</span>
+0014 <span class="comment">%       -&gt; [graphics handle] plot</span>
+0015 <span class="comment">%       -&gt; [graphics handle] checkButtons: buttons used to modifi the visualization on the</span>
+0016 <span class="comment">%       -&gt; GUI</span>
+0017 <span class="comment">%   - @iparam [float] polygon: vector with the polygon to be analized</span>
+0018 <span class="comment">%   - @iparam [struct] camerasSet: structure containing all available cameras</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0021 <span class="comment">%   The output for this function is:</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   - @oparam [struct] results: structure containing the obtained results:</span>
+0024 <span class="comment">%       -&gt; [struct] photoParams: it is a struct that contains the following:</span>
+0025 <span class="comment">%                       --&gt; [float] cmpixel: centimeters per pixels ratio to be achieved {cm/px}</span>
+0026 <span class="comment">%                       --&gt; [float] flyAlt: flight altitude in meters {m}</span>
+0027 <span class="comment">%                       --&gt; [float] B: distance between photographs in meters {m}</span>
+0028 <span class="comment">%                       --&gt; [float] A: separation between lines in meters {m}</span>
+0029 <span class="comment">%                       --&gt; [float] mHeight: image height at ground in meters {m}</span>
+0030 <span class="comment">%                       --&gt; [float] mWidth: image height at ground in meters {m}</span>
+0031 <span class="comment">%                       --&gt; [float] fovhdeg: height of the field of view in degrees {deg}</span>
+0032 <span class="comment">%                       --&gt; [float] fovwdeg: width of the field of view in degrees {deg}</span>
+0033 <span class="comment">%       -&gt; [struct] Grid: structure containing the parameters of the generated grid.</span>
+0034 <span class="comment">%                       --&gt; [float] area: area of the grid in square meters {m^2}</span>
+0035 <span class="comment">%                       --&gt; [int]   noStrips: number of strips that covers the polygon</span>
+0036 <span class="comment">%                       --&gt; [float] distanceOverPath: distance travelled to cover the area of the polygon {m^2}</span>
+0037 <span class="comment">%                       --&gt; [struct] Path: struct containing the coordinates of the waypoints that define the grid.</span>
+0038 <span class="comment">%                               ---&gt; [float] x: vector of Eastings of the waypoints in UTM {m}</span>
+0039 <span class="comment">%                               ---&gt; [float] y: vector of Northings of the waypoints in UTM {m}</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%       -&gt; [struct] outerBox: structure containing the external bounds used as auxiliary</span>
+0042 <span class="comment">%       material to compute the grid</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%                   --&gt; [float] TopRight: vector of UTM coordinates of the top right corner of the</span>
+0045 <span class="comment">%                   --&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%                   --&gt; [float] TopLeft:  vector of UTM coordinates of the top left corner of the</span>
+0048 <span class="comment">%                   --&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%                   --&gt; [float] BottomRight: vector of UTM coordinates of the bottom right corner of</span>
+0051 <span class="comment">%                   --&gt; the rectangle that circumbscribes the polygon plus more {m}</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%                   --&gt; [float] BottomLeft: vector of UTM coordinates of the bottom left corner of the</span>
+0054 <span class="comment">%                   --&gt; rectangle that circumbscribes the polygon plus more {m}</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%                   --&gt; [float] Width: width of the rectangle that circumbscribes the polygon plus more {m}</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">%                   --&gt; [float] Height: height of the rectangle that circumbscribes the polygon plus</span>
+0059 <span class="comment">%                   --&gt; more {m}</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%                   --&gt; [float] vertex: matrix of vertices of the bounding box plus more {m}</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%                   --&gt; [float] WPaux: matrix of waypoints of the external grid covering the bounding</span>
+0064 <span class="comment">%                   --&gt; box plus more {m}</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">%       -&gt; [struct] polyBounds: it is a structure (optional) containing the following fields:</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">%                   --&gt; [float] TopLeft: vector containing the coordinates of the top left corner of</span>
+0069 <span class="comment">%                   --&gt; the polygon {m}</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">%                   --&gt; [float] TopRight: vector containing the coordinates of the top right corner of</span>
+0072 <span class="comment">%                   --&gt; the polygon {m}</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">%                   --&gt; [float] BottomLeft: vector containing the coordinates of the bottom left corner</span>
+0075 <span class="comment">%                   --&gt; of the polygon {m}</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">%                   --&gt; [float] BottomRight: vector containing the coordinates of the bottom right</span>
+0078 <span class="comment">%                   --&gt; corner of the polygon {m}</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">%                   --&gt; [float] diagDist: diagonal distance of the rectangle circumbscribing the</span>
+0081 <span class="comment">%                   --&gt; polygon {m}</span>
+0082 <span class="comment">%</span>
+0083 <span class="comment">%                   --&gt; [float] midWidth: half the width of the rectangle circumbscribing the polygon</span>
+0084 <span class="comment">%                   --&gt; {m}</span>
+0085 <span class="comment">%</span>
+0086 <span class="comment">%                   --&gt; [float] midHeight: half the height of the rectangle circumbscribing the polygon</span>
+0087 <span class="comment">%                   --&gt; {m}</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">%                   --&gt; [float] vertex: matrix containing the coordinates of the polygon's vertices</span>
+0090 <span class="comment">%                   --&gt; 'closed' (the last coordinate of the vertices and the first are the same one)</span>
+0091 <span class="comment">%                   --&gt; {m}</span>
+0092 <span class="comment">%</span>
+0093 <span class="comment">%                   --&gt; [float] Width: width of the rectangle that circumbscribes the polygon {m}</span>
+0094 <span class="comment">%</span>
+0095 <span class="comment">%                   --&gt; [float] Height: height of the rectangle that circumbscribes the polygon {m}</span>
+0096 <span class="comment">%</span>
+0097 <span class="comment">%                   --&gt; [float] Rectvertex: matrix containing the coordinates of the polygon's Bounding</span>
+0098 <span class="comment">%                   --&gt; Box vertices 'closed' (the last coordinate of the vertices and the first are the</span>
+0099 <span class="comment">%                   --&gt; same one) {m}</span>
+0100 <span class="comment">%</span>
+0101 <span class="comment">%                   --&gt; [float] polyCenter: centroid of the polygon, vector containing x and y</span>
+0102 <span class="comment">%                   --&gt; coordinates {m}</span>
+0103 <span class="comment">%</span>
+0104 <span class="comment">%                   --&gt; [float] minAngle: angle of rotation of the polygon of the polygon's vertices</span>
+0105 <span class="comment">%                   --&gt;(a.c.sorted) {deg}</span>
+0106 <span class="comment">%       -&gt; [int] Zone: UTM zone</span>
+0107 <span class="comment">%       -&gt; [char] Band: UTM Band</span>
+0108 <span class="comment">%</span>
+0109 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0110 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0111 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0112 <span class="comment">%   ** @date 14/03/2017</span>
+0113 <span class="comment">%   ** @version 1.2</span>
+0114 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0115 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0116 [inputs, statusParse] = <a href="parseInputs.html" class="code" title="function [parsedInputs, status] = parseInputs( log, inputs, camerasSet )">parseInputs</a>(log, inputs, camerasSet);
+0117 
+0118 
+0119 <span class="keyword">if</span> statusParse == 1
+0120    
+0121     <span class="comment">% Do computing stuff</span>
+0122     
+0123     <span class="comment">% First get UTM coordinates.</span>
+0124     
+0125     [x, y, Zone, Band] = <a href="geoToUTM.html" class="code" title="function [ X, Y, varargout ] = geoToUTM( lat, lon, aprr )">geoToUTM</a>(polygon(1,:), polygon(2,:));
+0126     
+0127     <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[1] Projectiong into UTM coordinates'</span>, 1);
+0128     
+0129     polygon(1,:) = x;
+0130     polygon(2,:) = y;
+0131     
+0132     
+0133     <span class="comment">% Then, camera parameters</span>
+0134     
+0135     <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[2] Obtaining photogrametry flight params'</span>, 1);
+0136     
+0137     [ photoParams ] = <a href="getFlightPhotoParams.html" class="code" title="function [ photoParams ] = getFlightPhotoParams( camera, cameraPos, detSize, nPx, overlap, sidelap)">getFlightPhotoParams</a>( camerasSet(inputs.selCamera), inputs.cameraPos, <span class="keyword">...</span>
+0138         inputs.detSize, inputs.nPx, inputs.overlap, inputs.sidelap);
+0139 
+0140     <span class="comment">% Now, compute the grid</span>
+0141     
+0142     <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[3] Grid computations beginning'</span>, 1);
+0143     
+0144     cryteria = <span class="string">'MinD'</span>;
+0145     
+0146     <span class="keyword">switch</span>(inputs.startPos)
+0147         
+0148         <span class="keyword">case</span> 1
+0149             start = <span class="string">'TopRight'</span>;
+0150             
+0151         <span class="keyword">case</span> 2
+0152             start = <span class="string">'TopLeft'</span>;
+0153         
+0154         <span class="keyword">case</span> 3
+0155             start = <span class="string">'BottomRight'</span>;
+0156         
+0157         <span class="keyword">case</span> 4
+0158             start = <span class="string">'BottomLeft'</span>;
+0159     <span class="keyword">end</span>
+0160 
+0161     
+0162     <span class="keyword">try</span>
+0163         
+0164     [ Grid, flagComp, outerBox, PolyBounds ] = <a href="computeGrid.html" class="code" title="function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )">computeGrid</a>( polygon, photoParams, start, cryteria );
+0165     
+0166     <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[4] Grid computations finished'</span>, 0);
+0167     
+0168     <span class="keyword">catch</span>
+0169         
+0170         flagComp = -1;
+0171         Grid = struct([]);
+0172         outerBox = struct([]);
+0173         PolyBounds = struct([]);
+0174         
+0175     <span class="keyword">end</span>
+0176     
+0177 <span class="keyword">end</span>
+0178 
+0179 <span class="comment">% If computing stuff OK, do displayingStuff</span>
+0180 <span class="keyword">switch</span>(flagComp)
+0181     
+0182     <span class="keyword">case</span> -1
+0183     
+0184         results = struct([]);
+0185         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log,<span class="string">''</span>,0)
+0186         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------FATAL ERROR------ Some parameters lead to incoherent grid formulation (grid does not intersect with polygon), please check sidelap and/or detection size and or starting position'</span>, 0);
+0187         ok = 0;
+0188     
+0189     <span class="keyword">case</span> 0
+0190     
+0191         results = struct([]);
+0192         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log,<span class="string">''</span>,0)
+0193         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------FATAL ERROR------ Sidelap value is not enough to cover all the polygon area, please try with another value'</span>, 0);    
+0194         ok = 0;
+0195 
+0196     <span class="keyword">case</span> 1
+0197     
+0198         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------EVENT------ Grid OK!'</span>, 0);  
+0199         ok = 1;
+0200         
+0201     <span class="keyword">case</span> 2
+0202         
+0203         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------WARNING------ Grid checks not succeeded, area might not be 100 % covered'</span>, 0);  
+0204         
+0205         ok = 1;
+0206         
+0207     <span class="keyword">otherwise</span>
+0208                      
+0209         results = struct([]);
+0210         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log,<span class="string">''</span>,0)
+0211         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------FATAL ERROR------ Unknown error in computeGrid. Please contact with support for more info'</span>, 0);
+0212         ok = 0;
+0213         
+0214         
+0215 <span class="keyword">end</span>
+0216         
+0217  <span class="keyword">if</span> ok == 1                            
+0218 
+0219         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Flight Altitude: %2.2f [m]'</span>, photoParams.flyAlt), 1);
+0220         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Flight Distance: %2.2f [m]'</span>, Grid.distanceOverPath), 1);
+0221         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Area of the polygon: %2.2f [m^2]'</span>, Grid.area), 1);
+0222         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Sidelap: %i [%%]'</span>, inputs.sidelap), 1);
+0223         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Number of lines: %i'</span>, Grid.noStrips), 1);
+0224         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Separation between lines: %2.2f [m]'</span>, photoParams.A), 1);    
+0225         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Image Height (on ground): %2.2f [m]'</span>, photoParams.mHeight), 1);
+0226         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'--DATA--&gt; Image Width (on ground): %2.2f [m]'</span>, photoParams.mWidth), 0);
+0227 
+0228 
+0229 
+0230         axes(display.plot) 
+0231         cla(display.plot)
+0232         hold(display.plot,<span class="string">'on'</span>);
+0233         axis on
+0234 
+0235         set(display.plot, <span class="string">'Color'</span>, [0.8 0.8 0.8]);
+0236 
+0237          display.plot.XMinorGrid = <span class="string">'on'</span>;
+0238          display.plot.YMinorGrid = <span class="string">'on'</span>;
+0239 
+0240         <span class="comment">% Plot the polygon</span>
+0241 
+0242         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[5] Displaying Polygon'</span>, 1);
+0243         hPoly = plot(PolyBounds.vertex(:,1), PolyBounds.vertex(:,2),<span class="string">'b--*'</span>, <span class="string">'linewidth'</span>,3, <span class="string">'markersize'</span>, 10,<span class="string">'Markerfacecolor'</span>, <span class="string">'b'</span>);
+0244         hold on
+0245         
+0246         hBBox = plot(PolyBounds.Rectvertex(:,1), PolyBounds.Rectvertex(:,2),<span class="string">'--*'</span>,<span class="string">'Color'</span>, [0.4118 0.5725 1], <span class="string">'linewidth'</span>,3, <span class="string">'markersize'</span>, 10,<span class="string">'Markerfacecolor'</span>, [0.4118 0.5725 1]);
+0247 
+0248         <span class="comment">% Plot the final grid</span>
+0249 
+0250         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[6] Displaying final grid over polygon'</span>, 1);
+0251 
+0252         hGrid = plot(Grid.Path.x, Grid.Path.y, <span class="string">'-s'</span>,<span class="string">'Color'</span>,[0 0.8 0], <span class="string">'linewidth'</span>, 3, <span class="string">'Markersize'</span>, 10, <span class="string">'markerfacecolor'</span>, [0 0.8 0]);
+0253 
+0254 
+0255         <span class="comment">% plot the outerBox</span>
+0256         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[7] Displaying Outer Box'</span>, 1);
+0257 
+0258         hOutBox(1) = line([outerBox.BottomLeft(1) outerBox.BottomRight(1)], [outerBox.BottomLeft(2) <span class="keyword">...</span>
+0259             outerBox.BottomRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,[0.0314 0.8118 1.0000], <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);             
+0260         
+0261         hold on
+0262         hOutBox(2) = line([outerBox.TopLeft(1) outerBox.TopRight(1)], [outerBox.TopLeft(2) <span class="keyword">...</span>
+0263             outerBox.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,[0.0314 0.8118 1.0000], <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0264 
+0265         hOutBox(3) = line([outerBox.BottomLeft(1) outerBox.TopLeft(1)], [outerBox.BottomLeft(2) <span class="keyword">...</span>
+0266             outerBox.TopLeft(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,[0.0314 0.8118 1.0000], <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0267 
+0268         hOutBox(4) = line([outerBox.BottomRight(1) outerBox.TopRight(1)], [outerBox.BottomRight(2) <span class="keyword">...</span>
+0269             outerBox.TopRight(2)], <span class="string">'linewidth'</span>, 3, <span class="string">'Color'</span>,[0.0314 0.8118 1.0000], <span class="string">'LineStyle'</span>, <span class="string">'--'</span>);
+0270 
+0271         <span class="comment">% Plot the outer grid Waypoints</span>
+0272         hold on
+0273 
+0274         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[8] Displaying Outer Box Grid'</span>, 1);
+0275         hGridBox = plot(outerBox.WPaux(:,1), outerBox.WPaux(:,2), <span class="string">'-o'</span>, <span class="string">'Color'</span>, [0.4667 0.6745 0.3373], <span class="string">'linewidth'</span>, 2,<span class="string">'MarkerSize'</span>,10, <span class="string">'MarkerFaceColor'</span>, [0.4667 0.6745 0.3373]);
+0276 
+0277         <span class="comment">% Plot the start position</span>
+0278        
+0279         <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'[9] Displaying Start Position'</span>, 0);
+0280 
+0281         hStart = plot(Grid.Path.x(1), Grid.Path.y(1), <span class="string">'k-x'</span>, <span class="string">'linewidth'</span>, 3, <span class="string">'Markersize'</span>, 10, <span class="string">'markerfacecolor'</span>, <span class="string">'k'</span>);
+0282 
+0283         xlabel(<span class="string">'Easting [m]'</span>);
+0284         ylabel(<span class="string">'Northing [m]'</span>);
+0285 
+0286         legend([hPoly hBBox hGrid hOutBox(1) hGridBox hStart ],<span class="string">'Polygon'</span>, <span class="string">'Polgon Bounding Box'</span>, <span class="string">'Grid over polygon'</span>,<span class="string">'Outer Box'</span>, <span class="keyword">...</span>
+0287             <span class="string">'Grid over outer Box'</span>, <span class="string">'Start position'</span>, <span class="string">'Location'</span>, <span class="string">'SouthEast'</span>);
+0288 
+0289         legend HIDE
+0290 
+0291         hold off
+0292         hold(display.plot,<span class="string">'off'</span>)
+0293 
+0294         set(display.pol,<span class="string">'Value'</span>,1);
+0295         set(display.bbox,<span class="string">'Value'</span>,1);
+0296         set(display.grid,<span class="string">'Value'</span>,1);
+0297         set(display.obox,<span class="string">'Value'</span>,1);
+0298         set(display.ogrid,<span class="string">'Value'</span>,1);
+0299         set(display.start,<span class="string">'Value'</span>,1);
+0300 
+0301 
+0302         results.photoParams = photoParams;
+0303         results.Grid = Grid;
+0304         results.PolyBounds = PolyBounds;
+0305         results.outerBox = outerBox;
+0306         results.Zone = Zone(1);
+0307         results.Band = Band(1);
+0308 
+0309         handGraphics.hOutBox = hOutBox;
+0310         handGraphics.hPoly = hPoly;
+0311         handGraphics.hBBox = hBBox;
+0312         handGraphics.hGridBox = hGridBox;
+0313         handGraphics.hGrid = hGrid;
+0314         handGraphics.hStart = hStart;
+0315 
+0316         results.handGraphics = handGraphics;
+0317         
+0318    
+0319 <span class="keyword">end</span>
+0320 <span class="keyword">end</span>
+0321</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

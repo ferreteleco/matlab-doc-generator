@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Cameras>
+  <Camera>
+    <name>multiarchivo demo</name>
+    <flen>5</flen>
+    <imgh>3456</imgh>
+    <imgw>4608</imgw>
+    <senh>4.62</senh>
+    <senw>6.16</senw>
+    </Camera>
+  </Cameras>

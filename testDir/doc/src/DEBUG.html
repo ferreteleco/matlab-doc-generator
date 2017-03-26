@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DEBUG</title>
+  <meta name="keywords" content="DEBUG">
+  <meta name="description" content="@desc Script used for debugging o the ComputeGrid and gridInspector functions">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; DEBUG.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>DEBUG
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>@desc Script used for debugging o the ComputeGrid and gridInspector functions</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">   @desc Script used for debugging o the ComputeGrid and gridInspector functions
+%--------------------------------------------------------------------------------------------------
+   @author Andres Ferreiro Gonzalez (@aferreiro)
+   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)
+   @date 14/03/17
+   @version 1.0
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getEnvelope.html" class="code" title="function [ env ] = getEnvelope( vertex )">getEnvelope</a>	getEnvelope gets the rectangle surronding the polygon specified by vertex.</li><li><a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>	getPolyArea returns the area of a polygon.</li><li><a href="rotatePolygon.html" class="code" title="function [ rotPol ] = rotatePolygon( vertex, center, angle )">rotatePolygon</a>	rotatePolygon performs a rotation of the polygon specified by angle arround specified center.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%   @desc Script used for debugging o the ComputeGrid and gridInspector functions</span>
+0002 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0003 <span class="comment">%   @author Andres Ferreiro Gonzalez (@aferreiro)</span>
+0004 <span class="comment">%   @company Galician Research and Development Center in Advanced Telecommunications (GRADIANT)</span>
+0005 <span class="comment">%   @date 14/03/17</span>
+0006 <span class="comment">%   @version 1.0</span>
+0007 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0008 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0009 polygon = [539859.168 539935.677 539971.455 539924.661 ; 4687039.661 4687029.326 4687035.254 4687101.229 ];
+0010 
+0011 
+0012 <span class="comment">% Coordinates that define the vertics of the polygon</span>
+0013 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0014 polyx = polygon(1,:);
+0015 polyy = polygon(2,:);
+0016 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0017 
+0018 <span class="comment">% 1. Boundaries of the polygon</span>
+0019 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0020 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0021 
+0022 <span class="comment">%   a. Get convex hull</span>
+0023 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0024 <span class="comment">% It uses http://www.qhull.org/</span>
+0025 k = convhull(polyx, polyy);
+0026 
+0027 <span class="comment">% Clockwise order for vertex</span>
+0028 k = flipud(k);
+0029 
+0030 vertex = [polyx(k)', polyy(k)'];
+0031 
+0032 vertex = [[vertex(:,1);vertex(1,1)] [vertex(:,2);vertex(1,2)]];
+0033 
+0034 <span class="comment">% % Do Debug</span>
+0035 <span class="comment">% plot(vertex(:,1), vertex(:,2),'r')</span>
+0036 
+0037 <span class="comment">%    b. Get centroid</span>
+0038 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0039 <span class="comment">% Ref. ArcGIS http://foro.gabrielortiz.com/index.asp?Topic_ID=5168</span>
+0040 
+0041 <span class="comment">% Area of the polygon</span>
+0042 [ A ] = <a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>( vertex(:,1), vertex(:,2) );
+0043 
+0044 x_center = abs(1/(6*A)*sum((vertex(1:end-1,1) + vertex(2:<span class="keyword">end</span>,1)).*(vertex(1:end-1,1).*vertex(2:<span class="keyword">end</span>,2) - vertex(2:<span class="keyword">end</span>,1).*vertex(1:end-1,2))));
+0045 y_center = abs(1/(6*A)*sum((vertex(1:end-1,2) + vertex(2:<span class="keyword">end</span>,2)).*(vertex(1:end-1,1).*vertex(2:<span class="keyword">end</span>,2) - vertex(2:<span class="keyword">end</span>,1).*vertex(1:end-1,2))));
+0046 
+0047 <span class="comment">% % Do Debug</span>
+0048 <span class="comment">% plot(vertex(:,1), vertex(:,2),'r')</span>
+0049 <span class="comment">% hold on</span>
+0050 <span class="comment">% plot(cx, cy,'bx', 'MarkerSize', 8)</span>
+0051 
+0052 <span class="comment">% c. Compute Smallest Surrounding Rectangle</span>
+0053 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0054 <span class="comment">% Ref: https://sourceforge.net/p/opencarto/code/HEAD/tree/trunk/server/src/main/java/org/opencarto/algo/base/SmallestSurroundingRectangle.java#l41</span>
+0055 <span class="comment">% and https://es.mathworks.com/matlabcentral/answers/93554-how-can-i-rotate-a-set-of-points-in-a-plane-by-a-certain-angle-about-an-arbitrary-point</span>
+0056 
+0057 minArea = 9999999999999;
+0058 minAngle = 0;
+0059 
+0060 ssr = zeros(4,2);
+0061 
+0062 ci = vertex(1,:);
+0063 
+0064 <span class="keyword">for</span> ii = 1 : length(vertex(:,1))-1
+0065    
+0066     cii = vertex(ii+1,:);
+0067     
+0068     angle = atan2d(cii(2) - ci(2), cii(1) - ci(1));
+0069     
+0070     [ rotPol ] = <a href="rotatePolygon.html" class="code" title="function [ rotPol ] = rotatePolygon( vertex, center, angle )">rotatePolygon</a>( vertex, [x_center y_center], -angle );
+0071     
+0072     rect = <a href="getEnvelope.html" class="code" title="function [ env ] = getEnvelope( vertex )">getEnvelope</a>(rotPol);
+0073     
+0074     [ area ] = <a href="getPolyArea.html" class="code" title="function [ area ] = getPolyArea( vertex, coord )">getPolyArea</a>( rect );
+0075     
+0076     <span class="keyword">if</span> area &lt; minArea
+0077         
+0078         ssr = rect;
+0079         minArea = area;
+0080         minAngle = angle;        
+0081     <span class="keyword">end</span>
+0082     
+0083     ci = cii;
+0084 <span class="keyword">end</span>
+0085 
+0086 ssr = <a href="rotatePolygon.html" class="code" title="function [ rotPol ] = rotatePolygon( vertex, center, angle )">rotatePolygon</a>( ssr, [x_center y_center], minAngle );
+0087 
+0088 <span class="comment">% Do Debug</span>
+0089 plot(ssr(:,1), ssr(:,2))
+0090 hold on
+0091 plot(vertex(:,1), vertex(:,2),<span class="string">'r'</span>)
+0092 plot(cx, cy,<span class="string">'bx'</span>, <span class="string">'MarkerSize'</span>, 8)
+0093 
+0094 
+0095 
+0096 <span class="comment">% %  Draw large bounding box:</span>
+0097 <span class="comment">%</span>
+0098 <span class="comment">% N = 100;</span>
+0099 <span class="comment">%</span>
+0100 <span class="comment">% xstart = 0;</span>
+0101 <span class="comment">% ystart = 0;</span>
+0102 <span class="comment">%</span>
+0103 <span class="comment">% xlen = N;</span>
+0104 <span class="comment">% ylen = N;</span>
+0105 <span class="comment">%</span>
+0106 <span class="comment">% rectangle('position', [xstart, ystart, xlen, ylen])</span>
+0107 <span class="comment">%</span>
+0108 <span class="comment">% % Draw smaller boxes</span>
+0109 <span class="comment">% dx = 1;</span>
+0110 <span class="comment">% dy = 1;</span>
+0111 <span class="comment">%</span>
+0112 <span class="comment">% nx = floor(xlen/dx);</span>
+0113 <span class="comment">% ny = floor(ylen/dy);</span>
+0114 <span class="comment">%</span>
+0115 <span class="comment">% for i = 1:nx</span>
+0116 <span class="comment">%     x = xstart + (i-1)*dx;</span>
+0117 <span class="comment">%     for j = 1:ny</span>
+0118 <span class="comment">%</span>
+0119 <span class="comment">%         color = [rand(1,1) rand(1,1) rand(1,1)];</span>
+0120 <span class="comment">%         y = ystart + (j-1)*dy;</span>
+0121 <span class="comment">%         rectangle('position', [x, y, dx, dy], 'FaceColor', color)</span>
+0122 <span class="comment">%     end</span>
+0123 <span class="comment">% end</span>
+0124 <span class="comment">%</span>
+0125 <span class="comment">%</span></pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

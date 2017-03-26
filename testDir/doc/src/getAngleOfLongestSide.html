@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getAngleOfLongestSide</title>
+  <meta name="keywords" content="getAngleOfLongestSide">
+  <meta name="description" content="getAngleOfLongestSide gets the angle of the longest side of a plygon defined by its">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; getAngleOfLongestSide.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getAngleOfLongestSide
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>getAngleOfLongestSide gets the angle of the longest side of a plygon defined by its</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ angleLS, distLS, index ] = getAngleOfLongestSide( lats, lons, mode ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">getAngleOfLongestSide gets the angle of the longest side of a plygon defined by its
+vertices.
+   
+%--------------------------------------------------------------------------------------------------   
+   @desc Computes the bearing of a poygon's longest face. 
+
+   Supports the use of vectors in latitude and longitude coordinates.
+   
+%--------------------------------------------------------------------------------------------------   
+   The inputs for this function are:
+   
+   - @iparam [float] lats: vector of latitudes or Northings {deg. or m}
+   - @iparam [float] lons: vector of longitudes or Eastings {deg. or m}
+   
+   - @iparam [String] mode: string that specifies the coordinates to be used in the
+   calculations. (Optional) Values:
+       -&gt; 'Geo': Geographical coordinates, decimal deg. (default) 
+       -&gt; 'UTM': UTM coordinates
+   
+%--------------------------------------------------------------------------------------------------
+   The outputs for this function are:
+ 
+   - @oparam [float] angleLS: angle of the longest side {deg}
+   - @oparam [float] distLS: length of the longest side {m}
+   - @oparam [int] index: index of the initial position of the longest side of the polygon 
+   
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 28/02/2017
+   ** @version 1.2
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>	getBearing gets the bearing between two locations.</li><li><a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>	getDistance returns the distance between two locations in the suface of the Earth.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeGrid.html" class="code" title="function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )">computeGrid</a>	computeGrid computes the grid required to cover the specified polygon.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ angleLS, distLS, index ] = getAngleOfLongestSide( lats, lons, mode )</a>
+0002 <span class="comment">%getAngleOfLongestSide gets the angle of the longest side of a plygon defined by its</span>
+0003 <span class="comment">%vertices.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0006 <span class="comment">%   @desc Computes the bearing of a poygon's longest face.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Supports the use of vectors in latitude and longitude coordinates.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0011 <span class="comment">%   The inputs for this function are:</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   - @iparam [float] lats: vector of latitudes or Northings {deg. or m}</span>
+0014 <span class="comment">%   - @iparam [float] lons: vector of longitudes or Eastings {deg. or m}</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   - @iparam [String] mode: string that specifies the coordinates to be used in the</span>
+0017 <span class="comment">%   calculations. (Optional) Values:</span>
+0018 <span class="comment">%       -&gt; 'Geo': Geographical coordinates, decimal deg. (default)</span>
+0019 <span class="comment">%       -&gt; 'UTM': UTM coordinates</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0022 <span class="comment">%   The outputs for this function are:</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%   - @oparam [float] angleLS: angle of the longest side {deg}</span>
+0025 <span class="comment">%   - @oparam [float] distLS: length of the longest side {m}</span>
+0026 <span class="comment">%   - @oparam [int] index: index of the initial position of the longest side of the polygon</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0029 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0030 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0031 <span class="comment">%   ** @date 28/02/2017</span>
+0032 <span class="comment">%   ** @version 1.2</span>
+0033 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0034 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0035 
+0036 <span class="keyword">if</span> nargin &lt; 2
+0037     
+0038         error(<span class="string">'Not enough input arguments. Type &quot;help getAngleOfLongestSide&quot; in the command prompt for more info about function usage.'</span>);
+0039         
+0040 <span class="keyword">elseif</span> nargin &gt; 3
+0041     
+0042             error(<span class="string">'Too many input arguments. Type &quot;help getAngleOfLongestSide&quot; in the command prompt for more info about function usage.'</span>);
+0043             
+0044 <span class="keyword">elseif</span> nargin == 2
+0045     
+0046     mode = <span class="string">'Geo'</span>;
+0047             
+0048 <span class="keyword">end</span>
+0049 
+0050 angleLS = 0;
+0051 distLS = 0;
+0052 
+0053 index = 0;
+0054 
+0055 <span class="keyword">switch</span>(mode)
+0056     
+0057     <span class="keyword">case</span> <span class="string">'Geo'</span>
+0058                 
+0059         <span class="keyword">for</span> ii = 2 : length(lats)
+0060 
+0061             tdist = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(lats(ii-1), lons(ii-1), lats(ii), lons(ii), <span class="string">'Hav2'</span>);
+0062 
+0063             <span class="keyword">if</span> tdist &gt;= distLS
+0064 
+0065                 angleLS = <a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>(lats(ii-1), lons(ii-1), lats(ii), lons(ii),<span class="string">'Geo'</span>);
+0066                 index = ii-1;
+0067 
+0068             <span class="keyword">end</span>
+0069 
+0070         <span class="keyword">end</span>
+0071     
+0072     <span class="keyword">case</span> <span class="string">'UTM'</span>
+0073         
+0074         <span class="keyword">for</span> ii = 2 : length(lats)
+0075 
+0076             tdist = <a href="getDistance.html" class="code" title="function [ d ] = getDistance(Y0, X0, Y1, X1, method)">getDistance</a>(lats(ii-1), lons(ii-1), lats(ii), lons(ii), <span class="string">'Pyt'</span>);
+0077 
+0078             <span class="keyword">if</span> tdist &gt; distLS
+0079 
+0080                 angleLS = <a href="getBearing.html" class="code" title="function [ bearing ] = getBearing( lat0, lon0, lat1, lon1, mode )">getBearing</a>(lats(ii-1), lons(ii-1), lats(ii), lons(ii),<span class="string">'UTM'</span>);
+0081                 distLS = tdist;
+0082                 index = ii-1;
+0083 
+0084             <span class="keyword">end</span>
+0085 
+0086         <span class="keyword">end</span>
+0087                    
+0088     <span class="keyword">otherwise</span>
+0089         
+0090        error(<span class="string">'Unrecognized coordinates mode. Type &quot;help getAngleOfLongestSide&quot; in the command prompt for more info about function usage'</span>);
+0091 
+0092 <span class="keyword">end</span>
+0093</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

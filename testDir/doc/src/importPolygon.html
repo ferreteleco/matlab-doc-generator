@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of importPolygon</title>
+  <meta name="keywords" content="importPolygon">
+  <meta name="description" content="importPolygon gets polygon boundaries from the file specified in path.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">src</a> &gt; importPolygon.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>importPolygon
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>importPolygon gets polygon boundaries from the file specified in path.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [ polygon, status ] = importPolygon( log, Path ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">importPolygon gets polygon boundaries from the file specified in path.
+   
+%--------------------------------------------------------------------------------------------------
+   @desc Gets polygon boundaries from the file specified in path. Supports the use of kml
+   generated files and .poly files (Mission Planner).
+
+   TAKE CARE!!: decimal degrees format.
+%--------------------------------------------------------------------------------------------------
+   The inputs for this function are:
+
+   - @iparam [graphics handle] log: handle of log console 
+   - @iparam [String] Path: Path to polygon file
+   
+%--------------------------------------------------------------------------------------------------
+   The outputs of this function are:
+   
+   - @oparam [float] polygon: matrix with lats, lons and alts in rows {deg}
+   - @oparam [int] status: flag that indicates if everithing went fine (1) or not (-1)
+
+%--------------------------------------------------------------------------------------------------
+   ** @author Andrés Ferreiro González (@aferreiro)
+   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)
+   ** @date 14/03/2017
+   ** @version 1.0
+%--------------------------------------------------------------------------------------------------
+%%-------------------------------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>	updateLog updates the console log in the GridInspector Window.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="gridInspector.html" class="code" title="function varargout = gridInspector(varargin)">gridInspector</a>	gridInspector MATLAB code for gridInspector.fig</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ polygon, status ] = importPolygon( log, Path )</a>
+0002 <span class="comment">%importPolygon gets polygon boundaries from the file specified in path.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0005 <span class="comment">%   @desc Gets polygon boundaries from the file specified in path. Supports the use of kml</span>
+0006 <span class="comment">%   generated files and .poly files (Mission Planner).</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   TAKE CARE!!: decimal degrees format.</span>
+0009 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0010 <span class="comment">%   The inputs for this function are:</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   - @iparam [graphics handle] log: handle of log console</span>
+0013 <span class="comment">%   - @iparam [String] Path: Path to polygon file</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0016 <span class="comment">%   The outputs of this function are:</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   - @oparam [float] polygon: matrix with lats, lons and alts in rows {deg}</span>
+0019 <span class="comment">%   - @oparam [int] status: flag that indicates if everithing went fine (1) or not (-1)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0022 <span class="comment">%   ** @author Andrés Ferreiro González (@aferreiro)</span>
+0023 <span class="comment">%   ** @company Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</span>
+0024 <span class="comment">%   ** @date 14/03/2017</span>
+0025 <span class="comment">%   ** @version 1.0</span>
+0026 <span class="comment">%%--------------------------------------------------------------------------------------------------</span>
+0027 <span class="comment">%%%-------------------------------------------------------------------------------------------------</span>
+0028 
+0029 <span class="keyword">if</span> nargin &lt; 1
+0030     
+0031         error(<span class="string">'Not enough input arguments. Type &quot;help importPolygon&quot; in the command prompt for more info about function usage.'</span>);
+0032         
+0033 <span class="keyword">elseif</span> nargin &gt; 2
+0034     
+0035         error(<span class="string">'Too many input arguments. Type &quot;help importPolygon&quot; in the command prompt for more info about function usage.'</span>);
+0036             
+0037 <span class="keyword">end</span>
+0038 
+0039 lats = [];
+0040 lons = [];
+0041 elevs = [];
+0042 
+0043 <span class="keyword">try</span>
+0044     
+0045     tokens = strsplit(Path,<span class="string">'.'</span>);
+0046     
+0047     <span class="keyword">switch</span>(tokens{end})
+0048         
+0049         <span class="keyword">case</span>'kml'  <span class="comment">% if it's a kml file, we get the values</span>
+0050     
+0051             <span class="comment">% First, open file and dump it on memory</span>
+0052 
+0053             fileID = fopen(Path,<span class="string">'r'</span>);
+0054 
+0055             s = textscan(fileID, <span class="string">'%s'</span>, <span class="string">'delimiter'</span>, <span class="string">'\n'</span>); 
+0056             cell = strcat(s{1});
+0057 
+0058             fclose(fileID);
+0059 
+0060             <span class="comment">% Then index of tags (&lt;Point&gt; and &lt;/Point&gt;)</span>
+0061             IPoint = strfind(cell, <span class="string">'&lt;Placemark&gt;'</span>);
+0062             IndexPoint = find(not(cellfun(<span class="string">'isempty'</span>, IPoint)));  
+0063 
+0064             ISlashPoint = strfind(cell, <span class="string">'&lt;/Placemark&gt;'</span>);
+0065             IndexSlashPoint = find(not(cellfun(<span class="string">'isempty'</span>, ISlashPoint)));  
+0066 
+0067             <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0068 
+0069             <span class="comment">% Import coordinates for each waypoint</span>
+0070             <span class="keyword">for</span> ii = 1 : length(IndexPoint)
+0071 
+0072             pointstr = strcat(cell{IndexPoint(ii):IndexSlashPoint(ii)});
+0073 
+0074                 <span class="keyword">if</span> (isempty(strfind(pointstr, <span class="string">'&lt;name&gt;WP H'</span>)) &amp;&amp; isempty(strfind(pointstr, <span class="string">'&lt;name&gt;WPs&lt;/name&gt;'</span>))<span class="keyword">...</span>
+0075                         &amp;&amp; isempty(strfind(pointstr, <span class="string">'&lt;name&gt;onground&lt;/name&gt;'</span>)))  <span class="comment">% If it's not a 'Home' Waypoint</span>
+0076 
+0077                     coordindex = strfind(pointstr,<span class="string">'&lt;coordinates&gt;'</span>);
+0078                     coordslashindex = strfind(pointstr,<span class="string">'&lt;/coordinates&gt;'</span>);
+0079 
+0080                     str = pointstr(coordindex+13:coordslashindex-1);
+0081 
+0082                     spltstr = strsplit(str,<span class="string">','</span>);
+0083 
+0084                     lats = [lats str2double(spltstr{1,2}) ];
+0085                     lons = [lons str2double(spltstr{1,1}) ];
+0086                     elevs = [elevs str2double(spltstr{1,3}) ];
+0087 
+0088                 <span class="keyword">end</span>
+0089 
+0090             <span class="keyword">end</span>
+0091             
+0092             status = 1;
+0093             polygon = [ lats;lons;elevs];
+0094     
+0095         <span class="keyword">case</span> <span class="string">'poly'</span>        <span class="comment">% .poly file</span>
+0096     
+0097              <span class="comment">% First, open file and dump it on memory</span>
+0098 
+0099             fileID = fopen(Path,<span class="string">'r'</span>);
+0100 
+0101             s = textscan(fileID, <span class="string">'%s'</span>, <span class="string">'delimiter'</span>, <span class="string">'\n'</span>); 
+0102             cell = strcat(s{1});
+0103 
+0104             fclose(fileID);
+0105 
+0106             <span class="keyword">for</span> ll = 2 : length(cell)
+0107 
+0108                 line = strrep(cell{ll}, <span class="string">','</span>, <span class="string">'.'</span>);
+0109                 spltstr = strsplit(line, <span class="string">' '</span>);
+0110 
+0111                 lats = [lats str2double(spltstr{1,1}) ];
+0112                 lons = [lons str2double(spltstr{1,2}) ];
+0113 
+0114             <span class="keyword">end</span>
+0115 
+0116             elevs = zeros(1,length(lats));
+0117             
+0118             status = 1;
+0119             polygon = [ lats;lons;elevs];
+0120         
+0121         <span class="keyword">otherwise</span>
+0122                         
+0123             <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, sprintf(<span class="string">'------FATAL ERROR------ Unsupported file extension (.%s)'</span>, tokens{end}), 0);
+0124             polygon = [];
+0125             status = -1;
+0126     <span class="keyword">end</span>
+0127 <span class="keyword">catch</span>
+0128     
+0129     status = -1;
+0130     polygon = [];
+0131     
+0132     <a href="updateLog.html" class="code" title="function updateLog( log, strin, multiline )">updateLog</a>(log, <span class="string">'------FATAL ERROR------ The polygon file is not well constructed, please check it'</span>,0);
+0133     
+0134 <span class="keyword">end</span>
+0135 <span class="keyword">end</span>
+0136</pre></div>
+<hr><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
