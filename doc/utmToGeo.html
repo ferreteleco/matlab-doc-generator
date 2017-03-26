@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeGrid</title>
+  <meta name="keywords" content="utmToGeo">
+  <meta name="description" content="utmToGeo transforms the input UTM projection to its geographical coordinates.  ">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="" content="PyMDoc documentation generator for Matlab v1.0 &copy; 2017 Andres Ferreiro">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="..\doc\utils/style.css">
+</head>
+<body>
+<a name="_top"></a>
+<header><center><img src="..\doc\utils\logo_POLARYS.png" alt="Project Logo" style="width:10%;height:10%;"></center> 
+  <br><strong>POLARYS PROJECT</strong></br>
+  </header>
+  <nav>
+    
+    <a href="..\doc\computeeeGrid.html">..\doc\computeeeGrid</a>
+    
+    <a href="..\doc\computeGrid.html">..\doc\computeGrid</a>
+    
+    <a href="..\doc\DEBUG.html">..\doc\DEBUG</a>
+    
+    <a href="..\doc\dumpToFile.html">..\doc\dumpToFile</a>
+    
+    <a href="..\doc\exportKML.html">..\doc\exportKML</a>
+    
+    <a href="..\doc\findLineIntersection.html">..\doc\findLineIntersection</a>
+    
+    <a href="..\doc\findLineIntersectionTest.html">..\doc\findLineIntersectionTest</a>
+    
+    <a href="..\doc\Fotogrametry.html">..\doc\Fotogrametry</a>
+    
+    <a href="..\doc\geoToUTM.html">..\doc\geoToUTM</a>
+    
+    <a href="..\doc\getAngleOfLongestSide.html">..\doc\getAngleOfLongestSide</a>
+    
+    <a href="..\doc\getBearing.html">..\doc\getBearing</a>
+    
+    <a href="..\doc\getDistance.html">..\doc\getDistance</a>
+    
+    <a href="..\doc\getEnvelope.html">..\doc\getEnvelope</a>
+    
+    <a href="..\doc\getFlightPhotoParams.html">..\doc\getFlightPhotoParams</a>
+    
+    <a href="..\doc\getPolyArea.html">..\doc\getPolyArea</a>
+    
+    <a href="..\doc\getPolyBounds.html">..\doc\getPolyBounds</a>
+    
+    <a href="..\doc\getPolyCenter.html">..\doc\getPolyCenter</a>
+    
+    <a href="..\doc\gridInspector.html">..\doc\gridInspector</a>
+    
+    <a href="..\doc\importCameras.html">..\doc\importCameras</a>
+    
+    <a href="..\doc\importPolygon.html">..\doc\importPolygon</a>
+    
+    <a href="..\doc\launchFlightPlan.html">..\doc\launchFlightPlan</a>
+    
+    <a href="..\doc\newPos.html">..\doc\newPos</a>
+    
+    <a href="..\doc\onComputeClick.html">..\doc\onComputeClick</a>
+    
+    <a href="..\doc\parseInputs.html">..\doc\parseInputs</a>
+    
+    <a href="..\doc\resetAll.html">..\doc\resetAll</a>
+    
+    <a href="..\doc\rotatePolygon.html">..\doc\rotatePolygon</a>
+    
+    <a href="..\doc\updateLog.html">..\doc\updateLog</a>
+    
+    <a href="..\doc\utmToGeo.html">..\doc\utmToGeo</a>
+    
+  </nav>
+<article>
+<div><a href="../index.html">Home</a>\<a href="index.html">..\doc</a>\utmToGeo.m</div>
+<h1><strong>Function:</strong> utmToGeo <img alt="^" border="0" src="..\doc\utils/matlabicon.gif"></h1>
+
+<h2><a name="_toc"></a>Table of Contents: </h2>
+<ul list-style-type="none">
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_summary">Summary</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_usage">Function usage</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_description">Description</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_IO">I/O parameters</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_iparams">Input parameters</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_oparams">output parameters</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_cri">Cross-reference Information</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_usedby">Used by</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_uses">Uses</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_misc">Miscellaneous information</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_author">Author</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_version">Current Version</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_date">Date</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_company">Company</a></li>
+    <li><img alt="^" border="0" src="..\doc\utils/info.png"><a href="#_code">Source Code</a></li>
+</ul>
+
+<h2><a name="_summary"></a>Summary. <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+<div class="box"><strong>transforms the input UTM projection to its geographical coordinates.  </strong></div>
+
+<h2><a name="_usage"></a>Function usage: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+<div class="box"><strong>[ lat, lon ] = utmToGeo( X, Y, Zone, Band, aprr ) </strong></div>
+
+<h2><a name="_description"></a>Description: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+<div class="box">Transforms the input UTM projection (needed zone and band) to its geographical coordinates.<br><br>The default datum used for calculations is the WGS-84 but support for more datums<br>could be developed in future releases.<br><br>The bounds for the UTM projection are +-180 degrees in longitude and +-84 degrees in<br>latitude.<br><br>Supports the use of vectors in the parameters X and Y, but both UTM Zone and Band have<br>to be the same for all the coordinates.<br></div>
+
+<h2><a name="_IO"></a>I/O parameters: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+
+<h3><a name="_iparams"></a>Input parameters: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h3>
+<div class="box"><pre class="comment"> Here are the parameters used as inputs for this function:
+  
+      <li>[<b><FONT color="#0000FF">float</FONT></b>] <b>X:</b> UTM Easting {<u>m</u>}</li>
+  
+      <li>[<b><FONT color="#0000FF">float</FONT></b>] <b>Y:</b> UTM Northing {<u>m</u>}</li>
+  
+      <li>[<b><FONT color="#0000FF">int</FONT></b>] <b>Zone:</b> Zone of the UTM Projection (<i>1 to 60</i>)</li>
+  
+      <li>[<b><FONT color="#0000FF">char</FONT></b>] <b>Band:</b> Band of the  UTM Projection (<i>C to X</i>)
+</li>
+  
+      <li>[<b><FONT color="#0000FF">String</FONT></b>] <b>aprr:</b> string that defines the form of expansion of the meridian on the
+ellipsoid. (<i>Optional</i>) <b>Values:</b>
+		 <b>'Kraw':</b> Krakiwsky approximation (<i>default</i>)
+		 <b>'Hinks':</b> Hinks approximation
+		 <b>'Helm':</b> Helmert approximation
+</li>
+  
+</pre></div>
+
+<h3><a name="_oparams"></a>Output parameters: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h3>
+<div class="box"><pre class='comment'> Here are the parameters used as inputs for this function:
+  
+      <li>[<b><FONT color="#0000FF">float</FONT></b>] <b> lat</b>:  latitude obtained {<u>deg</u>}</li>
+  
+      <li>[<b><FONT color="#0000FF">float</FONT></b>] <b> lon</b>:  longitude obtained {<u>deg</u>}
+</li>
+  
+</pre></div>
+
+<h2><a name="_cri"></a>Cross-reference information: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+
+<h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h3>
+<div class="box">
+  <ul list-style-type="none">
+  
+  <li><img alt="^" border="0" src="..\doc\utils/matlabicon.gif"> exportKML</li>
+  
+</ul>
+</div>
+
+<h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h3>
+<div class="box">
+  <ul list-style-type="none">
+  
+  </ul>
+</div>
+<h2><a name="_misc"></a>Miscelaneous information: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+<ul>
+  <li><a name="_author"></a><strong>Author: </strong> Andrés Ferreiro González (@aferreiro)</li>
+  <li><a name="_version"></a><strong>Version: </strong> 1.1</li>
+  <li><a name="_date"></a><strong>Date: </strong>16/02/2017</li>
+  <li><a name="_company"></a><strong>Company: </strong> Galician Research And Development Center In Advanced Telecommunications (GRADIANT)</a></li>
+</ul>
+
+<h2><a name="_code"></a>Source Code: <a href="#_top"><img alt="^" border="0" src="..\doc\utils/up.png"></a></h2>
+<div class="box"><pre class="comment">
+      
+</pre></div>
+</article>
+<footer><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
+</body>
+</html>

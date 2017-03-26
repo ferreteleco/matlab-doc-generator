@@ -1,4 +1,4 @@
-function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos, cryteria )
+function [ Grid, flag, varargout ] = computeeeGrid( polygon, photoParams, StartPos, cryteria )
 %computeGrid computes the grid required to cover the specified polygon. 
 %
 %%--------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos
 %%--------------------------------------------------------------------------------------------------
 %   The outputs for this function are:
 %
-%   - @oparam [struct] Grid: structure containing the parameters of the generated grid
+%   - @oparam [struct] Grid: structure containing the parameters of the generated grid:
 %
 %       -> [float] area: area of the grid in square meters {m^2}
 %       -> [int]   noStrips: number of strips that covers the polygon
@@ -55,7 +55,7 @@ function [ Grid, flag, varargout ] = computeGrid( polygon, photoParams, StartPos
 %               --> [float] y: vector of Northings of the waypoints in UTM {m}
 %
 %   - @oparam [int] flag: it indicates whether the computed grid  is correct (1) for the
-%     given polygon, or has warnings (2) or it is not correct (0)
+%     given polygon, or has warnings (2) or it is not correct(0).
 %
 %   - @oparam [struct] externalBounds: structure containing the external bounds used as
 %   auxiliary material to compute the grid (optional)

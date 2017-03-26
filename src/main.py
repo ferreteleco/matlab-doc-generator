@@ -15,12 +15,14 @@ def main():
 
     start = time.time()
     pathvar = "..\\testDir"
+    outputdir = "..\\doc"
     var = 'mfiles'
 
     try:
 
-        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, recur=True, appendcode=True,
-                                                            usage=True, verbose=True)
+        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, outputdir, recur=True,
+                                                            appendcode=False, usage=True,
+                                                            verbose=True)
 
     except KeyError:
 

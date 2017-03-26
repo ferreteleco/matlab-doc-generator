@@ -1,9 +1,8 @@
 import os
 import os.path
 from docGeneratorClasses import *
+from generateDoc import generatedoc
 import itertools
-import re
-import jinja2
 
 
 # @desc Here the .m files will be allocated prior to opean each one and get the parameters
@@ -19,7 +18,7 @@ import jinja2
 # @date 20/03/17
 # @version 1.3
 ###
-def formatlabfiles(pathvar, recur=False, appendcode=False, usage=False, verbose=False):
+def formatlabfiles(pathvar, outputdir, recur=False, appendcode=False, usage=False, verbose=False):
     if verbose:
         print('\nEVENT!!!! Beginning process...\n')
         print('Step 1) Searching in directories:\n')
@@ -63,65 +62,8 @@ def formatlabfiles(pathvar, recur=False, appendcode=False, usage=False, verbose=
                                                      appendcode=appendcode, usage=usage,
                                                      verbose=verbose)
 
-    # DoDebug
-    for fun in listoffunctions:
-        print(fun.name)
-        print(fun.version)
-        print(fun.uses)
-        if fun.name == 'computeGrid':
-            print('\n'.join(fun.usedby))
-            print('\n'.join(fun.uses))
-        # print(fun.date)
-        # print(fun.author)
-        # print(fun.summ)
-        # print(fun.desc)
-        # for param in fun.oparams:
-        #     print('[', param.typ, ']', param.name)
-        #     print('\n'.join(param.desc))
-
-    listmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
-
-    # The search path can be used to make finding templates by
-    #   relative paths much easier.  In this case, we are using
-    #   absolute paths and thus set it to the filesystem root.
-    templateloader = jinja2.FileSystemLoader(searchpath="./")
-    # An environment provides the data necessary to read and
-    #   parse our templates.  We pass in the loader object here.
-    templateenv = jinja2.Environment(loader=templateloader)
-
-    # This constant string specifies the template file we will use.
-    template_file = "./templates/functionTemplate.jinja"
-
-    # Read the template file using the environment object.
-    # This also constructs our Template object.
-    template = templateenv.get_template(template_file)
-
-    templatevars = {"name": listmod[0].name,
-                    "project_name": "POLARYS PROJECT",
-                    "dir": chainofdirs[0],
-                    "summary": listmod[0].summ,
-                    "usage": listmod[0].usage,
-                    "description": listmod[0].desc,
-                    "iparam": listmod[0].iparams,
-                    "oparam": listmod[0].oparams,
-                    "usedby": listmod[0].usedby,
-                    "uses": listmod[0].uses,
-                    }
-
-    outputtext = template.render(templatevars)
-
-    with open("my_new_file.html", "w") as fh:
-        fh.write(outputtext)
-
-    fh.close()
-
-    # # DoDebug
-    # for fun in listmod:
-    #     print(fun.name)
-    #     print(fun.author)
-    #     for param in fun.oparams:
-    #         print('[', param.typ, ']', param.name)
-    #         print('\n'.join(param.desc))
+    generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, appendcode=appendcode,
+                verbose=verbose)
 
 
 # @desc Here there will be a loop over all .m files for getting the information of them
@@ -211,7 +153,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
             fun = __parsemfunct(chunks, verbose=verbose)
             fun.name = fil[0:len(fil) - 2]
 
-            if appendcode:
+            if appendcode or usage:
                 fun.addcode(code)
 
             listoffunctions.append(fun)
@@ -224,56 +166,6 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
                                                       verbose=verbose)
 
     return listoffunctions, listofscripts
-
-
-# This function adds highlighting and font color for types found in parameters description of the
-# function or class given lists
-##
-# @iparam listin
-# @iparam which
-# @iparam verbose
-##
-# @oparam modifiedlist
-##
-# @author Andres Ferreiro Gonzalez
-# @company Own
-# @date 23/03/17
-# @version 1.1
-def __preformparameters(listin, which='...', verbose=False):
-    if verbose:
-        print('Step 4) Preformatting ', which, ' parameters description...\n', sep='')
-
-    for index, clas in enumerate(listin):
-
-        if verbose:
-            print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name,
-                  '...', sep='')
-
-        for oparam in clas.oparams:
-            for idx, line in enumerate(oparam.desc):
-                p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-                linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
-                linemod = p.sub(r'{<u>\1</u>}', linemod)
-                p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
-                linemod = p.sub(r'(<i>\1</i>)', linemod)
-                p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
-                linemod = p.sub(r'<b>\1:</b>', linemod)
-                oparam.desc[idx] = linemod
-
-        for iparam in clas.iparams:
-            for idx, line in enumerate(iparam.desc):
-                p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-                linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
-                linemod = p.sub(r'{<u>\1</u>}', linemod)
-                p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
-                linemod = p.sub(r'(<i>\1</i>)', linemod)
-                p = re.compile('( [a-zA-Z\'\d]* ):', re.VERBOSE)
-                linemod = p.sub(r'<b>\1:</b>', linemod)
-                iparam.desc[idx] = linemod
-
-    return listin
 
 
 # @desc This function checks if the usage between functions and scripts, as 'mutual calls'

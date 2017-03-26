@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeGrid</title>
   <meta name="keywords" content="{{fun.name}}">
-  <meta name="description" content="{{fun.name}} {{fun.summ}}">
+  <meta name="description" content="{{fun.name}}">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="" content="PyMDoc documentation generator for Matlab v1.0 &copy; 2017 Andres Ferreiro">
   <meta name="robots" content="index, follow">
@@ -25,26 +25,20 @@
 <h1><strong>Function:</strong> {{fun.name}} <img alt="^" border="0" src="{{style}}/matlabicon.gif"></h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
-<ul list-style-type="none">
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_summary">Summary</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_usage">Function usage</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_description">Description</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_IO">I/O parameters</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_iparams">Input parameters</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_oparams">output parameters</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_cri">Cross-reference Information</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_usedby">Used by</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_uses">Uses</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_misc">Miscellaneous information</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_author">Author</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_version">Current Version</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_date">Date</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_company">Company</a></li>
-    <li><img alt="^" border="0" src="{{style}}/info.png"><a href="#_code">Source Code</a></li>
-</ul>
+<ul style="list-style-image:url({{style}}/info.png)">
+  <li><a href="#_usage">Function usage</a></li>
+  <li><a href="#_description">Description</a></li>
+  <li><a href="#_cri">Cross-reference Information</a></li>
+  <li><a href="#_usedby">Used by</a></li>
+  <li><a href="#_uses">Uses</a></li>
+  <li><a href="#_misc">Miscellaneous information</a></li>
+  <li><a href="#_author">Author</a></li>
+  <li><a href="#_version">Current Version</a></li>
+  <li><a href="#_date">Date</a></li>
+  <li><a href="#_company">Company</a></li>
+  <li><a href="#_code">Source Code</a></li>
 
-<h2><a name="_summary"></a>Summary. <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
-<div class="box"><strong>{{fun.summ}}</strong></div>
+</ul>
 
 <h2><a name="_usage"></a>Function usage: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <div class="box"><strong>{{fun.usage}} </strong></div>
@@ -52,38 +46,22 @@
 <h2><a name="_description"></a>Description: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <div class="box">{{fun.desc.replace('\n', '<br>')}}</div>
 
-<h2><a name="_IO"></a>I/O parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
-
-<h3><a name="_iparams"></a>Input parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
-<div class="box"><pre class="comment"> Here are the parameters used as inputs for this function:
-  {% for item in fun.iparams %}
-      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}:</b> {{'\n'.join(item.desc)}}</li>
-  {% endfor %}
-</pre></div>
-
-<h3><a name="_oparams"></a>Output parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
-<div class="box"><pre class='comment'> Here are the parameters used as inputs for this function:
-  {% for item in fun.oparams %}
-      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
-  {% endfor %}
-</pre></div>
-
 <h2><a name="_cri"></a>Cross-reference information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 
 <h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
-  <ul list-style-type="none">
+  <ul style="list-style-image:url({{style}}/matlabicon.gif)">
   {% for item in fun.usedby %}
-  <li><img alt="^" border="0" src="{{style}}/matlabicon.gif"> {{item}}</li>
+  <li>{{item}}</li>
   {% endfor %}
 </ul>
 </div>
 
 <h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
-  <ul list-style-type="none">
+  <ul style="list-style-image:url({{style}}/matlabicon.gif)">
   {% for item in fun.uses %}
-  <li><img alt="^" border="0" src="{{style}}/matlabicon.gif"> {{item}}</li>
+  <li>{{item}}</li>
   {% endfor %}
   </ul>
 </div>
