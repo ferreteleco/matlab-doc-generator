@@ -18,10 +18,11 @@ import itertools
 # @date 20/03/17
 # @version 1.3
 ###
-def formatlabfiles(pathvar, outputdir, recur=False, appendcode=False, usage=False, verbose=False):
-    if verbose:
-        print('\nEVENT!!!! Beginning process...\n')
-        print('Step 1) Searching in directories:\n')
+def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur=False,
+                   appendcode=False, usage=False, verbose=False):
+
+    print('\nEVENT!!!! Beginning process...\n')
+    print('Step 1) Searching in directories:\n')
 
     chainoffiles = []  # Array that will store the list of files
     chainofdirs = []  # Array that will store the paths of the files in chainOfFiles
@@ -58,11 +59,13 @@ def formatlabfiles(pathvar, outputdir, recur=False, appendcode=False, usage=Fals
               len(set(chainofdirs)), ' directories\n', sep='')
 
     # Once fetching finishes, begin scanning files
-    listoffunctions, listofscripts = __scanformfiles(chainoffiles, chainofdirs,
-                                                     appendcode=appendcode, usage=usage,
-                                                     verbose=verbose)
+    listoffunctions, listofscripts, listofclasses = __scanformfiles(chainoffiles, chainofdirs,
+                                                                    appendcode=appendcode,
+                                                                    usage=usage,
+                                                                    verbose=verbose)
 
-    generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, appendcode=appendcode,
+    generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
+                projectlogopath=projectlogo, projectname=projectname, appendcode=appendcode,
                 verbose=verbose)
 
 
@@ -80,14 +83,16 @@ def formatlabfiles(pathvar, outputdir, recur=False, appendcode=False, usage=Fals
 # @version 1.1
 ###
 def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False):
-    if verbose:
-        print('Step 2) Loading files to memory:\n')
+
+    print('Step 2) Loading files to memory:\n')
 
     index = 0
     # List of 'function' objects
     listoffunctions = []
     # List of 'script' objects
     listofscripts = []
+    # List of 'script' objects
+    listofclasses = []
 
     # Loop over all previously fetched files
     for fil in chainoffiles:
@@ -105,6 +110,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 
         ind = 0
         isscript = False
+        isclass = False
         isheader = True
 
         for line in fileid:
@@ -114,8 +120,18 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
                 # Check if its a script or not
                 if ind == 0:
 
-                    if '@desc' in line:
+                    if 'classdef' in line:
+                        isclass = True
+                        isscript = False
+
+                    elif '@desc' in line:
                         isscript = True
+                        isclass = False
+
+                    else:
+
+                        isscript = False
+                        isclass = False
 
                     ind += 1
 
@@ -147,6 +163,17 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 
             listofscripts.append(scr)
 
+        elif isclass:
+
+            # Parse each function header
+            cla = __parsemclass(chunks, verbose=verbose)
+            cla.name = fil[0:len(fil) - 2]
+
+            if appendcode or usage:
+                cla.addcode(code)
+
+            listofclasses.append(cla)
+
         else:
 
             # Parse each function header
@@ -162,32 +189,34 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
         print('\nEVENT!!!! Loading process finished\n')
 
     if usage:
-        listoffunctions, listofscripts = __checkusage(listoffunctions, listofscripts,
-                                                      verbose=verbose)
+        listoffunctions, listofscripts, listofclasses = __checkusage(listoffunctions, listofscripts,
+                                                                     listofclasses, verbose=verbose)
 
-    return listoffunctions, listofscripts
+    return listoffunctions, listofscripts, listofclasses
 
 
 # @desc This function checks if the usage between functions and scripts, as 'mutual calls'
 ##
 # @iparam listoffunctions
 # @iparam listofscripts
+# @iparam listofclasses
 # @iparam verbose
 ##
 # @oparam listoffunctions
 # @oparam listofscripts
+# @oparam listofclasses
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.0
+# @version 1.1
 ###
-def __checkusage(listoffunctions, listofscripts, verbose=False):
-    merged = listoffunctions + listofscripts
+def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False):
+    merged = listoffunctions + listofscripts + listofclasses
     ind = 0
 
     if verbose:
-        print('Step 3) Checking mutual ussage among ', len(merged), ' files:\n', sep='')
+        print('\t- Checking mutual ussage among ', len(merged), ' files:\n', sep='')
         ind = 0
 
     for x, y in itertools.permutations(merged, 2):
@@ -204,9 +233,13 @@ def __checkusage(listoffunctions, listofscripts, verbose=False):
         print('\nEVENT!!!! All combinations between files checked\n')
 
     listoffunctions = merged[0:len(listoffunctions)]
-    listofscripts = merged[len(listoffunctions):len(merged)]
+    listofscriptstmp = merged[len(listoffunctions):len(listoffunctions)+len(listofscripts)]
+    listofclassestmp = merged[len(listoffunctions)+len(listofscripts):]
 
-    return listoffunctions, listofscripts
+    listofscripts = listofscriptstmp
+    listofclasses = listofclassestmp
+
+    return listoffunctions, listofscripts, listofclasses
 
 
 # This function parses the lines in the input list for a script file
@@ -310,7 +343,7 @@ def __parsemscript(chunks, verbose=False):
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.0
+# @version 1.1
 ###
 def __parsemfunct(chunks, verbose=False):
     # 'Function' object definition
@@ -429,6 +462,152 @@ def __parsemfunct(chunks, verbose=False):
                               'forward')
                     continue
     return fun
+
+
+# This function parses the lines in the input list for a class file
+# @iparam chunks
+# @iparams verbose
+##
+# @author Andres Ferreiro Gonzalez
+# @company Own
+# @date 27/03/17
+# @version 1.0
+###
+def __parsemclass(chunks, verbose=False):
+
+    # 'Class' object definition
+    cls = ClassDefinition()
+    # Current state, used for multi-line fields
+    current = 'classdef'
+
+    if verbose:
+        print('\t- Parsing...')
+
+    # Loop through the lines of the header searching for predefined tags and storing the relevant
+    # information in a 'class' object
+    for line in chunks:
+
+        line = line.replace('\n', ' ')
+
+        if current == 'classdef':
+
+            token = line[line.find('classdef') + 9:len(line)].strip()
+
+            cls.usage = token
+
+            current = '@summ'
+
+        elif current == '@summ':
+
+            token = line.split(' ', 1)
+
+            cls.updatesumm(''.join(token[1:len(token)]))
+
+            current = '@summn'
+
+        elif '@desc' in line:
+
+            token = line[line.find('@desc') + 5:len(line)].strip()
+
+            cls.updatedesc(token)
+
+            current = '@desc'
+
+        elif '@ref' in line:
+
+            token = line[line.find('@ref') + 4:len(line)].strip()
+
+            cls.addref(token)
+
+            current = '@ref'
+
+        elif '@method' in line:
+
+            token = line[line.find('@method') + 8:len(line)].strip()
+
+            cls.addmethod(token)
+
+            current = '@method'
+
+        elif '@event' in line:
+
+            token = line[line.find('@event') + 7:len(line)].strip()
+
+            cls.addevent(token)
+
+            current = '@event'
+
+        elif '@attribute' in line:
+
+            token = line[line.find('@attribute') + 11:len(line)].strip()
+
+            cls.addattribute(token)
+
+            current = '@attribute'
+
+        elif '@property' in line:
+
+            token = line[line.find('@property') + 9:len(line)].strip()
+
+            cls.addproperty(token)
+
+            current = '@property'
+
+        elif '@author' in line:
+
+            token = line[line.find('@author') + 7:len(line)].strip()
+
+            cls.author = token
+
+            current = '@author'
+
+        elif '@company' in line:
+
+            token = line[line.find('@company') + 8:len(line)].strip()
+
+            cls.company = token
+
+            current = '@company'
+
+        elif '@date' in line:
+
+            token = line[line.find('@date') + 5:len(line)].strip()
+
+            cls.date = token
+
+            current = '@date'
+
+        elif '@version' in line:
+
+            token = line[line.find('@version') + 8:len(line)].strip()
+
+            cls.version = token
+
+            current = '@version'
+
+        elif '%%' in line:
+
+            current = '%%'
+
+        else:
+
+            token = line[1:len(line) - 1].strip()
+
+            if current != '%%':
+
+                try:
+
+                    ({'@summn': cls.updatesumm, '@desc': cls.updatedesc, '@ref': cls.addref,
+                      '@method': cls.updatemethod, '@property': cls.updateproperty, '@attribute':
+                      cls.updateattribute, '@event': cls.updateevent}[current])(token)
+
+                except KeyError:
+
+                    if verbose:
+                        print('Error during parse of last highlighed file, skipping it and moving '
+                              'forward')
+                    continue
+    return cls
 
 
 # Junk function, ignore

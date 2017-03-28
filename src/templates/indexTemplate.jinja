@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeGrid</title>
+  <meta name="keywords" content="{{project_name}}">
+  <meta name="description" content="{{project_name}}">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="" content="PyMDoc documentation generator for Matlab v1.0 &copy; 2017 Andres Ferreiro">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="{{style}}/style.css">
+</head>
+<body>
+<a name="_top"></a>
+<header>{% if project_logo %}<center><img src="{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+  <br><strong>{{project_name}}</strong></br>
+  {% endif %}</header>
+<article class="ind">
+<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index</strong></h1>
+<h2><a name="_toc"></a>Documented functions: </h2>
+<ul style="list-style:none">
+  {% for fun in functions %}
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
+    {% endfor %}
+</ul>
+<h2><a name="_toc"></a>Documented scripts: </h2>
+<ul style="list-style:none">
+  {% for scr in scripts %}
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
+    {% endfor %}
+</ul>
+<h2><a name="_toc"></a>Documented classes: </h2>
+<ul style="list-style:none">
+    {% for cls in classes %}
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
+    {% endfor %}
+</ul>
+</article>
+<footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
+</body>
+</html>

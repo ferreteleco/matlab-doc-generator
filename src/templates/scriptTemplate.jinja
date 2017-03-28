@@ -12,7 +12,7 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="{{project_logo}}" alt="Project Logo" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+<header>{% if project_logo %}<center><img src="{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
   <br><strong>{{project_name}}</strong></br>
   {% endif %}</header>
   <nav>
@@ -21,27 +21,21 @@
     {% endfor %}
   </nav>
 <article>
-<div><a href="../index.html">Home</a>\<a href="index.html">{{dir}}</a>\{{fun.name}}.m</div>
-<h1><strong>Function:</strong> {{fun.name}} <img alt="^" border="0" src="{{style}}/matlabicon.gif"></h1>
-
+<div><a href="index.html">Home</a>\{{fun.name}}.m</div>
+<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Script:</strong> {{fun.name}}</h1>
 <h2><a name="_toc"></a>Table of Contents: </h2>
-<ul style="list-style-image:url({{style}}/info.png)">
-  <li><a href="#_usage">Function usage</a></li>
-  <li><a href="#_description">Description</a></li>
-  <li><a href="#_cri">Cross-reference Information</a></li>
-  <li><a href="#_usedby">Used by</a></li>
-  <li><a href="#_uses">Uses</a></li>
-  <li><a href="#_misc">Miscellaneous information</a></li>
-  <li><a href="#_author">Author</a></li>
-  <li><a href="#_version">Current Version</a></li>
-  <li><a href="#_date">Date</a></li>
-  <li><a href="#_company">Company</a></li>
-  <li><a href="#_code">Source Code</a></li>
-
+<ul style="list-style:none">
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_description">Description</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_cri">Cross-reference Information</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_usedby">Used by</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_uses">Uses</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_misc">Miscellaneous information</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_author">Author</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_version">Current Version</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_date">Date</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_company">Company</a></li>
+  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_code">Source Code</a></li>
 </ul>
-
-<h2><a name="_usage"></a>Function usage: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
-<div class="box"><strong>{{fun.usage}} </strong></div>
 
 <h2><a name="_description"></a>Description: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <div class="box">{{fun.desc.replace('\n', '<br>')}}</div>
@@ -50,18 +44,18 @@
 
 <h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
-  <ul style="list-style-image:url({{style}}/matlabicon.gif)">
+  <ul style="list-style:none">
   {% for item in fun.usedby %}
-  <li>{{item}}</li>
+  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{item}}.html"> {{item}}</a></li>
   {% endfor %}
 </ul>
 </div>
 
 <h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
-  <ul style="list-style-image:url({{style}}/matlabicon.gif)">
+  <ul style="list-style:none">
   {% for item in fun.uses %}
-  <li>{{item}}</li>
+  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href="{{item}}.html"> {{item}}</a></li>
   {% endfor %}
   </ul>
 </div>
@@ -74,10 +68,10 @@
 </ul>
 
 <h2><a name="_code"></a>Source Code: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
-<div class="box"><pre class="comment">
+<div class="box"><pre class="code">
       {{'\n'.join(code)}}
 </pre></div>
 </article>
-<footer><address>Generated on Sat 25-Mar-2017 19:17:00 by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
+<footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
 </body>
 </html>

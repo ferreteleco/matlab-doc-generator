@@ -22,16 +22,18 @@
   </nav>
 <article>
 <div><a href="index.html">Home</a>\{{fun.name}}.m</div>
-<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Function:</strong> {{fun.name}}</h1>
+<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Class:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
 <ul style="list-style:none">
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_summary">Summary</a></li>
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_usage">Function usage</a></li>
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_description">Description</a></li>
-    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_IO">I/O parameters</a></li>
-    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_iparams">Input parameters</a></li>
-    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_oparams">output parameters</a></li>
+    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_IO">Parameters</a></li>
+    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_attributes">Attributes</a></li>
+    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_methods">Methods</a></li>
+    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_events">Events</a></li>
+    <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_props">Properties</a></li>
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_cri">Cross-reference Information</a></li>
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_usedby">Used by</a></li>
     <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_uses">Uses</a></li>
@@ -52,18 +54,32 @@
 <h2><a name="_description"></a>Description: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <div class="box">{{fun.desc.replace('\n', '<br>')}}</div>
 
-<h2><a name="_IO"></a>I/O parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+<h2><a name="_IO"></a>Parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 
-<h3><a name="_iparams"></a>Input parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
-<div class="box"><pre class="comment"> Here are the parameters used as inputs for this function:
-  {% for item in fun.iparams %}
-      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}:</b> {{'\n'.join(item.desc)}}</li>
+<h3><a name="_attributes"></a>Attributes: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<div class="box"><pre class="comment">
+  {% for item in fun.attributes %}
+      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
   {% endfor %}
 </pre></div>
 
-<h3><a name="_oparams"></a>Output parameters: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
-<div class="box"><pre class='comment'> Here are the parameters used as inputs for this function:
-  {% for item in fun.oparams %}
+<h3><a name="_methods"></a>Methods: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<div class="box"><pre class="comment">
+  {% for item in fun.methods %}
+      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
+  {% endfor %}
+</pre></div>
+
+<h3><a name="_events"></a>Events: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<div class="box"><pre class="comment">
+  {% for item in fun.events %}
+      <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
+  {% endfor %}
+</pre></div>
+
+<h3><a name="_props"></a>Properties: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<div class="box"><pre class="comment">
+  {% for item in fun.properties %}
       <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
   {% endfor %}
 </pre></div>

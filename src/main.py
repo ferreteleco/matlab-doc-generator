@@ -1,27 +1,23 @@
-from scanFromFiles import *
+from scanFromFiles import formatlabfiles, forothers
 import time
-
-# TODO update the header in test files
-# TODO comment regex in scanFromFiles
-# TODO test all fields of lists
-# TODO HTML template Jinja2 http://kagerato.net/articles/software/libraries/jinja-quickstart.html
-# TODO Test With my own files in gridInspector
-# TODO reformat verbose to show better the infomation
-# TODO http://nuitka.net/pages/overview.html
-# TODO support for matlab classes
 
 
 def main():
 
     start = time.time()
     pathvar = "..\\testDir"
-    outputdir = "..\\doc"
+    outputdir = "G:\\Proyectos\\RepoWriteDoc\\doc"
+    projectlogopath = "..\\logo_POLARYS.png"
+    projectname = 'POLARYS PROJECT'
     var = 'mfiles'
 
     try:
 
-        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, outputdir, recur=True,
-                                                            appendcode=False, usage=True,
+        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, outputdir,
+                                                            projectlogo=projectlogopath,
+                                                            projectname=projectname,
+                                                            recur=True,
+                                                            appendcode=True, usage=True,
                                                             verbose=True)
 
     except KeyError:
