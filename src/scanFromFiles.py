@@ -608,9 +608,3 @@ def __parsemclass(chunks, verbose=False):
                               'forward')
                     continue
     return cls
-
-
-# Junk function, ignore
-#
-def forothers():
-    print('junk')

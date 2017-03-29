@@ -330,7 +330,7 @@ def __parsecode(inputcode):
 
         else:
 
-            p = re.compile('(?<!\'|\w|>)(\'  [^\']*  \')(?!\')', re.VERBOSE)
+            p = re.compile('(?<!\'|\w|>)(\'[^\']*\')(?!\')', re.VERBOSE)
             linemod = p.sub(r"<span class='string'>\1</span>", line)
 
             if '<span ' not in linemod:

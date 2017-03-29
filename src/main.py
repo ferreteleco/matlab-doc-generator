@@ -1,24 +1,29 @@
-from scanFromFiles import formatlabfiles, forothers
+from scanFromFiles import formatlabfiles
 import time
 
 
 def main():
 
     start = time.time()
+
+    # Inputs zone
+    #################################################################
     pathvar = "..\\testDir"
-    outputdir = "G:\\Proyectos\\RepoWriteDoc\\doc"
+    outputdir = "..\\doc"
     projectlogopath = "..\\logo_POLARYS.png"
     projectname = 'POLARYS PROJECT'
+    recur = True
+    appendcode = True
+    usage = True
+    verbose = True
+    #################################################################
+
     var = 'mfiles'
 
     try:
 
-        ({'mfiles': formatlabfiles, 'ker': forothers}[var])(pathvar, outputdir,
-                                                            projectlogo=projectlogopath,
-                                                            projectname=projectname,
-                                                            recur=True,
-                                                            appendcode=True, usage=True,
-                                                            verbose=True)
+        ({'mfiles': formatlabfiles}[var])(pathvar, outputdir, projectlogo=projectlogopath, projectname=projectname,
+                                          recur=recur, appendcode=appendcode, usage=usage, verbose=verbose)
 
     except KeyError:
 
