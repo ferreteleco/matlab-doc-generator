@@ -94,11 +94,12 @@ div.box {
 	border: 1px solid #575a60;
 	color: black;
 	padding: 4px;
-  word-wrap: break-word;
-  display:block;
-  overflow:auto;
-  font-family: Verdana,arial,sans-serif;
-  font-size: small;
+	word-wrap: break-word;
+    display:block;
+	overflow:auto;
+	font-family: Verdana,arial,sans-serif;
+	font-size: small;
+	font-weight: 500;
 }
 
 .comment {

@@ -5,23 +5,27 @@ This README is intended to summarize the development of the DocGenerator applica
 ### What is this repository for? ###
 
 * This repository will be used mainly or development purposes, but also as a way to distribute the application it i'm able to make it work.
-* 1.0 BETA
+* 1.1 BETA
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
-* For the moment (v1.0) it has to run from any Python IDE, like PyCharm or Spyder. Just run 'main.py' setting the correct values for the parameters in the variables section (Highlighted with comments)
+* For the moment (v1.0) it has to run from CMD. Just move to /src folder and run `'puyhon.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`		
+> -h -- Get usage hints CMD
+> -i -- Specify input directory (default) ./ 		
+> -o -- Specify output directory (default) ../doc 		
+> -l -- Specify path to project logo			
+> -n -- Specify project's name		
+> -r -- Perform recursive scan (check subdirectories)		
+> -u -- Check mutual ussage between files			
+> -c -- Append source code to documentation		
+> -v -- Verbose mode			
+
+NOTE: the specify paths without quotes!!
 
 * The configuration cannot be simpler:
-- The field 'pathvar' corresponds to a string that defines the path to the directory where the source code files are (top directory)
-- The field 'outputdir' corresponds to a string that defines the path of the directory where generated documentation shall be stored
-- The field 'projectlogopath' [optional] corresponds to a string that defines the path to the project's logo to be displayed in documentation
-- The field 'recur' [optional] is a bool that enables or disables the recursive search for files in directories below the specified one (subdirectories)
-- The field 'appendcode' [optional] is a bool that enables or disables the appending of source code to the generated documentation
-- The field 'usage' [optional] is a bool that enables or disables checking mutual usage between scanned files
-- The field 'verbose' [optional] is a bool that enables or disables the verbose mode
 
-* It uses the Python's libraries Jinja2 (for HTML templating), time (for execution time and dates), os (for path operations), itertools (for mutual usage checking), re (for regular expressions searching and substitution), copy2 (for copying single files) and copy_tree (for copying directories)
+It uses the Python's libraries Jinja2 (for HTML templating), time (for execution time and dates), os (for path operations), itertools (for mutual usage checking), re (for regular expressions searching and substitution), copy2 (for copying single files), copy_tree (for copying directories), sys (for command line arguments) and getopt (for argument parsing)
 
 ### What is the header the .m files has to have? ###
 
@@ -69,7 +73,7 @@ function [ nameofout1, nameofout2 ] = myfunc( namein1, namein2 )
 >%   -@author me			
 >%   -@company mine			
 >%   -@date 28/03/17			
->%   -@version 1.0			
+>%   -@version 1.1			
 >%%			
 >%%%			
 >			

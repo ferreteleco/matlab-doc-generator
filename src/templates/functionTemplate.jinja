@@ -12,7 +12,7 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+<header>{% if project_logo %}<center><img src="../{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
   <br><strong>{{project_name}}</strong></br>
   {% endif %}</header>
   <nav>
@@ -21,7 +21,7 @@
     {% endfor %}
   </nav>
 <article>
-<div><a href="index.html">Home</a>\{{fun.name}}.m</div>
+<div><a href="../index.html">Home</a>\{{fun.name}}.m</div>
 <h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Function:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
@@ -100,6 +100,6 @@
       {{'\n'.join(code)}}
 </pre></div>
 </article>
-<footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v1.0</a></strong> &copy; 2017</address></footer>
+<footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v{{version}}</a></strong> &copy; 2017</address></footer>
 </body>
 </html>

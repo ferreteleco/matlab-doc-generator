@@ -19,12 +19,14 @@ import time
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.1
+# @version 1.2
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=None, projectname=None, appendcode=False, verbose=False):
+                projectlogopath=None, projectname='', appendcode=False, verbose=False):
 
     print('Step 3) Beginning preformtting:\n')
+
+    ver = 1.1
 
     listfuncmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
     listclassmod = __preformparameters(listofclasses, which='classes', verbose=verbose)
@@ -40,6 +42,13 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
             print('\t- Creating output directory: ', outputdir, sep='')
 
         os.makedirs(outputdir)
+
+    if not os.path.exists(os.path.join(outputdir, "files")):
+
+        if verbose:
+            print('\t- Creating output directory: ', os.path.join(outputdir, "files"), sep='')
+
+        os.makedirs(os.path.join(outputdir, "files"))
 
     basedircss = os.path.join(outputdir, 'utils')
 
@@ -60,15 +69,20 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     copy_tree(fromdirectory, todirectory)
 
     # Copy project logo to output directory
+    if projectlogopath is not None:
 
-    if verbose:
-        print('\t- Copying project logo to destination directory.')
+        if verbose:
+            print('\t- Copying project logo to destination directory.')
 
-    copy2(projectlogopath, todirectory)
+        copy2(projectlogopath, todirectory)
 
-    filename = projectlogopath.split('\\')
+        filename = projectlogopath.split('\\')
 
-    projectlogo = os.path.join(basedircss, filename[len(filename)-1])
+        projectlogo = os.path.join("./utils", filename[len(filename)-1])
+
+    else:
+
+        projectlogo = ''
 
     outsnames = []
     outspath = []
@@ -79,7 +93,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     for namein in chainoffiles:
 
         outsnames.append(namein[0:-2])
-        outspath.append(os.path.join(outputdir, namein[0:-2]))
+        outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
 
     # Template loader for Jinja2 templates
     templateloader = jinja2.FileSystemLoader(searchpath="./templates/")
@@ -92,13 +106,14 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     # This also constructs our Template object.
     template = templateenv.get_template(template_file)
 
-    templatevars = {"project_name": "POLARYS PROJECT",
+    templatevars = {"project_name": projectname,
                     "project_logo": projectlogo,
-                    "style": basedircss,
+                    "style": "./utils",
                     "functions": listoffunctions,
                     "classes": listofclasses,
                     "date": time.strftime("%a %d/%m/%Y at %H:%S"),
-                    "scripts": listofscripts
+                    "scripts": listofscripts,
+                    "version": ver
                     }
     try:
 
@@ -163,12 +178,13 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
         templatevars = {"project_name": projectname,
                         "project_logo": projectlogo,
-                        "style": basedircss,
+                        "style": "../utils",
                         "pathslist": outsnames,
                         "dir": outputdir,
                         "fun": current,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),
-                        "code": code
+                        "code": code,
+                        "version": ver
                         }
         try:
 
@@ -316,7 +332,7 @@ def __preformparameters(listin, which='...', verbose=False):
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.0
+# @version 1.3
 def __parsecode(inputcode):
 
     parsedcode = []
@@ -331,7 +347,7 @@ def __parsecode(inputcode):
         else:
 
             p = re.compile('(?<!\'|\w|>)(\'[^\']*\')(?!\')', re.VERBOSE)
-            linemod = p.sub(r"<span class='string'>\1</span>", line)
+            linemod = p.sub(r'<span class="string">\1</span>', line)
 
             if '<span ' not in linemod:
 
@@ -360,9 +376,24 @@ def __parsecode(inputcode):
             if '% ' in linemod:
 
                 ind = linemod.index('% ')
-                linemod = linemod[0:ind]+linemod[ind:].replace('<span class="keyword">', '')\
-                    .replace('</span>', '')
-                linemod = linemod.replace('% ', '<span class="comm">% ', )+'</span>'
+                indspa = ind - ind
+
+                if '<span class="string">' in linemod:
+
+                    indspa = linemod.index('</span>')
+
+                if indspa < ind:
+
+                    linemod = linemod[indspa:ind]+linemod[ind:].replace('<span class="keyword">', '')\
+                        .replace('<span class="string">', '')
+                    linemod = linemod.replace('% ', '<span class="comm">% ')+'</span>'
+
+            elif '%%%' in linemod:
+
+                ind = linemod.index('%%%')
+                linemod = linemod[0:ind] + linemod[ind:].replace('<span class="keyword">', '') \
+                    .replace('<span class="string">', '')
+                linemod = linemod.replace('%%%', '<span class="comm">%%%')+'</span>'
 
             parsedcode.append(linemod)
 
