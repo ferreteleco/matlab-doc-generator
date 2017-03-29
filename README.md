@@ -26,110 +26,109 @@ This README is intended to summarize the development of the DocGenerator applica
 ### What is the header the .m files has to have? ###
 
 * For functions
-
-`function [ nameofout1, nameofout2 ] = myfunc( namein1, namein2 )`
-`%function summary of the function`
-`%`
-`%%`
-`%   -@desc here an extended description of the function. It supports multi line: Lorem ipsum dolor  `
-`% sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore     `
-`% magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip  `
-`% ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum   `
-`% dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa   `
-`% qui officia deserunt mollit anim id est laborum.`
-`%`
-`%%`
-`% -@ref www.reference1.be`
-`% -@ref www.refe2.be`
-`% -@ref references has to be single line ones`
-`%`
-`%%
-`%   The inputs for this funtion are:`
-`%`
-`%   -@iparam [type] namein1:Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do err `
-`%   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quisrrt `
-`%   nostrud`
-`%   -@iparam [type] nameofin1: description of out 2. If for example it's an struture, you can `
-`%     expand it:
-`%        -> [type] nameofstructfield1: description of field`
-`%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can`
-`%        -> continue this way`
-`%`
-`%%`
-`%   The outputs for this function are:`
-`%`
-`%   -@oparam [type] nameofout1: description`
-`%   -@oparam [type] nameofout2: description of out 2. If for example it's an struture, you can `
-`%     expand it:`
-`%        -> [type] nameofstructfield1: description of field`
-`%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can`
-`%        -> continue this way`
-`%`
-`%%`
-`%   -@author me`
-`%   -@company mine`
-`%   -@date 28/03/17`
-`%   -@version 1.0`
-`%%`
-`%%%`
-
+>
+function [ nameofout1, nameofout2 ] = myfunc( namein1, namein2 )
+>%function summary of the function
+>%
+>%%
+>%   -@desc here an extended description of the function. It supports multi line: Lorem ipsum dolor  
+>% sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore     
+>% magna aliqua. Ut enim ad minim veniam, quis nostrud xercitation ullamco laboris nisi ut aliquip  
+>% ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum    
+>% dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa   
+>% qui officia eserunt mollit anim id est laborum.
+>%
+>%%
+>% -@ref www.reference1.be
+>% -@ref www.refe2.be
+>% -@ref references has to be single line ones
+>%
+>%%
+>%   The inputs for this funtion are:
+>%
+>%   -@iparam [type] namein1:Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do err 
+>%   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quisrrt 
+>%   nostrud
+>%   -@iparam [type] nameofin1: description of out 2. If for example it's an struture, you can 
+>%     expand it:
+>%        -> [type] nameofstructfield1: description of field
+>%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can
+>%        -> continue this way
+>%
+>%%
+>%   The outputs for this function are:
+>%
+>%   -@oparam [type] nameofout1: description
+>%   -@oparam [type] nameofout2: description of out 2. If for example it's an struture, you can 
+>%     expand it:
+>%        -> [type] nameofstructfield1: description of field
+>%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can
+>%        -> continue this way
+>%
+>%%
+>%   -@author me
+>%   -@company mine
+>%   -@date 28/03/17
+>%   -@version 1.0
+>%%
+>%%%
+>
 * For classes
-
-`classdef myclass`
-`%myclass summary of the class`
-`%`
-`%%`
-`%   -@desc here an extended description of the function. It supports multi line: Lorem ipsum dolor `
-`% sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore `
-`% magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip `
-`% ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum `
-`% dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa `
-`% qui officia deserunt mollit anim id est laborum.`
-`%`
-`%%`
-`%   -@ref www.reference1.be`
-`%   -@ref www.refe2.be`
-`%   -@ref references has to be single line ones`
-`%`
-`%%`
-`%	  -@attribute name: value`
-`%`
-`%%`
-`%   -@method [void] getDate: onedue methods are called so often!`
-`%   -@method [type] method2: description of method 2. If for example returns an struture, you can `
-`%    expand it:`
-`%        -> [type] nameofstructfield1: description of field`
-`%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can`
-`%        -> continue this way. This struct field it's a struct itself, so:`
-`%            --> [type] stru1: description`
-`%            --> [type] stru2: description multi line Lorem ipsum dolor sit amet, consectetur`
-`%            --> adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna`
-`%            --> aliqua. Ut enim ad`
-`%`
-`%%`
-`%   -@property [int] dbg: sooo boring`
-`%   -@property [custom] me: the other is called dbg but it's a me, maario!!!`
-`%`
-`%%`
-`%   -@author me`
-`%   -@company mine`
-`%   -@date 28/03/17`
-`%   -@version 1.0`
-`%%`
-`%%%`
+>
+>classdef myclass
+>%myclass summary of the class
+>%
+>%%
+>%   -@desc here an extended description of the function. It supports multi line: Lorem ipsum dolor  
+>% sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore     
+>% magna aliqua. Ut enim ad minim veniam, quis nostrud >xercitation ullamco laboris nisi ut aliquip  
+>% ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+>%
+>%%
+>%   -@ref www.reference1.be
+>%   -@ref www.refe2.be
+>%   -@ref references has to be single line ones
+>%
+>%%
+>%	  -@attribute name: value
+>%
+>%%
+>%   -@method [void] getDate: onedue methods are called so often!
+>%   -@method [type] method2: description of method 2. If for example returns an struture, you can 
+>%    expand it:
+>%        -> [type] nameofstructfield1: description of field
+>%        -> [type] nameofstructfield2: description of field. In again its soooooooo long, you can
+>%        -> continue this way. This struct field it's a struct itself, so:
+>%            --> [type] stru1: description
+>%            --> [type] stru2: description multi line Lorem ipsum dolor sit amet, consectetur       
+>%            --> adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna      
+>%            --> aliqua. Ut enim ad
+>%
+>%%
+>%   -@property [int] dbg: sooo boring
+>%   -@property [custom] me: the other is called dbg but it's a me, maario!!!
+>%
+>%%
+>%   -@author me
+>%   -@company mine
+>%   -@date 28/03/17
+>%   -@version 1.0
+>%%
+>%%%
+>
 
 * For Scripts
-
-`%   -@desc Script used for whatever`
-`%`
-`%%`
-`%   -@author me`
-`%   -@company mine`
-`%   -@date 28/03/17`
-`%   -@version 1.0`
-`%`
-`%%`
-`%%%`
+>
+>%   -@desc Script used for whatever
+>%
+>%%
+>%   -@author me
+>%   -@company mine
+>%   -@date 28/03/17
+>%   -@version 1.0
+>%
+>%%
+>%%%
 
 ### In conclussion... ###
 
