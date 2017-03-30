@@ -10,7 +10,7 @@ This README is intended to summarize the development of the DocGenerator applica
 
 ### How do I get set up? ###
 
-* For the moment (v1.0) it has to run from CMD. Just move to /src folder and run `'puyhon.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`		
+* For the moment (v1.1) it has to run from CMD. Just move to /src folder and run `'python.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`		
 > -h -- Get usage hints CMD
 > -i -- Specify input directory (default) ./ 		
 > -o -- Specify output directory (default) ../doc 		
@@ -25,7 +25,9 @@ NOTE: the specify paths without quotes!!
 
 * The configuration cannot be simpler:
 
-It uses the Python's libraries Jinja2 (for HTML templating), time (for execution time and dates), os (for path operations), itertools (for mutual usage checking), re (for regular expressions searching and substitution), copy2 (for copying single files), copy_tree (for copying directories), sys (for command line arguments) and getopt (for argument parsing)
+It uses the Python's libraries Jinja2 (for HTML templating), time (for execution time and dates), os (for path operations), itertools (for mutual usage checking), re (for regular expressions searching and substitution), copy2 (for copying single files), copy_tree (for copying directories), sys (for command line arguments) and getopt (for argument parsing).
+
+NOTE: Python version 3.6!!!!
 
 ### What is the header the .m files has to have? ###
 
@@ -151,7 +153,10 @@ function [ nameofout1, nameofout2 ] = myfunc( namein1, namein2 )
 -@attribute name: description     // class attribute			
 -@property [type] name: description // class property			
 -%% delimiter used for sections (needed)			
-
+- -> adds \t\t
+Only on parameters description (iparams, oparams, methods, properties, attributes and events)!!
+- --> adds \t\t\t\t
+- ---> adds \t\t\t\t\t\t
 ### Who do I talk to? ###
 
 * Andrés Ferreiro González

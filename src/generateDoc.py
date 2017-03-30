@@ -19,12 +19,12 @@ import time
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.2
+# @version 1.3
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=None, projectname='', appendcode=False, verbose=False):
 
-    print('Step 3) Beginning preformtting:\n')
+    print('Step 3) Beginning preformatting:\n')
 
     ver = 1.1
 
@@ -60,7 +60,9 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         os.makedirs(basedircss)
 
     # Copy utils (CSS and icons) to output directory
-    fromdirectory = ".\\templates\\utils"
+    base = os.path.realpath(__file__).split('\\')
+    base = '\\'.join(base[0:-1])
+    fromdirectory = base+"\\templates\\utils"
     todirectory = basedircss
 
     if verbose:
@@ -96,7 +98,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
 
     # Template loader for Jinja2 templates
-    templateloader = jinja2.FileSystemLoader(searchpath="./templates/")
+    templateloader = jinja2.FileSystemLoader(searchpath=base+"/templates/")
     templateenv = jinja2.Environment(loader=templateloader)
 
     # This constant string specifies the template file we will use.
@@ -218,7 +220,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 23/03/17
-# @version 1.2
+# @version 1.3
 def __preformparameters(listin, which='...', verbose=False):
 
     if verbose:
@@ -237,7 +239,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(oparam.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -249,7 +251,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(iparam.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -269,7 +271,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(event.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -281,7 +283,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(attribute.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -293,7 +295,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(prop.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -305,7 +307,7 @@ def __preformparameters(listin, which='...', verbose=False):
                 for idx, line in enumerate(method.desc):
                     p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [\w.^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)

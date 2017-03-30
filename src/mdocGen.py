@@ -18,7 +18,7 @@ def main(argv):
         sys.exit(2)
 
     pathvar = '.\\'
-    outputdir = '..\\docs'
+    outputdir = '..\\doc'
     projectlogopath = None
     projectname = ''
     recur = False
@@ -51,7 +51,7 @@ def main(argv):
         elif opt in ("-l", "--logo"):
             projectlogopath = arg
         elif opt in ("-n", "--name"):
-            projectname = arg
+            projectname = arg + " Project"
         elif opt == "-r":
             recur = True
         elif opt == "-u":
