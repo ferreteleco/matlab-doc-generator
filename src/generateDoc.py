@@ -15,14 +15,15 @@ import time
 # @iparam listofscripts
 # @iparam listofclasses
 # @iparam verbose
+# @iparam usage
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.3
+# @version 1.4
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=None, projectname='', appendcode=False, verbose=False):
+                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False):
 
     print('Step 3) Beginning preformatting:\n')
 
@@ -169,7 +170,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
                 template = templateenv.get_template(template_file)
                 break
 
-        code = []
+        code = None
 
         if appendcode:
 
@@ -185,6 +186,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
                         "dir": outputdir,
                         "fun": current,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),
+                        "usage": usage,
                         "code": code,
                         "version": ver
                         }
@@ -334,7 +336,7 @@ def __preformparameters(listin, which='...', verbose=False):
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.3
+# @version 1.4
 def __parsecode(inputcode):
 
     parsedcode = []
@@ -354,7 +356,7 @@ def __parsecode(inputcode):
             if '<span ' not in linemod:
 
                 p = re.compile('((?<!\'|\w|\$|%|@|>)(end|elseif|else|if|switch|case|otherwise'
-                               '|break|continue|properties|methods|function|classdef|for)'
+                               '|break|continue|properties|methods|function|classdef|for|try|catch)'
                                '(?!\'))', re.VERBOSE)
 
                 linemod = p.sub(r'<span class="keyword">\1</span>', linemod)
@@ -364,7 +366,7 @@ def __parsecode(inputcode):
                 litemp = linemod
 
                 p = re.compile('((?<!\'|\w|\$|%|@|>)(end|elseif|else|if|switch|case|otherwise'
-                               '|break|continue|properties|methods|function|classdef|for)'
+                               '|break|continue|properties|methods|function|classdef|for|try|catch)'
                                '(?!\'))', re.VERBOSE)
 
                 indini = litemp.index('<span')

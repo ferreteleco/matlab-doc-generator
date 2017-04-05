@@ -17,24 +17,30 @@
   {% endif %}</header>
 <article class="ind">
 <h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index</strong></h1>
+{% if functions %}
 <h2><a name="_toc"></a>Documented functions: </h2>
 <ul style="list-style:none">
   {% for fun in functions %}
     <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="./files/{{fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
     {% endfor %}
 </ul>
+{% endif %}
+{% if scripts %}
 <h2><a name="_toc"></a>Documented scripts: </h2>
 <ul style="list-style:none">
   {% for scr in scripts %}
     <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="./files/{{scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
     {% endfor %}
 </ul>
+{% endif %}
+{% if classes %}
 <h2><a name="_toc"></a>Documented classes: </h2>
 <ul style="list-style:none">
     {% for cls in classes %}
     <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="./files/{{cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
     {% endfor %}
 </ul>
+{% endif %}
 </article>
 <footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v{{version}}</a></strong> &copy; 2017</address></footer>
 </body>

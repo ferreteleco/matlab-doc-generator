@@ -83,9 +83,8 @@
       <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
   {% endfor %}
 </pre></div>
-
+{% if usage %}
 <h2><a name="_cri"></a>Cross-reference information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
-
 <h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
@@ -94,7 +93,6 @@
   {% endfor %}
 </ul>
 </div>
-
 <h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
@@ -103,6 +101,7 @@
   {% endfor %}
   </ul>
 </div>
+{% endif %}
 <h2><a name="_misc"></a>Miscelaneous information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <ul>
   <li><a name="_author"></a><strong>Author: </strong> {{fun.author}}</li>
@@ -110,11 +109,12 @@
   <li><a name="_date"></a><strong>Date: </strong>{{fun.date}}</li>
   <li><a name="_company"></a><strong>Company: </strong> {{fun.company}}</a></li>
 </ul>
-
+{% if code %}
 <h2><a name="_code"></a>Source Code: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
 <div class="box"><pre class="code">
       {{'\n'.join(code)}}
 </pre></div>
+{% endif %}
 </article>
 <footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v1.0">PyDoc documentation generator for Matlab v{{version}}</a></strong> &copy; 2017</address></footer>
 </body>
