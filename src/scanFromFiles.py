@@ -65,7 +65,7 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
                                                                     verbose=verbose)
 
     generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=projectlogo, projectname=projectname, appendcode=appendcode,
+                projectlogopath=projectlogo, projectname=projectname, appendcode=appendcode, usage=usage,
                 verbose=verbose)
 
 
