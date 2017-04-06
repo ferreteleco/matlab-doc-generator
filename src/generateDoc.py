@@ -27,7 +27,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     print('Step 3) Beginning preformatting:\n')
 
-    ver = 1.1
+    ver = 1.2
 
     listfuncmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
     listclassmod = __preformparameters(listofclasses, which='classes', verbose=verbose)
@@ -336,7 +336,7 @@ def __preformparameters(listin, which='...', verbose=False):
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.4
+# @version 1.5
 def __parsecode(inputcode):
 
     parsedcode = []
@@ -382,14 +382,14 @@ def __parsecode(inputcode):
                 ind = linemod.index('% ')
                 indspa = ind - ind
 
-                if '<span class="string">' in linemod:
+                if '<span class="string">' in linemod or '<span class="keyword">'in linemod:
 
                     indspa = linemod.index('</span>')
 
                 if indspa < ind:
 
-                    linemod = linemod[indspa:ind]+linemod[ind:].replace('<span class="keyword">', '')\
-                        .replace('<span class="string">', '')
+                    linemod = linemod[0:ind]+linemod[ind:].replace('<span class="keyword">', '')\
+                        .replace('<span class="string">', '').replace('</span>', '')
                     linemod = linemod.replace('% ', '<span class="comm">% ')+'</span>'
 
             elif '%%%' in linemod:

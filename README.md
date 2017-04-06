@@ -5,12 +5,12 @@ This README is intended to summarize the development of the DocGenerator applica
 ### What is this repository for? ###
 
 * This repository will be used mainly or development purposes, but also as a way to distribute the application it i'm able to make it work.
-* 1.1 BETA
+* 1.2 BETA
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
-* For the moment (v1.1) it has to run from CMD. Just move to /src folder and run `'python.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`		
+* For the moment (v1.2) it has to run from CMD. Just move to /src folder and run `'python.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`
 > -h -- Get usage hints CMD
 > -i -- Specify input directory (default) ./ 		
 > -o -- Specify output directory (default) ../doc 		
@@ -19,7 +19,14 @@ This README is intended to summarize the development of the DocGenerator applica
 > -r -- Perform recursive scan (check subdirectories)		
 > -u -- Check mutual ussage between files			
 > -c -- Append source code to documentation		
-> -v -- Verbose mode			
+> -v -- Verbose mode
+
+EXAMPLE: assuming source files (.m) located in \MyFolder\src\,
+1) open a cmd in \MyFolder
+2) type: python {path to location of mdocGen.py}\mdocGen.py -i .\src -o .\doc -r -u -c -v
+will parse recursively all files located in \MyFolder\src\ and all its subdirectories checking mutual usage between objects and
+appending code to generated outputs while running in verbose mode.
+Te generated documentation shall be found at \MyFolder\doc\
 
 NOTE: the specify paths without quotes!!
 
