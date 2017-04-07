@@ -1,13 +1,21 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from wizard import Ui_MainWindow
 import sys
 import time
+import os
 
 
-class GUIDocGen(Ui_MainWindow):
-    def __init__(self, maiw):
-        Ui_MainWindow.__init__(self)
-        self.setupUi(maiw)
+class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super(GUIDocGen, self).__init__()
+
+        # Must use absolute path for displaying window icon
+        base = os.path.realpath(__file__).split('\\')
+        base = '\\'.join(base[0:-1])
+        ico = base + "\\templates\\utils\\info.png"
+        self.setWindowIcon(QtGui.QIcon(ico))
+
+        self.setupUi(self)
 
         # Connections between GUI and internal functions
         self.browseidir.clicked.connect(self.__browse_idir)
@@ -19,9 +27,15 @@ class GUIDocGen(Ui_MainWindow):
         self.recursive.clicked.connect(self.__maderecursive)
         self.generate.clicked.connect(self.__lestdocalcs)
 
-        self.idir.textChanged.connect(self.__dbg)
+        # Parse checking correctness of input and output directories
+        self.idir.editingFinished.connect(self.__dbg)
+        self.odir.editingFinished.connect(self.__dbg)
+        self.logo.editingFinished.connect(self.__dbg)
 
+        # Parameters used to feed document generation
         self.updatelog = self.console.append
+        self.updatetaskbar = self.taskprogress.setValue
+        self.updateprogbar = self.overallprogress.setValue
         self.__idir = None
         self.__odir = None
         self.__name = None
@@ -31,9 +45,10 @@ class GUIDocGen(Ui_MainWindow):
         self.__usage = False
         self.__recursive = False
 
+    # Thrash method, used for debug
     def __dbg(self):
 
-        print('haschanged')
+        self.updatelog('haschanged')
 
     def __browse_idir(self):
         idir = QtWidgets.QFileDialog.getExistingDirectory(parent=None,
@@ -80,7 +95,7 @@ class GUIDocGen(Ui_MainWindow):
 
     def __lestdocalcs(self):
 
-        self.updatelog('<FONT color="green"> aaaaaa </font>')
+        self.updatelog('<FONT color="green"> aaaaaa <br> ksdsdjaslkjasd </font>')
         for i in range(0, 101):
             self.taskprogress.setValue(i)
             time.sleep(0.05)
@@ -89,9 +104,7 @@ class GUIDocGen(Ui_MainWindow):
 if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
-    mainw = QtWidgets.QMainWindow()
+    prog = GUIDocGen()
+    prog.show()
 
-    prog = GUIDocGen(mainw)
-
-    mainw.show()
     sys.exit(app.exec_())
