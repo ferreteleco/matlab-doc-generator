@@ -23,31 +23,49 @@ import time
 # @version 1.4
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False):
+                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None):
 
-    print('Step 3) Beginning preformatting:\n')
+    if log is not None:
+        log('Step 3) Beginning preformatting:\n')
+    else:
+        print('Step 3) Beginning preformatting:\n')
 
     ver = 1.2
 
-    listfuncmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
-    listclassmod = __preformparameters(listofclasses, which='classes', verbose=verbose)
+    listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log)
+    listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log)
 
     if verbose:
-        print('\nEVENT!!!! All files preformatted\n')
 
-    print('Step 4) Beginning file dumping:\n')
+        if log is not None:
+            log('\nEVENT!!!! All files preformatted\n')
+        else:
+            print('\nEVENT!!!! All files preformatted\n')
+
+    if log is not None:
+        log('Step 4) Beginning file dumping:\n')
+    else:
+        print('Step 4) Beginning file dumping:\n')
 
     if not os.path.exists(outputdir):
 
         if verbose:
-            print('\t- Creating output directory: ', outputdir, sep='')
+            if log is not None:
+                var = '- Creating output directory: ' + outputdir
+                log(var)
+            else:
+                print('\t- Creating output directory: ', outputdir, sep='')
 
         os.makedirs(outputdir)
 
     if not os.path.exists(os.path.join(outputdir, "files")):
 
         if verbose:
-            print('\t- Creating output directory: ', os.path.join(outputdir, "files"), sep='')
+            if log is not None:
+                var = '- Creating output directory: ' + os.path.join(outputdir, "files")
+                log(var)
+            else:
+                print('\t- Creating output directory: ', os.path.join(outputdir, "files"), sep='')
 
         os.makedirs(os.path.join(outputdir, "files"))
 
@@ -56,7 +74,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     if not os.path.exists(basedircss):
 
         if verbose:
-            print('\t- Creating CSS&icons directory: ', basedircss, sep='')
+            if log is not None:
+                var = '- Creating CSS&icons directory: ' + basedircss
+                log(var)
+            else:
+                print('\t- Creating CSS&icons directory: ', basedircss, sep='')
 
         os.makedirs(basedircss)
 
@@ -67,7 +89,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     todirectory = basedircss
 
     if verbose:
-        print('\t- Copying utils to destination directory.')
+        if log is not None:
+            log('- Copying utils to destination directory.')
+        else:
+            print('\t- Copying utils to destination directory.')
 
     copy_tree(fromdirectory, todirectory)
 
@@ -75,7 +100,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     if projectlogopath is not None:
 
         if verbose:
-            print('\t- Copying project logo to destination directory.')
+            if log is not None:
+                log('- Copying project logo to destination directory.')
+            else:
+                print('\t- Copying project logo to destination directory.')
 
         copy2(projectlogopath, todirectory)
 
@@ -91,7 +119,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     outspath = []
 
     if verbose:
-        print('\t- Generating output paths and names.')
+        if log is not None:
+            log('- Generating output paths and names.')
+        else:
+            print('\t- Generating output paths and names.')
 
     for namein in chainoffiles:
 
@@ -121,20 +152,30 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     try:
 
         if verbose:
-            print('\t- Rendering template: index.html...')
+            if log is not None:
+                log('- Rendering template: index.html...')
+            else:
+                print('\t- Rendering template: index.html...')
 
         outputtext = template.render(templatevars)
 
         with open(os.path.join(outputdir, "index.html"), "w") as fh:
 
             if verbose:
-                print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
+                if log is not None:
+                    var = '- Saving file to: ' + outputdir + '\\index.html ...'
+                    log(var)
+                else:
+                    print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
             fh.write(outputtext)
             fh.close()
 
     except ReferenceError:
 
-        print('Fatal error')
+        if log is not None:
+            log('Fatal error')
+        else:
+            print('Fatal error')
 
     for index, file in enumerate(outsnames):
 
@@ -175,7 +216,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         if appendcode:
 
             if verbose:
-                print('\t- Parsing code of : ', current.name, ' ...', sep='')
+                if log is not None:
+                    var = '- Parsing code of : ' + current.name + ' ...'
+                    log(var)
+                else:
+                    print('\t- Parsing code of : ', current.name, ' ...', sep='')
 
             code = __parsecode(current.code)
 
@@ -193,21 +238,32 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         try:
 
             if verbose:
-                print('\t- Rendering template: ', current.name, ' ...', sep='')
+                if log is not None:
+                    var = '- Rendering template: ' + current.name + ' ...'
+                    log(var)
+                else:
+                    print('\t- Rendering template: ', current.name, ' ...', sep='')
 
             outputtext = template.render(templatevars)
 
             with open(outspath[index]+".html", "w") as fh:
 
                 if verbose:
-                    print('\t- Saving file to: ', outspath[index]+".html", ' ...', sep='')
+                    if log is not None:
+                        var = '- Saving file to: ' + outspath[index]+".html" + ' ...'
+                        log(var)
+                    else:
+                        print('\t- Saving file to: ', outspath[index]+".html", ' ...', sep='')
 
                 fh.write(outputtext)
                 fh.close()
 
         except ReferenceError:
 
-            print('Fatal error')
+            if log is not None:
+                log('Fatal error')
+            else:
+                print('Fatal error')
 
 
 # This function adds highlighting and font color for types found in parameters description of the
@@ -223,19 +279,26 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 # @company Own
 # @date 23/03/17
 # @version 1.3
-def __preformparameters(listin, which='...', verbose=False):
+def __preformparameters(listin, wh='...', verbose=False, log=None):
 
-    if verbose:
+    if verbose is True:
+        if log is not None:
+            var = '- Preformatting ' + wh + ' parameters description...\n'
+            log(var)
+        else:
+            print('\t- Preformatting ', wh, ' parameters description...\n', sep='')
 
-        print('\t- Preformatting ', which, ' parameters description...\n', sep='')
-
-    if which == 'functions':
+    if wh == 'functions':
 
         for index, clas in enumerate(listin):
 
             if verbose:
-                print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name,
-                      '...', sep='')
+                if log is not None:
+                    var = '- Evaluating (' + str(index + 1) + '/' + str(len(listin)) + ') element(s): ' + clas.name + \
+                          '...'
+                    log(var)
+                else:
+                    print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name, '...', sep='')
 
             for oparam in clas.oparams:
                 for idx, line in enumerate(oparam.desc):
@@ -261,13 +324,17 @@ def __preformparameters(listin, which='...', verbose=False):
                     linemod = p.sub(r'<b>\1:</b>', linemod)
                     iparam.desc[idx] = linemod
 
-    elif which == 'classes':
+    elif wh == 'classes':
 
         for index, clas in enumerate(listin):
 
             if verbose:
-                print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name,
-                      '...', sep='')
+                if log is not None:
+                    var = '- Evaluating (' + str(index + 1) + '/' + str(len(listin)) + ') element(s): ' + clas.name + \
+                          '...'
+                    log(var)
+                else:
+                    print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name, '...', sep='')
 
             for event in clas.events:
                 for idx, line in enumerate(event.desc):
@@ -320,8 +387,11 @@ def __preformparameters(listin, which='...', verbose=False):
     else:
 
         if verbose:
-
-            print('\t- Unrecognized element: ', which, '. No operations performed.', sep='')
+            if log is not None:
+                var = '- Unrecognized element: ' + wh + '. No operations performed.'
+                log(var)
+            else:
+                print('\t- Unrecognized element: ', wh, '. No operations performed.', sep='')
 
     return listin
 

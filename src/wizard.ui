@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1030</width>
-    <height>475</height>
+    <width>1200</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1030</width>
-    <height>475</height>
+    <width>1200</width>
+    <height>600</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1030</width>
-    <height>475</height>
+    <width>1200</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,9 +29,9 @@
    <widget class="QLineEdit" name="logo">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>124</y>
-      <width>311</width>
+      <x>112</x>
+      <y>123</y>
+      <width>291</width>
       <height>20</height>
      </rect>
     </property>
@@ -40,7 +40,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>250</y>
+      <y>530</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -48,14 +48,20 @@
     <property name="text">
      <string>Generate Documentation</string>
     </property>
+    <property name="autoRepeat">
+     <bool>false</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QTextBrowser" name="console">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>20</y>
-      <width>531</width>
-      <height>431</height>
+      <x>450</x>
+      <y>10</y>
+      <width>731</width>
+      <height>561</height>
      </rect>
     </property>
    </widget>
@@ -64,19 +70,19 @@
      <rect>
       <x>14</x>
       <y>39</y>
-      <width>94</width>
+      <width>101</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>9</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="lineWidth">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="text">
      <string>Input directory</string>
@@ -93,13 +99,13 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>9</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="lineWidth">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="text">
      <string>Output directory</string>
@@ -116,13 +122,13 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>9</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="lineWidth">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="text">
      <string>Project Logo</string>
@@ -139,13 +145,13 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>9</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="lineWidth">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="text">
      <string>Project Name</string>
@@ -154,7 +160,7 @@
    <widget class="QPushButton" name="browseidir">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>412</x>
       <y>39</y>
       <width>31</width>
       <height>23</height>
@@ -167,7 +173,7 @@
    <widget class="QPushButton" name="browseodir">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>412</x>
       <y>80</y>
       <width>31</width>
       <height>23</height>
@@ -180,7 +186,7 @@
    <widget class="QPushButton" name="browselogo">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>412</x>
       <y>123</y>
       <width>31</width>
       <height>23</height>
@@ -193,9 +199,9 @@
    <widget class="QLineEdit" name="idir">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>40</y>
-      <width>311</width>
+      <x>112</x>
+      <y>39</y>
+      <width>291</width>
       <height>20</height>
      </rect>
     </property>
@@ -203,9 +209,9 @@
    <widget class="QLineEdit" name="odir">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>82</y>
-      <width>311</width>
+      <x>112</x>
+      <y>81</y>
+      <width>291</width>
       <height>20</height>
      </rect>
     </property>
@@ -213,8 +219,8 @@
    <widget class="QLineEdit" name="name">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>166</y>
+      <x>112</x>
+      <y>165</y>
       <width>151</width>
       <height>20</height>
      </rect>
@@ -260,47 +266,47 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QPushButton" name="resConsole">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>400</y>
-      <width>481</width>
-      <height>50</height>
+      <x>360</x>
+      <y>520</y>
+      <width>81</width>
+      <height>23</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QProgressBar" name="taskprogress">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="invertedAppearance">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="overallprogress">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="invertedAppearance">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>Reset console</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="resAll">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>550</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset All</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="dumpLog">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>490</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dump log</string>
+    </property>
    </widget>
    <zorder>odir</zorder>
    <zorder>name</zorder>
-   <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>logo</zorder>
    <zorder>generate</zorder>
@@ -313,6 +319,9 @@
    <zorder>browseidir</zorder>
    <zorder>browseodir</zorder>
    <zorder>browselogo</zorder>
+   <zorder>resConsole</zorder>
+   <zorder>resAll</zorder>
+   <zorder>dumpLog</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
