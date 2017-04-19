@@ -134,9 +134,12 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
         copy2(projectlogopath, todirectory)
 
-        filename = projectlogopath.split('\\')
+        if '\\' in projectlogopath:
+            filename = projectlogopath.split('\\')
+        else:
+            filename = projectlogopath.split('/')
 
-        projectlogo = os.path.join("./utils", filename[len(filename)-1])
+        projectlogo = os.path.join(".\\utils", filename[len(filename)-1])
 
     else:
 
