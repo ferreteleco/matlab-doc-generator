@@ -12,17 +12,30 @@ import itertools
 # @iparam appendcode
 # @iparam usage
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 20/03/17
-# @version 1.3
+# @version 1.4
 ###
 def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur=False,
-                   appendcode=False, usage=False, verbose=False):
+                   appendcode=False, usage=False, verbose=False, log=None, prgbr=None):
 
-    print('\nEVENT!!!! Beginning process...\n')
-    print('Step 1) Searching in directories:\n')
+    if log is not None:
+
+        log('<b>EVENT!!!! Beginning process...</b>')
+        log('<u>Step 1) Searching in directories:</u>')
+    else:
+
+        print('\EVENT!!!! Beginning process...')
+        print('Step 1) Searching in directories:')
+
+    if prgbr is not None:
+
+        ind = 1
+        prgbr(1)
 
     chainoffiles = []  # Array that will store the list of files
     chainofdirs = []  # Array that will store the paths of the files in chainOfFiles
@@ -36,8 +49,19 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
         for files in next(os.walk(pathvar)):
             for name in files:
                 if name.endswith('.m'):
+
+                    if prgbr is not None:
+                        ind += 1
+                        prgbr(ind)
+                        if ind > 25:
+                            ind = 1
+
                     if verbose:
-                        print('\t- Fetching ', name, '...', sep='')
+                        if log is not None:
+                            var = '- Fetching ' + name + '...'
+                            log(var)
+                        else:
+                            print('\t- Fetching ', name, '...', sep='')
                     if not (name in chainoffiles):
                         chainoffiles.append(name)
                         chainofdirs.append(pathvar)
@@ -48,25 +72,47 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
         for root, dirs, files in os.walk(pathvar):
             for name in files:
                 if name.endswith('.m'):
+
+                    if prgbr is not None:
+                        ind += 1
+                        prgbr(ind)
+                        if ind > 25:
+                            ind = 1
+
                     if verbose:
-                        print('\t- Fetching ', os.path.join(root, name), '...', sep='')
+                        if log is not None:
+                            var = '- Fetching ' + os.path.join(root, name) + '...'
+                            log(var)
+                        else:
+                            print('\t- Fetching ', os.path.join(root, name), '...', sep='')
                     if not (name in chainoffiles):
                         chainoffiles.append(name)
                         chainofdirs.append(root)
 
+    if prgbr is not None:
+        ind = 25
+        prgbr(ind)
+
     if verbose:
-        print('\nEVENT!!!! Fetching process finished, found: ', len(chainoffiles), ' elements in ',
-              len(set(chainofdirs)), ' directories\n', sep='')
+        if log is not None:
+            var = '<b>EVENT!!!! Fetching process finished, found: ' + str(len(chainoffiles)) + ' elements in ' + \
+                  str(len(set(chainofdirs))) + ' directories</b>'
+            log(var)
+        else:
+            print('\nEVENT!!!! Fetching process finished, found: ', len(chainoffiles), ' elements in ',
+                  len(set(chainofdirs)), ' directories\n', sep='')
 
     # Once fetching finishes, begin scanning files
     listoffunctions, listofscripts, listofclasses = __scanformfiles(chainoffiles, chainofdirs,
                                                                     appendcode=appendcode,
                                                                     usage=usage,
-                                                                    verbose=verbose)
+                                                                    verbose=verbose,
+                                                                    log=log,
+                                                                    prgbr=prgbr)
 
     generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=projectlogo, projectname=projectname, appendcode=appendcode, usage=usage,
-                verbose=verbose)
+                verbose=verbose, log=log, prgbr=prgbr)
 
 
 # @desc Here there will be a loop over all .m files for getting the information of them
@@ -76,15 +122,24 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
 # @iparam appendcode
 # @iparam usage
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 20/03/17
-# @version 1.1
+# @version 1.2
 ###
-def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False):
+def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False, log=None, prgbr=None):
 
-    print('Step 2) Loading files to memory:\n')
+    if log is not None:
+
+        log('<u>Step 2) Loading files to memory:</u>')
+    else:
+        print('Step 2) Loading files to memory:\n')
+
+    if prgbr is not None:
+        indx = 25 + round(len(chainoffiles)/24)
 
     index = 0
     # List of 'function' objects
@@ -97,8 +152,19 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
     # Loop over all previously fetched files
     for fil in chainoffiles:
 
+        if prgbr is not None:
+            prgbr(indx)
+            indx += 1
+            if indx > 50:
+                indx = 50
+
         if verbose:
-            print('\t- Opening file ', os.path.join(chainofdirs[index], fil), '...', sep='')
+
+            if log is not None:
+                var = '- Opening file ' + os.path.join(chainofdirs[index], fil) + '...'
+                log(var)
+            else:
+                print('\t- Opening file ', os.path.join(chainofdirs[index], fil), '...', sep='')
 
         # Open each file and get the header, specified by '%%%'
         fileid = open(os.path.join(chainofdirs[index], fil), 'r')
@@ -155,7 +221,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
         if isscript:
 
             # Parse each function header
-            scr = __parsemscript(chunks, verbose=verbose)
+            scr = __parsemscript(chunks, verbose=verbose, log=log)
             scr.name = fil[0:len(fil) - 2]
 
             if appendcode or usage:
@@ -166,7 +232,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
         elif isclass:
 
             # Parse each function header
-            cla = __parsemclass(chunks, verbose=verbose)
+            cla = __parsemclass(chunks, verbose=verbose, log=log)
             cla.name = fil[0:len(fil) - 2]
 
             if appendcode or usage:
@@ -177,7 +243,7 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
         else:
 
             # Parse each function header
-            fun = __parsemfunct(chunks, verbose=verbose)
+            fun = __parsemfunct(chunks, verbose=verbose, log=log)
             fun.name = fil[0:len(fil) - 2]
 
             if appendcode or usage:
@@ -186,11 +252,15 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
             listoffunctions.append(fun)
 
     if verbose:
-        print('\nEVENT!!!! Loading process finished\n')
+        if log is not None:
+            log('<b>EVENT!!!! Loading process finished</b>')
+        else:
+            print('\nEVENT!!!! Loading process finished\n')
 
     if usage:
         listoffunctions, listofscripts, listofclasses = __checkusage(listoffunctions, listofscripts,
-                                                                     listofclasses, verbose=verbose)
+                                                                     listofclasses, verbose=verbose, log=log,
+                                                                     prgbr=prgbr)
 
     return listoffunctions, listofscripts, listofclasses
 
@@ -201,6 +271,8 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 # @iparam listofscripts
 # @iparam listofclasses
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @oparam listoffunctions
 # @oparam listofscripts
@@ -209,17 +281,32 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.1
+# @version 1.3
 ###
-def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False):
+def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False, log=None, prgbr=None):
     merged = listoffunctions + listofscripts + listofclasses
     ind = 0
 
     if verbose:
-        print('\t- Checking mutual ussage among ', len(merged), ' files:\n', sep='')
+        if log is not None:
+            var = '- Checking mutual ussage among ' + str(len(merged)) + ' files:'
+            log(var)
+        else:
+            print('\t- Checking mutual ussage among ', len(merged), ' files:\n', sep='')
         ind = 0
 
+    if prgbr is not None:
+        indx = 25
+        prgbr(indx)
+        indx += 1
+
     for x, y in itertools.permutations(merged, 2):
+
+        if prgbr is not None:
+            indx += 1
+            prgbr(indx)
+            if indx > 50:
+                indx = 25
 
         if y.name in ' '.join(x.code):
             x.adduses(y.name)
@@ -227,10 +314,21 @@ def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False):
 
         if verbose:
             ind += 1
-            print('\t- Checked ', ind, '-th combination of files', sep='')
+            if log is not None:
+                var = '- Checked ' + str(ind) + '-th combination of files'
+                log(var)
+            else:
+                print('\t- Checked ', ind, '-th combination of files', sep='')
+
+    if prgbr is not None:
+        indx = 50
+        prgbr(indx)
 
     if verbose:
-        print('\nEVENT!!!! All combinations between files checked\n')
+        if log is not None:
+            log('<b>EVENT!!!! All combinations between files checked</b>')
+        else:
+            print('\nEVENT!!!! All combinations between files checked\n')
 
     listoffunctions = merged[0:len(listoffunctions)]
     listofscriptstmp = merged[len(listoffunctions):len(listoffunctions)+len(listofscripts)]
@@ -245,13 +343,14 @@ def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False):
 # This function parses the lines in the input list for a script file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.0
+# @version 1.1
 ###
-def __parsemscript(chunks, verbose=False):
+def __parsemscript(chunks, verbose=False, log=None):
     # 'Script' object definition
     scr = ScriptDefinition()
 
@@ -259,7 +358,10 @@ def __parsemscript(chunks, verbose=False):
     current = '@desc'
 
     if verbose:
-        print('\t- Parsing...')
+        if log is not None:
+            log('- Parsing...')
+        else:
+            print('\t- Parsing...')
 
     for line in chunks:
 
@@ -330,8 +432,12 @@ def __parsemscript(chunks, verbose=False):
                 except KeyError:
 
                     if verbose:
-                        print('ERROR!!!! during parse of last highlighted file, skipping it and'
-                              ' moving forward')
+
+                        if log is not None:
+                            log('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
+                        else:
+                            print('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
+
                     continue
     return scr
 
@@ -339,20 +445,24 @@ def __parsemscript(chunks, verbose=False):
 # This function parses the lines in the input list for a function file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.1
+# @version 1.2
 ###
-def __parsemfunct(chunks, verbose=False):
+def __parsemfunct(chunks, verbose=False, log=None):
     # 'Function' object definition
     fun = FuncDefinition()
     # Current state, used for multi-line fields
     current = 'function'
 
     if verbose:
-        print('\t- Parsing...')
+        if log is not None:
+            log('- Parsing...')
+        else:
+            print('\t- Parsing...')
 
     # Loop through the lines of the header searching for predefined tags and storing the relevant
     # information in a 'function' object
@@ -458,8 +568,10 @@ def __parsemfunct(chunks, verbose=False):
                 except KeyError:
 
                     if verbose:
-                        print('Error during parse of last highlighed file, skipping it and moving '
-                              'forward')
+                        if log is not None:
+                            log('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
+                        else:
+                            print('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
                     continue
     return fun
 
@@ -467,13 +579,14 @@ def __parsemfunct(chunks, verbose=False):
 # This function parses the lines in the input list for a class file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.0
+# @version 1.1
 ###
-def __parsemclass(chunks, verbose=False):
+def __parsemclass(chunks, verbose=False, log=None):
 
     # 'Class' object definition
     cls = ClassDefinition()
@@ -481,7 +594,10 @@ def __parsemclass(chunks, verbose=False):
     current = 'classdef'
 
     if verbose:
-        print('\t- Parsing...')
+        if log is not None:
+            log('- Parsing...')
+        else:
+            print('\t- Parsing...')
 
     # Loop through the lines of the header searching for predefined tags and storing the relevant
     # information in a 'class' object
@@ -604,7 +720,9 @@ def __parsemclass(chunks, verbose=False):
                 except KeyError:
 
                     if verbose:
-                        print('Error during parse of last highlighed file, skipping it and moving '
-                              'forward')
+                        if log is not None:
+                            log('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
+                        else:
+                            print('ERROR!!!! during parse of last highlighted file, skipping it and moving forward')
                     continue
     return cls

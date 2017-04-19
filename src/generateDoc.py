@@ -16,38 +16,71 @@ import time
 # @iparam listofclasses
 # @iparam verbose
 # @iparam usage
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.4
+# @version 1.5
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False):
+                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None,
+                prgbr=None):
 
-    print('Step 3) Beginning preformatting:\n')
+    if log is not None:
+        log('<u>Step 3) Beginning preformatting:</u>')
+    else:
+        print('Step 3) Beginning preformatting:\n')
 
-    ver = 1.2
+    ver = 2.0
 
-    listfuncmod = __preformparameters(listoffunctions, which='functions', verbose=verbose)
-    listclassmod = __preformparameters(listofclasses, which='classes', verbose=verbose)
+    listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
+    listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
+
+    if prgbr is not None:
+        ind = 75
+        prgbr(ind)
 
     if verbose:
-        print('\nEVENT!!!! All files preformatted\n')
 
-    print('Step 4) Beginning file dumping:\n')
+        if log is not None:
+            log('<b>EVENT!!!! All files preformatted</b>')
+        else:
+            print('\nEVENT!!!! All files preformatted\n')
+
+    if log is not None:
+        log('<u>Step 4) Beginning file dumping:</u>')
+    else:
+        print('Step 4) Beginning file dumping:\n')
 
     if not os.path.exists(outputdir):
 
+        if prgbr is not None:
+            ind = 76
+            prgbr(ind)
+
         if verbose:
-            print('\t- Creating output directory: ', outputdir, sep='')
+            if log is not None:
+                var = '- Creating output directory: ' + outputdir
+                log(var)
+            else:
+                print('\t- Creating output directory: ', outputdir, sep='')
 
         os.makedirs(outputdir)
 
     if not os.path.exists(os.path.join(outputdir, "files")):
 
+        if prgbr is not None:
+            ind = 77
+            prgbr(ind)
+
         if verbose:
-            print('\t- Creating output directory: ', os.path.join(outputdir, "files"), sep='')
+            if log is not None:
+                var = '- Creating output directory: ' + os.path.join(outputdir, "files")
+                log(var)
+            else:
+                print('\t- Creating output directory: ', os.path.join(outputdir, "files"), sep='')
 
         os.makedirs(os.path.join(outputdir, "files"))
 
@@ -55,8 +88,16 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     if not os.path.exists(basedircss):
 
+        if prgbr is not None:
+            ind = 78
+            prgbr(ind)
+
         if verbose:
-            print('\t- Creating CSS&icons directory: ', basedircss, sep='')
+            if log is not None:
+                var = '- Creating CSS&icons directory: ' + basedircss
+                log(var)
+            else:
+                print('\t- Creating CSS&icons directory: ', basedircss, sep='')
 
         os.makedirs(basedircss)
 
@@ -66,16 +107,30 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     fromdirectory = base+"\\templates\\utils"
     todirectory = basedircss
 
+    if prgbr is not None:
+        ind = 79
+        prgbr(ind)
+
     if verbose:
-        print('\t- Copying utils to destination directory.')
+        if log is not None:
+            log('- Copying utils to destination directory.')
+        else:
+            print('\t- Copying utils to destination directory.')
 
     copy_tree(fromdirectory, todirectory)
 
     # Copy project logo to output directory
     if projectlogopath is not None:
 
+        if prgbr is not None:
+            ind = 80
+            prgbr(ind)
+
         if verbose:
-            print('\t- Copying project logo to destination directory.')
+            if log is not None:
+                log('- Copying project logo to destination directory.')
+            else:
+                print('\t- Copying project logo to destination directory.')
 
         copy2(projectlogopath, todirectory)
 
@@ -85,15 +140,31 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     else:
 
+        if prgbr is not None:
+            ind = 80
+            prgbr(ind)
+
         projectlogo = ''
 
     outsnames = []
     outspath = []
 
     if verbose:
-        print('\t- Generating output paths and names.')
+        if log is not None:
+            log('- Generating output paths and names.')
+        else:
+            print('\t- Generating output paths and names.')
+
+    if prgbr is not None:
+        ind = 80 + round(len(chainoffiles)/10)
 
     for namein in chainoffiles:
+
+        if prgbr is not None:
+            prgbr(ind)
+            ind += 1
+            if ind > 90:
+                ind = 80
 
         outsnames.append(namein[0:-2])
         outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
@@ -121,22 +192,41 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     try:
 
         if verbose:
-            print('\t- Rendering template: index.html...')
+            if log is not None:
+                log('- Rendering template: index.html...')
+            else:
+                print('\t- Rendering template: index.html...')
 
         outputtext = template.render(templatevars)
 
         with open(os.path.join(outputdir, "index.html"), "w") as fh:
 
             if verbose:
-                print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
+                if log is not None:
+                    var = '- Saving file to: ' + outputdir + '\\index.html ...'
+                    log(var)
+                else:
+                    print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
             fh.write(outputtext)
             fh.close()
 
     except ReferenceError:
 
-        print('Fatal error')
+        if log is not None:
+            log('Fatal error')
+        else:
+            print('Fatal error')
+
+    if prgbr is not None:
+        ind = 90
 
     for index, file in enumerate(outsnames):
+
+        if prgbr is not None:
+            prgbr(ind)
+            ind += 1
+            if ind > 99:
+                ind = 90
 
         for fun in listfuncmod:
             if file == fun.name:
@@ -175,7 +265,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         if appendcode:
 
             if verbose:
-                print('\t- Parsing code of : ', current.name, ' ...', sep='')
+                if log is not None:
+                    var = '- Parsing code of : ' + current.name + ' ...'
+                    log(var)
+                else:
+                    print('\t- Parsing code of : ', current.name, ' ...', sep='')
 
             code = __parsecode(current.code)
 
@@ -193,21 +287,32 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         try:
 
             if verbose:
-                print('\t- Rendering template: ', current.name, ' ...', sep='')
+                if log is not None:
+                    var = '- Rendering template: ' + current.name + ' ...'
+                    log(var)
+                else:
+                    print('\t- Rendering template: ', current.name, ' ...', sep='')
 
             outputtext = template.render(templatevars)
 
             with open(outspath[index]+".html", "w") as fh:
 
                 if verbose:
-                    print('\t- Saving file to: ', outspath[index]+".html", ' ...', sep='')
+                    if log is not None:
+                        var = '- Saving file to: ' + outspath[index]+".html" + ' ...'
+                        log(var)
+                    else:
+                        print('\t- Saving file to: ', outspath[index]+".html", ' ...', sep='')
 
                 fh.write(outputtext)
                 fh.close()
 
         except ReferenceError:
 
-            print('Fatal error')
+            if log is not None:
+                log('<FONT color="red"><b>Fatal error</b></FONT>')
+            else:
+                print('Fatal error')
 
 
 # This function adds highlighting and font color for types found in parameters description of the
@@ -216,26 +321,44 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 # @iparam listin
 # @iparam which
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @oparam modifiedlist
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 23/03/17
-# @version 1.3
-def __preformparameters(listin, which='...', verbose=False):
+# @version 1.4
+def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
-    if verbose:
+    if verbose is True:
+        if log is not None:
+            var = '- Preformatting ' + wh + ' parameters description...'
+            log(var)
+        else:
+            print('\t- Preformatting ', wh, ' parameters description...\n', sep='')
 
-        print('\t- Preformatting ', which, ' parameters description...\n', sep='')
+    if prgbr is not None:
+        ind = 50
 
-    if which == 'functions':
+    if wh == 'functions':
 
         for index, clas in enumerate(listin):
 
+            if prgbr is not None:
+                ind += index
+                if ind > 75:
+                    ind = 50
+                prgbr(ind)
+
             if verbose:
-                print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name,
-                      '...', sep='')
+                if log is not None:
+                    var = '- Evaluating (' + str(index + 1) + '/' + str(len(listin)) + ') element(s): ' + clas.name + \
+                          '...'
+                    log(var)
+                else:
+                    print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name, '...', sep='')
 
             for oparam in clas.oparams:
                 for idx, line in enumerate(oparam.desc):
@@ -261,13 +384,23 @@ def __preformparameters(listin, which='...', verbose=False):
                     linemod = p.sub(r'<b>\1:</b>', linemod)
                     iparam.desc[idx] = linemod
 
-    elif which == 'classes':
+    elif wh == 'classes':
 
         for index, clas in enumerate(listin):
 
+            if prgbr is not None:
+                ind += index
+                if ind > 75:
+                    ind = 50
+                prgbr(ind)
+
             if verbose:
-                print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name,
-                      '...', sep='')
+                if log is not None:
+                    var = '- Evaluating (' + str(index + 1) + '/' + str(len(listin)) + ') element(s): ' + clas.name + \
+                          '...'
+                    log(var)
+                else:
+                    print('\t- Evaluating (', index + 1, '/', len(listin), ') element(s): ', clas.name, '...', sep='')
 
             for event in clas.events:
                 for idx, line in enumerate(event.desc):
@@ -320,8 +453,11 @@ def __preformparameters(listin, which='...', verbose=False):
     else:
 
         if verbose:
-
-            print('\t- Unrecognized element: ', which, '. No operations performed.', sep='')
+            if log is not None:
+                var = '- Unrecognized element: ' + wh + '. No operations performed.'
+                log(var)
+            else:
+                print('\t- Unrecognized element: ', wh, '. No operations performed.', sep='')
 
     return listin
 
@@ -329,14 +465,13 @@ def __preformparameters(listin, which='...', verbose=False):
 # This function adds basic syntax highlighting for code elements
 ##
 # @iparam imputcode
-# @iparam verbose
 ##
 # @oparam parsedcode
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.5
+# @version 1.6
 def __parsecode(inputcode):
 
     parsedcode = []
