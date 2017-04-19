@@ -12,23 +12,30 @@ import itertools
 # @iparam appendcode
 # @iparam usage
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 20/03/17
-# @version 1.3
+# @version 1.4
 ###
 def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur=False,
-                   appendcode=False, usage=False, verbose=False, log=None):
+                   appendcode=False, usage=False, verbose=False, log=None, prgbr=None):
 
     if log is not None:
 
-        log('\nEVENT!!!! Beginning process...\n')
-        log('Step 1) Searching in directories:\n')
+        log('<b>EVENT!!!! Beginning process...</b>')
+        log('<u>Step 1) Searching in directories:</u>')
     else:
 
-        print('\nEVENT!!!! Beginning process...\n')
-        print('Step 1) Searching in directories:\n')
+        print('\EVENT!!!! Beginning process...')
+        print('Step 1) Searching in directories:')
+
+    if prgbr is not None:
+
+        ind = 1
+        prgbr(1)
 
     chainoffiles = []  # Array that will store the list of files
     chainofdirs = []  # Array that will store the paths of the files in chainOfFiles
@@ -42,6 +49,13 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
         for files in next(os.walk(pathvar)):
             for name in files:
                 if name.endswith('.m'):
+
+                    if prgbr is not None:
+                        ind += 1
+                        prgbr(ind)
+                        if ind > 25:
+                            ind = 1
+
                     if verbose:
                         if log is not None:
                             var = '- Fetching ' + name + '...'
@@ -58,6 +72,13 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
         for root, dirs, files in os.walk(pathvar):
             for name in files:
                 if name.endswith('.m'):
+
+                    if prgbr is not None:
+                        ind += 1
+                        prgbr(ind)
+                        if ind > 25:
+                            ind = 1
+
                     if verbose:
                         if log is not None:
                             var = '- Fetching ' + os.path.join(root, name) + '...'
@@ -68,10 +89,14 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
                         chainoffiles.append(name)
                         chainofdirs.append(root)
 
+    if prgbr is not None:
+        ind = 25
+        prgbr(ind)
+
     if verbose:
         if log is not None:
-            var = '\nEVENT!!!! Fetching process finished, found: ' + str(len(chainoffiles)) + ' elements in ' + \
-                  str(len(set(chainofdirs))) + ' directories\n'
+            var = '<b>EVENT!!!! Fetching process finished, found: ' + str(len(chainoffiles)) + ' elements in ' + \
+                  str(len(set(chainofdirs))) + ' directories</b>'
             log(var)
         else:
             print('\nEVENT!!!! Fetching process finished, found: ', len(chainoffiles), ' elements in ',
@@ -82,11 +107,12 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
                                                                     appendcode=appendcode,
                                                                     usage=usage,
                                                                     verbose=verbose,
-                                                                    log=log)
+                                                                    log=log,
+                                                                    prgbr=prgbr)
 
     generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=projectlogo, projectname=projectname, appendcode=appendcode, usage=usage,
-                verbose=verbose, log=log)
+                verbose=verbose, log=log, prgbr=prgbr)
 
 
 # @desc Here there will be a loop over all .m files for getting the information of them
@@ -96,19 +122,24 @@ def formatlabfiles(pathvar, outputdir, projectlogo=None, projectname=None, recur
 # @iparam appendcode
 # @iparam usage
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 20/03/17
-# @version 1.1
+# @version 1.2
 ###
-def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False, log=None):
+def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, verbose=False, log=None, prgbr=None):
 
     if log is not None:
 
-        log('Step 2) Loading files to memory:\n')
+        log('<u>Step 2) Loading files to memory:</u>')
     else:
         print('Step 2) Loading files to memory:\n')
+
+    if prgbr is not None:
+        indx = 25 + round(len(chainoffiles)/24)
 
     index = 0
     # List of 'function' objects
@@ -120,6 +151,12 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 
     # Loop over all previously fetched files
     for fil in chainoffiles:
+
+        if prgbr is not None:
+            prgbr(indx)
+            indx += 1
+            if indx > 50:
+                indx = 50
 
         if verbose:
 
@@ -216,13 +253,14 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 
     if verbose:
         if log is not None:
-            log('\nEVENT!!!! Loading process finished\n')
+            log('<b>EVENT!!!! Loading process finished</b>')
         else:
             print('\nEVENT!!!! Loading process finished\n')
 
     if usage:
         listoffunctions, listofscripts, listofclasses = __checkusage(listoffunctions, listofscripts,
-                                                                     listofclasses, verbose=verbose, log=log)
+                                                                     listofclasses, verbose=verbose, log=log,
+                                                                     prgbr=prgbr)
 
     return listoffunctions, listofscripts, listofclasses
 
@@ -233,6 +271,8 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 # @iparam listofscripts
 # @iparam listofclasses
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @oparam listoffunctions
 # @oparam listofscripts
@@ -241,21 +281,32 @@ def __scanformfiles(chainoffiles, chainofdirs, appendcode=False, usage=False, ve
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.2
+# @version 1.3
 ###
-def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False, log=None):
+def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False, log=None, prgbr=None):
     merged = listoffunctions + listofscripts + listofclasses
     ind = 0
 
     if verbose:
         if log is not None:
-            var = '- Checking mutual ussage among ' + str(len(merged)) + ' files:\n'
+            var = '- Checking mutual ussage among ' + str(len(merged)) + ' files:'
             log(var)
         else:
             print('\t- Checking mutual ussage among ', len(merged), ' files:\n', sep='')
         ind = 0
 
+    if prgbr is not None:
+        indx = 25
+        prgbr(indx)
+        indx += 1
+
     for x, y in itertools.permutations(merged, 2):
+
+        if prgbr is not None:
+            indx += 1
+            prgbr(indx)
+            if indx > 50:
+                indx = 25
 
         if y.name in ' '.join(x.code):
             x.adduses(y.name)
@@ -269,9 +320,13 @@ def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False, l
             else:
                 print('\t- Checked ', ind, '-th combination of files', sep='')
 
+    if prgbr is not None:
+        indx = 50
+        prgbr(indx)
+
     if verbose:
         if log is not None:
-            log('\nEVENT!!!! All combinations between files checked\n')
+            log('<b>EVENT!!!! All combinations between files checked</b>')
         else:
             print('\nEVENT!!!! All combinations between files checked\n')
 
@@ -288,11 +343,12 @@ def __checkusage(listoffunctions, listofscripts, listofclasses, verbose=False, l
 # This function parses the lines in the input list for a script file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.0
+# @version 1.1
 ###
 def __parsemscript(chunks, verbose=False, log=None):
     # 'Script' object definition
@@ -389,11 +445,12 @@ def __parsemscript(chunks, verbose=False, log=None):
 # This function parses the lines in the input list for a function file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.1
+# @version 1.2
 ###
 def __parsemfunct(chunks, verbose=False, log=None):
     # 'Function' object definition
@@ -522,11 +579,12 @@ def __parsemfunct(chunks, verbose=False, log=None):
 # This function parses the lines in the input list for a class file
 # @iparam chunks
 # @iparams verbose
+# @iparam log
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.0
+# @version 1.1
 ###
 def __parsemclass(chunks, verbose=False, log=None):
 

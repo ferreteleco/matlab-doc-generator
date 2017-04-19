@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Matlab Documentation Generator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="logo">
@@ -31,7 +31,7 @@
      <rect>
       <x>112</x>
       <y>123</y>
-      <width>291</width>
+      <width>391</width>
       <height>20</height>
      </rect>
     </property>
@@ -58,10 +58,10 @@
    <widget class="QTextBrowser" name="console">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>550</x>
       <y>10</y>
-      <width>731</width>
-      <height>561</height>
+      <width>631</width>
+      <height>531</height>
      </rect>
     </property>
    </widget>
@@ -160,8 +160,8 @@
    <widget class="QPushButton" name="browseidir">
     <property name="geometry">
      <rect>
-      <x>412</x>
-      <y>39</y>
+      <x>510</x>
+      <y>38</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -173,7 +173,7 @@
    <widget class="QPushButton" name="browseodir">
     <property name="geometry">
      <rect>
-      <x>412</x>
+      <x>510</x>
       <y>80</y>
       <width>31</width>
       <height>23</height>
@@ -186,8 +186,8 @@
    <widget class="QPushButton" name="browselogo">
     <property name="geometry">
      <rect>
-      <x>412</x>
-      <y>123</y>
+      <x>510</x>
+      <y>122</y>
       <width>31</width>
       <height>23</height>
      </rect>
@@ -201,7 +201,7 @@
      <rect>
       <x>112</x>
       <y>39</y>
-      <width>291</width>
+      <width>391</width>
       <height>20</height>
      </rect>
     </property>
@@ -211,7 +211,7 @@
      <rect>
       <x>112</x>
       <y>81</y>
-      <width>291</width>
+      <width>391</width>
       <height>20</height>
      </rect>
     </property>
@@ -269,7 +269,7 @@
    <widget class="QPushButton" name="resConsole">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>460</x>
       <y>520</y>
       <width>81</width>
       <height>23</height>
@@ -282,7 +282,7 @@
    <widget class="QPushButton" name="resAll">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>460</x>
       <y>550</y>
       <width>81</width>
       <height>23</height>
@@ -295,7 +295,7 @@
    <widget class="QPushButton" name="dumpLog">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>460</x>
       <y>490</y>
       <width>81</width>
       <height>23</height>
@@ -303,6 +303,19 @@
     </property>
     <property name="text">
      <string>Dump log</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="overallprogess">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>550</y>
+      <width>641</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
     </property>
    </widget>
    <zorder>odir</zorder>
@@ -322,6 +335,7 @@
    <zorder>resConsole</zorder>
    <zorder>resAll</zorder>
    <zorder>dumpLog</zorder>
+   <zorder>overallprogess</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

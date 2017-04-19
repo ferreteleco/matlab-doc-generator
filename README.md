@@ -4,13 +4,25 @@ This README is intended to summarize the development of the DocGenerator applica
 
 ### What is this repository for? ###
 
-* This repository will be used mainly or development purposes, but also as a way to distribute the application it i'm able to make it work.
-* 1.2 BETA
+* This repository will be used mainly or development purposes, but also as a way to distribute the application it i'm able get it working.
+* 2.0 BETA
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
-* For the moment (v1.2) it has to run from CMD. Just move to /src folder and run `'python.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`
+*To run using the built-in GUI: simply click on the direct access 'DocGenerationGUI' and et voilá:
+> Edit boxes and buttons:   
+> Input directory: -- Specify input directory either by clicking in the side button or manually 		
+> Output directory -- Specify output directory either by clicking in the side button or manually
+> Project Logo -- Specify path to project logo (optional)   
+> Project Name -- Specify project's name (optional)		
+> Check buttons:   
+> Recursive scan -- Perform recursive scan (check subdirectories)		
+> Check usage -- Check mutual ussage between files			
+> Append code -- Append source code to documentation		
+> -Verbose mode -- Verbose mode (shown in log console at right hand)
+
+* To run from CMD: just move to /src folder and run `'python.exe mdocGen.py [-i <inputdir>] [-o <outputdir>] [-l <projectlogo>] [-n <projectname>] [-r -u -c -v -h]'`
 > -h -- Get usage hints CMD
 > -i -- Specify input directory (default) ./ 		
 > -o -- Specify output directory (default) ../doc 		
@@ -33,6 +45,8 @@ NOTE: the specify paths without quotes!!
 * The configuration cannot be simpler:
 
 It uses the Python's libraries Jinja2 (for HTML templating), time (for execution time and dates), os (for path operations), itertools (for mutual usage checking), re (for regular expressions searching and substitution), copy2 (for copying single files), copy_tree (for copying directories), sys (for command line arguments) and getopt (for argument parsing).
+
+Version 2.0 uses also PyQt5 for the GUI.
 
 NOTE: Python version 3.6!!!!
 
@@ -160,10 +174,9 @@ function [ nameofout1, nameofout2 ] = myfunc( namein1, namein2 )
 -@attribute name: description     // class attribute			
 -@property [type] name: description // class property			
 -%% delimiter used for sections (needed)			
-- -> adds \t\t
-Only on parameters description (iparams, oparams, methods, properties, attributes and events)!!
-- --> adds \t\t\t\t
-- ---> adds \t\t\t\t\t\t
+- -> adds \t\t --> adds \t\t\t\t ---> adds \t\t\t\t\t\t
+-Only on parameters description (iparams, oparams, methods, properties, attributes and events)!!
+
 ### Who do I talk to? ###
 
 * Andrés Ferreiro González

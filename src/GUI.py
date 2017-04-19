@@ -9,7 +9,8 @@ import imghdr
 
 class processThread(QtCore.QThread):
 
-    progress_data = QtCore.pyqtSignal(object)
+    data_log = QtCore.pyqtSignal(object)
+    prog_bar = QtCore.pyqtSignal(object)
 
     def __init__(self, idir, odir, projectlogo=None, projectname='', recur=False, appendcode=False, usage=False,
                  verbose=False):
@@ -26,20 +27,22 @@ class processThread(QtCore.QThread):
 
     def run(self):
 
-        self.progress_data.emit('<FONT weight="bold">Beginning process</font>')
+        self.data_log.emit('<FONT color="green"><b>BEGINNING PROCESS</b></font>\n')
         start = time.time()
+
+        self.prog_bar.emit(1)
 
         var = 'mfiles'
         ({'mfiles': formatlabfiles}[var])(self.__idir, self.__odir, projectlogo=self.__logo,
                                           projectname=self.__name, recur=self.__recursive,
                                           appendcode=self.__code, usage=self.__usage, verbose=self.__verbose,
-                                          log=self.progress_data.emit)
+                                          log=self.data_log.emit, prgbr=self.prog_bar.emit)
 
         end = time.time()
-        self.progress_data.emit('PROCESS FINISHED!!')
-        var = '\nTook' + str(end - start) + 'seconds'
-        self.progress_data.emit(var)
-        self.progress_data.emit('succeeded')
+        self.data_log.emit('<FONT color="green"><b>PROCESS FINISHED!!</b></font>')
+        var = '<b>Took ' + str(end - start) + ' seconds</b>'
+        self.data_log.emit(var)
+        self.prog_bar.emit(100)
 
 
 class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -72,7 +75,8 @@ class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
         self.odir.editingFinished.connect(self.__isfile)
 
         # Parameters used to feed document generation
-        self.updatelog = self.console.append
+        self.__updatelog = self.console.append
+        self.__oprogbar = self.overallprogess.setValue
         self.__idir = None
         self.__odir = None
         self.__name = None
@@ -113,6 +117,7 @@ class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
         self.name.setText('')
 
         self.__resetconsole()
+        self.__oprogbar(0)
 
         self.code.setChecked(False)
         self.usage.setChecked(False)
@@ -207,10 +212,10 @@ class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __lestdocalcs(self):
 
-        self.gooo()
+        self.go()
 
     @QtCore.pyqtSlot()
-    def gooo(self):
+    def go(self):
 
         self.__name = self.name.text()
 
@@ -219,7 +224,8 @@ class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
                                     projectname=self.__name, recur=self.__recursive,
                                     appendcode=self.__code, usage=self.__usage, verbose=self.__verbose)
 
-            process.progress_data.connect(self.dbg)
+            process.data_log.connect(self.dbg)
+            process.prog_bar.connect(self.foo)
             self.threads.append(process)
             process.start()
 
@@ -229,8 +235,10 @@ class GUIDocGen(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def dbg(self, data):
 
-        print(data)
-        self.updatelog(data)
+        self.__updatelog(data)
+
+    def foo(self, value):
+        self.__oprogbar(value)
 
 
 if __name__ == '__main__':

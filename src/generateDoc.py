@@ -16,38 +16,49 @@ import time
 # @iparam listofclasses
 # @iparam verbose
 # @iparam usage
+# @iparam log
+# @iparam progbr
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.4
+# @version 1.5
 ###
 def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
-                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None):
+                projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None,
+                prgbr=None):
 
     if log is not None:
-        log('Step 3) Beginning preformatting:\n')
+        log('<u>Step 3) Beginning preformatting:</u>')
     else:
         print('Step 3) Beginning preformatting:\n')
 
-    ver = 1.2
+    ver = 2.0
 
-    listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log)
-    listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log)
+    listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
+    listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
+
+    if prgbr is not None:
+        ind = 75
+        prgbr(ind)
 
     if verbose:
 
         if log is not None:
-            log('\nEVENT!!!! All files preformatted\n')
+            log('<b>EVENT!!!! All files preformatted</b>')
         else:
             print('\nEVENT!!!! All files preformatted\n')
 
     if log is not None:
-        log('Step 4) Beginning file dumping:\n')
+        log('<u>Step 4) Beginning file dumping:</u>')
     else:
         print('Step 4) Beginning file dumping:\n')
 
     if not os.path.exists(outputdir):
+
+        if prgbr is not None:
+            ind = 76
+            prgbr(ind)
 
         if verbose:
             if log is not None:
@@ -59,6 +70,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         os.makedirs(outputdir)
 
     if not os.path.exists(os.path.join(outputdir, "files")):
+
+        if prgbr is not None:
+            ind = 77
+            prgbr(ind)
 
         if verbose:
             if log is not None:
@@ -72,6 +87,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     basedircss = os.path.join(outputdir, 'utils')
 
     if not os.path.exists(basedircss):
+
+        if prgbr is not None:
+            ind = 78
+            prgbr(ind)
 
         if verbose:
             if log is not None:
@@ -88,6 +107,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     fromdirectory = base+"\\templates\\utils"
     todirectory = basedircss
 
+    if prgbr is not None:
+        ind = 79
+        prgbr(ind)
+
     if verbose:
         if log is not None:
             log('- Copying utils to destination directory.')
@@ -98,6 +121,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     # Copy project logo to output directory
     if projectlogopath is not None:
+
+        if prgbr is not None:
+            ind = 80
+            prgbr(ind)
 
         if verbose:
             if log is not None:
@@ -113,6 +140,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     else:
 
+        if prgbr is not None:
+            ind = 80
+            prgbr(ind)
+
         projectlogo = ''
 
     outsnames = []
@@ -124,7 +155,16 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         else:
             print('\t- Generating output paths and names.')
 
+    if prgbr is not None:
+        ind = 80 + round(len(chainoffiles)/10)
+
     for namein in chainoffiles:
+
+        if prgbr is not None:
+            prgbr(ind)
+            ind += 1
+            if ind > 90:
+                ind = 80
 
         outsnames.append(namein[0:-2])
         outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
@@ -177,7 +217,16 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         else:
             print('Fatal error')
 
+    if prgbr is not None:
+        ind = 90
+
     for index, file in enumerate(outsnames):
+
+        if prgbr is not None:
+            prgbr(ind)
+            ind += 1
+            if ind > 99:
+                ind = 90
 
         for fun in listfuncmod:
             if file == fun.name:
@@ -261,7 +310,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         except ReferenceError:
 
             if log is not None:
-                log('Fatal error')
+                log('<FONT color="red"><b>Fatal error</b></FONT>')
             else:
                 print('Fatal error')
 
@@ -272,25 +321,36 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 # @iparam listin
 # @iparam which
 # @iparam verbose
+# @iparam log
+# @iparam progbr
 ##
 # @oparam modifiedlist
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 23/03/17
-# @version 1.3
-def __preformparameters(listin, wh='...', verbose=False, log=None):
+# @version 1.4
+def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
     if verbose is True:
         if log is not None:
-            var = '- Preformatting ' + wh + ' parameters description...\n'
+            var = '- Preformatting ' + wh + ' parameters description...'
             log(var)
         else:
             print('\t- Preformatting ', wh, ' parameters description...\n', sep='')
 
+    if prgbr is not None:
+        ind = 50
+
     if wh == 'functions':
 
         for index, clas in enumerate(listin):
+
+            if prgbr is not None:
+                ind += index
+                if ind > 75:
+                    ind = 50
+                prgbr(ind)
 
             if verbose:
                 if log is not None:
@@ -327,6 +387,12 @@ def __preformparameters(listin, wh='...', verbose=False, log=None):
     elif wh == 'classes':
 
         for index, clas in enumerate(listin):
+
+            if prgbr is not None:
+                ind += index
+                if ind > 75:
+                    ind = 50
+                prgbr(ind)
 
             if verbose:
                 if log is not None:
@@ -399,14 +465,13 @@ def __preformparameters(listin, wh='...', verbose=False, log=None):
 # This function adds basic syntax highlighting for code elements
 ##
 # @iparam imputcode
-# @iparam verbose
 ##
 # @oparam parsedcode
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.5
+# @version 1.6
 def __parsecode(inputcode):
 
     parsedcode = []
