@@ -1,2 +1,0 @@
-@TODO replicate directories structure
-@TODO http://nuitka.net/pages/overview.html
