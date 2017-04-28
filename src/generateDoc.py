@@ -483,7 +483,12 @@ def __parsecode(inputcode):
 
         line = line.replace('<', '&lt;').replace('>', '&gt;')
 
-        if line[0] == '%':
+        aux = line.lstrip()
+
+        if aux == '':
+            aux = '###############'
+            
+        if line[0] == '%' or aux[0] == '%':
             parsedcode.append('<span class="comm">'+line+'</span>')
 
         else:
