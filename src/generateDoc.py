@@ -24,7 +24,7 @@ import time
 # @date 27/03/17
 # @version 1.5
 ###
-def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
+def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None,
                 prgbr=None):
 
@@ -37,6 +37,8 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
     listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
+
+    outputdir = os.path.realpath(outputdir)
 
     if prgbr is not None:
         ind = 75
@@ -150,7 +152,10 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         projectlogo = ''
 
     outsnames = []
+    outsroutes = []
     outspath = []
+
+    outputdir = os.path.join(outputdir, "files")
 
     if verbose:
         if log is not None:
@@ -161,7 +166,9 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     if prgbr is not None:
         ind = 80 + round(len(chainoffiles)/10)
 
-    for namein in chainoffiles:
+    basedirs = os.path.commonprefix(chainofdirs)
+
+    for indx, namein in enumerate(chainoffiles):
 
         if prgbr is not None:
             prgbr(ind)
@@ -169,8 +176,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
             if ind > 90:
                 ind = 80
 
+        curdir = chainofdirs[indx].replace(basedirs, '')
+
         outsnames.append(namein[0:-2])
-        outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
+        outsroutes.append([outputdir+'\\'+curdir+'\\', namein[0:-2]])
+        outspath.append(os.path.join(outputdir+'\\'+curdir+'\\', namein[0:-2]))
 
     # Template loader for Jinja2 templates
     templateloader = jinja2.FileSystemLoader(searchpath=base+"/templates/")
@@ -185,7 +195,7 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
     templatevars = {"project_name": projectname,
                     "project_logo": projectlogo,
-                    "style": "./utils",
+                    "style": basedircss,
                     "functions": listoffunctions,
                     "classes": listofclasses,
                     "date": time.strftime("%a %d/%m/%Y at %H:%S"),
@@ -224,6 +234,9 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         ind = 90
 
     for index, file in enumerate(outsnames):
+
+        if not os.path.exists(outsroutes[index][0]):
+            os.makedirs(outsroutes[index][0])
 
         if prgbr is not None:
             prgbr(ind)
@@ -278,8 +291,8 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
         templatevars = {"project_name": projectname,
                         "project_logo": projectlogo,
-                        "style": "../utils",
-                        "pathslist": outsnames,
+                        "style": basedircss,
+                        "pathslist": outsroutes,
                         "dir": outputdir,
                         "fun": current,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),

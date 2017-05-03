@@ -17,7 +17,7 @@
   {% endif %}</header>
   <nav>
     {% for item in pathslist %}
-    <a href="{{item+'.html'}}">{{item}}</a>
+    <a href="{{''.join(item)+'.html'}}">{{item[1]}}</a>
     {% endfor %}
   </nav>
 <article>
