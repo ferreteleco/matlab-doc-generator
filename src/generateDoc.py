@@ -11,6 +11,7 @@ import time
 ##
 # @iparam outputdir
 # @iparam chainoffiles
+# @iparam chainofdirs
 # @iparam listoffunctions
 # @iparam listofscripts
 # @iparam listofclasses
@@ -22,7 +23,7 @@ import time
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.5
+# @version 1.6
 ###
 def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None,
@@ -141,7 +142,9 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
         else:
             filename = projectlogopath.split('/')
 
-        projectlogo = os.path.join(".\\utils", filename[len(filename)-1])
+        projectlogo = filename[len(filename)-1]
+
+        print(projectlogo)
 
     else:
 
@@ -155,7 +158,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     outsroutes = []
     outspath = []
 
-    outputdir = os.path.join(outputdir, "files")
+    outputdirfiles = os.path.join(outputdir, "files")
 
     if verbose:
         if log is not None:
@@ -178,12 +181,13 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         curdir = chainofdirs[indx].replace(basedirs, '')
         outsnames.append(namein[0:-2])
-        outsroutes.append([outputdir+'\\'+curdir+'\\', namein[0:-2]])
 
         if curdir is '':
-            outspath.append(os.path.join(outputdir, 'root'))
+            outspath.append(os.path.join(outputdirfiles, 'root'))
+            outsroutes.append([outputdirfiles + '\\' + 'root' + '\\', namein[0:-2]])
         else:
-            outspath.append(os.path.join(outputdir, curdir[1:]))
+            outspath.append(os.path.join(outputdirfiles, curdir[1:]))
+            outsroutes.append([outputdirfiles + '\\' + curdir + '\\', namein[0:-2]])
 
     # Template loader for Jinja2 templates
     templateloader = jinja2.FileSystemLoader(searchpath=base + "/templates/")
@@ -195,6 +199,13 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         if not os.path.exists(it):
             os.makedirs(it)
+
+        if verbose:
+            if log is not None:
+                var = '- Creating output directory: ' + it
+                log(var)
+            else:
+                print('\t- Creating output directory: ', it, sep='')
 
         indxs = [index for index, item in enumerate(outspath) if item == it]
 
@@ -291,22 +302,28 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
                     }
     try:
 
+        if projectname == '':
+            name = 'index.html'
+        else:
+            name = projectname.lower()+'.html'
+
         if verbose:
             if log is not None:
-                log('- Rendering template: index.html...')
+                var = '- Rendering template: ' + name
+                log(var)
             else:
-                print('\t- Rendering template: index.html...')
+                print('\t- Rendering template: ' + name + '...')
 
         outputtext = template.render(templatevars)
 
-        with open(os.path.join(outputdir, "index.html"), "w") as fh:
+        with open(os.path.join(outputdir, name), "w") as fh:
 
             if verbose:
                 if log is not None:
-                    var = '- Saving file to: ' + outputdir + '\\index.html ...'
+                    var = '- Saving file to: ' + outputdir + '\\' + name + '...'
                     log(var)
                 else:
-                    print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
+                    print('\t- Saving file to: ', outputdir, '\\' + name + '...', sep='')
             fh.write(outputtext)
             fh.close()
 

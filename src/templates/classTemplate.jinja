@@ -12,8 +12,8 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="..\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
-  <br><strong>{{project_name}}</strong></br>
+<header>{% if project_logo %}<center><img src="{{style}}\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+  <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
   <nav>
     <center><h3> Project's Source Files</h3></center>
@@ -22,7 +22,13 @@
     {% endfor %}
   </nav>
 <article>
+{% if project_name %}
+<div><a href="{{dir}}/{{project_name}}.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+{% else %}
 <div><a href="{{dir}}/index.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+{% endif %}
+
+
 <h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Class:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>

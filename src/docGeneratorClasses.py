@@ -18,6 +18,7 @@ import re
 # @iparam code
 # @iparam usedby
 # @iparam uses
+# @iparam path
 ##
 # @method addiparam
 # @method updateiparam
@@ -33,7 +34,7 @@ import re
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 21/03/17
-# @version 1.5
+# @version 1.6
 ###
 class FuncDefinition:
 
@@ -352,13 +353,14 @@ class FuncDefinition:
 # @iparam code
 # @iparam usedby
 # @iparam uses
+# @iparam path
 ##
 # @method updatedesc
 ##
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 22/03/17
-# @version 1.2
+# @version 1.3
 ###
 class ScriptDefinition:
 
@@ -636,6 +638,7 @@ class ParamDefinition:
 # @iparam code
 # @iparam usedby
 # @iparam uses
+# @iparam path
 ##
 # @method addproperty
 # @method updateproperty
@@ -655,7 +658,7 @@ class ParamDefinition:
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.2
+# @version 1.3
 ###
 class ClassDefinition:
 
