@@ -2,7 +2,7 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <title>Index of {{project_name}} project</title>
+  <title>Index of {{project_name}} project: {{currfold}} </title>
   <meta name="keywords" content="{{project_name}}">
   <meta name="description" content="{{project_name}}">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -16,22 +16,13 @@
   <br><strong>{{project_name}}</strong></br>
   {% endif %}</header>
 <article class="ind">
-<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index of {{project_name}} project</strong></h1>
-
-{% if project_folders %}
-<h2><a name="_toc"></a>Source folders: </h2>
-<ul style="list-style:none">
-  {% for folder in project_folders %}
-    <li><img alt="mt" border="0" src="{{style}}/folder.ico"> <a href="{{folder}}/index.html">{{folder.replace(cmmprfxout, '')}}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-
+<div><a href="{{dir}}/index.html">Home</a>\{{currfold}}</div>
+<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index of {{project_name}} project: '{{currfold}}' folder</strong></h1>
 {% if functions %}
 <h2><a name="_toc"></a>Documented functions: </h2>
 <ul style="list-style:none">
   {% for fun in functions %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{fun.path}}\{{fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -39,7 +30,7 @@
 <h2><a name="_toc"></a>Documented scripts: </h2>
 <ul style="list-style:none">
   {% for scr in scripts %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{scr.path}}\{{scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -47,7 +38,7 @@
 <h2><a name="_toc"></a>Documented classes: </h2>
 <ul style="list-style:none">
     {% for cls in classes %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{cls.path}}\{{cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
     {% endfor %}
 </ul>
 {% endif %}

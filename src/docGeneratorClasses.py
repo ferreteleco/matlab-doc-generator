@@ -37,9 +37,11 @@ import re
 ###
 class FuncDefinition:
 
+    typ = 'function'
+
     def __init__(self, name=None, usage=None, desc=None, author=None, date=None, version=None,
                  iparams=None, oparams=None, summ=None, refs=None, company=None, code=None,
-                 usedby=None, uses=None):
+                 usedby=None, uses=None, path=None):
 
         if name is None:
             self._name = ''
@@ -102,6 +104,11 @@ class FuncDefinition:
             self._company = ''
         else:
             self._company = company
+
+        if path is None:
+            self._path = ''
+        else:
+            self._path = path
 
         if code is None:
             self._code = []
@@ -217,6 +224,10 @@ class FuncDefinition:
         self._name = name
 
     @property
+    def typ(self):
+        return self.typ
+
+    @property
     def usage(self):
         return self._usage
 
@@ -320,6 +331,14 @@ class FuncDefinition:
     def uses(self, uses):
         self._uses = uses
 
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        self._path = path
+
 
 # This class is used to store the data extracted from the different headers analized for scripts
 ##
@@ -343,8 +362,10 @@ class FuncDefinition:
 ###
 class ScriptDefinition:
 
+    typ = 'script'
+
     def __init__(self, name=None, desc=None, code=None, author=None, date=None, version=None,
-                 refs=None, uses=None, usedby=None, company=None):
+                 refs=None, uses=None, usedby=None, company=None, path=None):
 
         if name is None:
             self._name = ''
@@ -390,6 +411,11 @@ class ScriptDefinition:
             self._author = ''
         else:
             self._author = author
+
+        if path is None:
+            self._path = ''
+        else:
+            self._path = path
 
         if date is None:
             # dd/mm/yyyy format
@@ -443,6 +469,10 @@ class ScriptDefinition:
     @name.setter
     def name(self, name):
         self._name = name
+
+    @property
+    def typ(self):
+        return self.typ
 
     @property
     def refs(self):
@@ -515,6 +545,14 @@ class ScriptDefinition:
     @version.setter
     def version(self, version):
         self._version = version
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        self._path = path
 
 
 # This class is used to store the param data of the different headers analized
@@ -621,9 +659,11 @@ class ParamDefinition:
 ###
 class ClassDefinition:
 
+    typ = 'class'
+
     def __init__(self, name=None, usage=None, desc=None, author=None, date=None, version=None,
                  methods=None, attributes=None, events=None, properties=None, summ=None, refs=None,
-                 company=None, code=None, usedby=None, uses=None):
+                 company=None, code=None, usedby=None, uses=None, path=None):
 
         if name is None:
             self._name = ''
@@ -714,6 +754,11 @@ class ClassDefinition:
             self._uses = []
         else:
             self._uses = [uses]
+
+        if path is None:
+            self._path = ''
+        else:
+            self._path = path
 
     # This method adds a new method to the class object
     ##
@@ -857,6 +902,10 @@ class ClassDefinition:
         self._name = name
 
     @property
+    def typ(self):
+        return self.typ
+
+    @property
     def usage(self):
         return self._usage
 
@@ -975,3 +1024,11 @@ class ClassDefinition:
     @uses.setter
     def uses(self, uses):
         self._uses = uses
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        self._path = path
