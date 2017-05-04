@@ -16,9 +16,14 @@
   <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
   <nav>
-    <center><h3> Project's Source Files</h3></center>
-    {% for item in pathslist %}
-    <a href="{{''.join(item)+'.html'}}">{{item[1]}}</a>
+    <center><h3> File Navigation </h3></center>
+    {% for item in project_folders %}
+    <a href="{{item+'\index.html'}}"><img alt="^" border="0" src="{{style}}/folder.ico"><b class='nm'> {{item.replace(cmmprfxout, '')}}</b></a>
+    {% for elm in pathslist %}
+    {% if  elm[0] in item %}
+    <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="{{style}}/matlabicon.gif"><i> {{elm[1]}}</i></a>
+    {% endif %}
+    {% endfor %}
     {% endfor %}
   </nav>
 <article>

@@ -15,7 +15,20 @@
 <header>{% if project_logo %}<center><img src="{{style}}\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
   <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
-<article class="ind">
+
+  <nav>
+    <center><h3> File Navigation </h3></center>
+    {% for item in project_folders %}
+    <a href="{{item+'\index.html'}}"><img alt="^" border="0" src="{{style}}/folder.ico"><b class='nm'> {{item.replace(cmmprfxout, '')}}</b></a>
+    {% for elm in pathslist %}
+    {% if  elm[0] in item %}
+    <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="{{style}}/matlabicon.gif"><i> {{elm[1]}}</i></a>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+  </nav>
+
+<article>
 {% if project_name %}
 <div><a href="{{dir}}/{{project_name}}.html">Home</a>\{{currfold}}</div>
 {% else %}

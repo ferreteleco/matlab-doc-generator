@@ -184,10 +184,12 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         if curdir is '':
             outspath.append(os.path.join(outputdirfiles, 'root'))
-            outsroutes.append([outputdirfiles + '\\' + 'root' + '\\', namein[0:-2]])
+            outsroutes.append([os.path.join(outputdirfiles, 'root'), namein[0:-2]])
         else:
             outspath.append(os.path.join(outputdirfiles, curdir[1:]))
-            outsroutes.append([outputdirfiles + '\\' + curdir + '\\', namein[0:-2]])
+            outsroutes.append([os.path.join(outputdirfiles, curdir[1:]), namein[0:-2]])
+
+    print(outsroutes[0][0]+'-----'+outspath[0])
 
     # Template loader for Jinja2 templates
     templateloader = jinja2.FileSystemLoader(searchpath=base + "/templates/")
@@ -240,6 +242,9 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         templatevars = {"project_name": projectname,
                         "project_logo": projectlogo,
+                        "project_folders": sorted(list(set(outspath))),
+                        "pathslist": outsroutes,
+                        "cmmprfxout": cmmprfxout,
                         "style": basedircss,
                         "functions": funs,
                         "dir": outputdir,
@@ -292,6 +297,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     templatevars = {"project_name": projectname,
                     "project_logo": projectlogo,
                     "project_folders": sorted(list(set(outspath))),
+                    "pathslist": outsroutes,
                     "cmmprfxout": cmmprfxout,
                     "style": basedircss,
                     "functions": listoffunctions,
@@ -392,6 +398,8 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         templatevars = {"project_name": projectname,
                         "project_logo": projectlogo,
+                        "project_folders": sorted(list(set(outspath))),
+                        "cmmprfxout": cmmprfxout,
                         "style": basedircss,
                         "pathslist": outsroutes,
                         "dir": outputdir,
