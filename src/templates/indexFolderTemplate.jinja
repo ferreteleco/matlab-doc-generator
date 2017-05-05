@@ -2,7 +2,7 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <title>Index of {{project_name}} project</title>
+  <title>Index of {{project_name}} project: {{currfold}} </title>
   <meta name="keywords" content="{{project_name}}">
   <meta name="description" content="{{project_name}}">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -15,6 +15,7 @@
 <header>{% if project_logo %}<center><img src="{{style}}\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
   <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
+
   <nav>
     <center><h3> File Navigation </h3></center>
     {% for item in project_folders %}
@@ -26,23 +27,19 @@
     {% endfor %}
     {% endfor %}
   </nav>
+
 <article>
-<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index of {{project_name}} project</strong></h1>
-
-{% if project_folders %}
-<h2><a name="_toc"></a>Source folders: </h2>
-<ul style="list-style:none">
-  {% for folder in project_folders %}
-    <li><img alt="mt" border="0" src="{{style}}/folder.ico"> <a href="{{folder}}/index.html"><b>{{folder.replace(cmmprfxout, '')}}</b></a></li>
-    {% endfor %}
-</ul>
+{% if project_name != '' %}
+<div><a href="{{dir}}/{{project_name}}.html">Home</a>\{{currfold}}</div>
+{% else %}
+<div><a href="{{dir}}/index.html">Home</a>\{{currfold}}</div>
 {% endif %}
-
+<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Index of '{{currfold}}' folder</strong></h1>
 {% if functions %}
 <h2><a name="_toc"></a>Documented functions: </h2>
 <ul style="list-style:none">
   {% for fun in functions %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{fun.path}}\{{fun.name}}.html"><b>{{fun.name}}</b></a>: {{fun.summ}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -50,7 +47,7 @@
 <h2><a name="_toc"></a>Documented scripts: </h2>
 <ul style="list-style:none">
   {% for scr in scripts %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{scr.path}}\{{scr.name}}.html"><b>{{scr.name}}</b></a>: {{scr.desc}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -58,7 +55,7 @@
 <h2><a name="_toc"></a>Documented classes: </h2>
 <ul style="list-style:none">
     {% for cls in classes %}
-    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{cls.path}}\{{cls.name}}.html"><b>{{cls.name}}</b></a>: {{cls.summ}}</li>
+    <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"> <a href="{{folderpath+'/'+cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
     {% endfor %}
 </ul>
 {% endif %}

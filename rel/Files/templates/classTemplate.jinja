@@ -12,16 +12,26 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="..\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
-  <br><strong>{{project_name}}</strong></br>
+<header>{% if project_logo %}<center><img src="{{style}}\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+  <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
   <nav>
-    {% for item in pathslist %}
-    <a href="{{item+'.html'}}">{{item}}</a>
+    <center><h3> File Navigation </h3></center>
+    {% for item in project_folders %}
+    <a href="{{item+'\index.html'}}"><img alt="^" border="0" src="{{style}}/folder.ico"><b class='nm'> {{item.replace(cmmprfxout, '')}}</b></a>
+    {% for elm in pathslist %}
+    {% if  elm[0] in item %}
+    <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="{{style}}/matlabicon.gif"><i> {{elm[1]}}</i></a>
+    {% endif %}
+    {% endfor %}
     {% endfor %}
   </nav>
 <article>
-<div><a href="../index.html">Home</a>\{{fun.name}}.m</div>
+{% if project_name != '' %}
+<div><a href="{{dir}}/{{project_name}}.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+{% else %}
+<div><a href="{{dir}}/index.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+{% endif %}
 <h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Class:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
@@ -85,19 +95,29 @@
 </pre></div>
 {% if usage %}
 <h2><a name="_cri"></a>Cross-reference information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+
 <h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
   {% for item in fun.usedby %}
-  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href="{{item}}.html"> {{item}}</a></li>
+  {% for element in pathslist %}
+  {% if element[1] == item %}
+  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href= "{{element[0]}}\{{item}}.html"> {{item}}</a></li>
+  {% endif %}
+  {% endfor %}
   {% endfor %}
 </ul>
 </div>
+
 <h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
   {% for item in fun.uses %}
-  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href="{{item}}.html"> {{item}}</a></li>
+  {% for element in pathslist %}
+  {% if element[1] == item %}
+  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href= "{{element[0]}}\{{item}}.html"> {{item}}</a></li>
+  {% endif %}
+  {% endfor %}
   {% endfor %}
   </ul>
 </div>
