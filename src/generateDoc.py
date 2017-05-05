@@ -34,7 +34,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     else:
         print('Step 3) Beginning preformatting:\n')
 
-    ver = 2.0
+    ver = 3.0
 
     listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
     listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
@@ -311,7 +311,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
         if projectname == '':
             name = 'index.html'
         else:
-            name = projectname.lower()+'.html'
+            name = projectname.lower().replace(' ', '_')+'.html'
 
         if verbose:
             if log is not None:

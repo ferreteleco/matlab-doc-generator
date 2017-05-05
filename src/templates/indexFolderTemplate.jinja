@@ -29,7 +29,7 @@
   </nav>
 
 <article>
-{% if project_name %}
+{% if project_name != '' %}
 <div><a href="{{dir}}/{{project_name}}.html">Home</a>\{{currfold}}</div>
 {% else %}
 <div><a href="{{dir}}/index.html">Home</a>\{{currfold}}</div>

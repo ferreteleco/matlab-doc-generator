@@ -27,13 +27,11 @@
     {% endfor %}
   </nav>
 <article>
-{% if project_name %}
+{% if project_name != '' %}
 <div><a href="{{dir}}/{{project_name}}.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
 {% else %}
 <div><a href="{{dir}}/index.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
 {% endif %}
-
-
 <h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Class:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
