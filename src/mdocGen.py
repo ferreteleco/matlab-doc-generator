@@ -51,7 +51,7 @@ def main(argv):
         elif opt in ("-l", "--logo"):
             projectlogopath = arg
         elif opt in ("-n", "--name"):
-            projectname = arg + " Project"
+            projectname = arg
         elif opt == "-r":
             recur = True
         elif opt == "-u":

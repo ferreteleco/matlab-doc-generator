@@ -11,6 +11,7 @@ import time
 ##
 # @iparam outputdir
 # @iparam chainoffiles
+# @iparam chainofdirs
 # @iparam listoffunctions
 # @iparam listofscripts
 # @iparam listofclasses
@@ -22,9 +23,9 @@ import time
 # @author Andres Ferreiro Gonzalez
 # @company Own
 # @date 27/03/17
-# @version 1.5
+# @version 1.6
 ###
-def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofclasses,
+def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscripts, listofclasses,
                 projectlogopath=None, projectname='', appendcode=False, usage=False, verbose=False, log=None,
                 prgbr=None):
 
@@ -33,10 +34,12 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     else:
         print('Step 3) Beginning preformatting:\n')
 
-    ver = 2.0
+    ver = 3.1
 
     listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
     listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
+
+    outputdir = os.path.realpath(outputdir)
 
     if prgbr is not None:
         ind = 75
@@ -139,7 +142,9 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         else:
             filename = projectlogopath.split('/')
 
-        projectlogo = os.path.join(".\\utils", filename[len(filename)-1])
+        projectlogo = filename[len(filename)-1]
+
+        print(projectlogo)
 
     else:
 
@@ -150,7 +155,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
         projectlogo = ''
 
     outsnames = []
+    outsroutes = []
     outspath = []
+    outsrel = []
+
+    outputdirfiles = os.path.join(outputdir, "files")
 
     if verbose:
         if log is not None:
@@ -161,7 +170,9 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     if prgbr is not None:
         ind = 80 + round(len(chainoffiles)/10)
 
-    for namein in chainoffiles:
+    basedirs = os.path.commonprefix(chainofdirs)
+
+    for indx, namein in enumerate(chainoffiles):
 
         if prgbr is not None:
             prgbr(ind)
@@ -169,12 +180,112 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
             if ind > 90:
                 ind = 80
 
+        curdir = chainofdirs[indx].replace(basedirs, '')
         outsnames.append(namein[0:-2])
-        outspath.append(os.path.join(os.path.join(outputdir, 'files'), namein[0:-2]))
+
+        if curdir is '':
+            outspath.append(os.path.join(outputdirfiles, 'root'))
+            outsrel.append('files/root')
+            outsroutes.append(['files/root', namein[0:-2]])
+        else:
+            outspath.append(os.path.join(outputdirfiles, curdir[1:]))
+            outsrel.append('files/'+curdir[1:])
+            outsroutes.append(['files/'+curdir[1:], namein[0:-2]])
 
     # Template loader for Jinja2 templates
-    templateloader = jinja2.FileSystemLoader(searchpath=base+"/templates/")
+    templateloader = jinja2.FileSystemLoader(searchpath=base + "/templates/")
     templateenv = jinja2.Environment(loader=templateloader)
+
+    cmmprfxout = os.path.commonprefix(list(set(outspath)))
+
+    for it in (set(outspath)):
+
+        if not os.path.exists(it):
+            os.makedirs(it)
+
+        if verbose:
+            if log is not None:
+                var = '- Creating output directory: ' + it
+                log(var)
+            else:
+                print('\t- Creating output directory: ', it, sep='')
+
+        indxs = [index for index, item in enumerate(outspath) if item == it]
+
+        funs = []
+        scrs = []
+        clss = []
+
+        for ii, funx in enumerate(listoffunctions):
+
+            if funx.name in [outsnames[i] for i in indxs]:
+                funs.append(funx)
+                listoffunctions[ii].path = 'files/'+it.replace(cmmprfxout, '')
+
+        for ii, scrx in enumerate(listofscripts):
+
+            if scrx.name in [outsnames[i] for i in indxs]:
+                scrs.append(scrx)
+                listofscripts[ii].path = 'files/'+it.replace(cmmprfxout, '')
+
+        for ii, cl in enumerate(listofclasses):
+
+            if cl.name in [outsnames[i] for i in indxs]:
+                clss.append(cl)
+                listofclasses[ii].path = 'files/'+it.replace(cmmprfxout, '')
+
+        # This constant string specifies the template file we will use.
+        template_file = "indexFolderTemplate.jinja"
+
+        # Read the template file using the environment object.
+        # This also constructs our Template object.
+        template = templateenv.get_template(template_file)
+
+        bsst = it.replace(cmmprfxout, '').split()
+        bss = '../'*(len(bsst)+1)
+
+        templatevars = {"base": bss,
+                        "project_name": projectname,
+                        "project_logo": projectlogo,
+                        "project_folders": sorted(list(set(outsrel))),
+                        "pathslist": outsroutes,
+                        "functions": funs,
+                        "classes": clss,
+                        "date": time.strftime("%a %d/%m/%Y at %H:%S"),
+                        "scripts": scrs,
+                        "currfold": 'files/'+it.replace(cmmprfxout, ''),
+                        "version": ver
+                        }
+        try:
+
+            if verbose:
+                if log is not None:
+                    log('- Rendering template: index.html...')
+                else:
+                    print('\t- Rendering template: index.html...')
+
+            outputtext = template.render(templatevars)
+
+            with open(os.path.join(it, "index.html"), "w") as fh:
+
+                if verbose:
+                    if log is not None:
+                        var = '- Saving file to: ' + it + '\\index.html ...'
+                        log(var)
+                    else:
+                        print('\t- Saving file to: ', it, '\\index.html ...', sep='')
+                fh.write(outputtext)
+                fh.close()
+
+        except ReferenceError:
+
+            if log is not None:
+                log('Fatal error')
+            else:
+                print('Fatal error')
+
+        if prgbr is not None:
+            ind = 90
 
     # This constant string specifies the template file we will use.
     template_file = "indexTemplate.jinja"
@@ -183,9 +294,11 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
     # This also constructs our Template object.
     template = templateenv.get_template(template_file)
 
-    templatevars = {"project_name": projectname,
+    templatevars = {"base": './',
+                    "project_name": projectname,
                     "project_logo": projectlogo,
-                    "style": "./utils",
+                    "project_folders": sorted(list(set(outsrel))),
+                    "pathslist": outsroutes,
                     "functions": listoffunctions,
                     "classes": listofclasses,
                     "date": time.strftime("%a %d/%m/%Y at %H:%S"),
@@ -194,22 +307,28 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
                     }
     try:
 
+        if projectname == '':
+            name = 'index.html'
+        else:
+            name = projectname.lower().replace(' ', '_')+'.html'
+
         if verbose:
             if log is not None:
-                log('- Rendering template: index.html...')
+                var = '- Rendering template: ' + name
+                log(var)
             else:
-                print('\t- Rendering template: index.html...')
+                print('\t- Rendering template: ' + name + '...')
 
         outputtext = template.render(templatevars)
 
-        with open(os.path.join(outputdir, "index.html"), "w") as fh:
+        with open(os.path.join(outputdir, name), "w") as fh:
 
             if verbose:
                 if log is not None:
-                    var = '- Saving file to: ' + outputdir + '\\index.html ...'
+                    var = '- Saving file to: ' + outputdir + '\\' + name + '...'
                     log(var)
                 else:
-                    print('\t- Saving file to: ', outputdir, '\\index.html ...', sep='')
+                    print('\t- Saving file to: ', outputdir, '\\' + name + '...', sep='')
             fh.write(outputtext)
             fh.close()
 
@@ -276,17 +395,22 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
             code = __parsecode(current.code)
 
-        templatevars = {"project_name": projectname,
+        bsst = outspath[index].replace(cmmprfxout, '').split()
+        bss = '../' * (len(bsst)+1)
+
+        templatevars = {"base": bss,
+                        "project_name": projectname,
                         "project_logo": projectlogo,
-                        "style": "../utils",
-                        "pathslist": outsnames,
-                        "dir": outputdir,
+                        "project_folders": sorted(list(set(outsrel))),
+                        "pathslist": outsroutes,
+                        "currbase": outspath[index].replace(cmmprfxout, ''),
                         "fun": current,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),
                         "usage": usage,
                         "code": code,
                         "version": ver
                         }
+
         try:
 
             if verbose:
@@ -298,14 +422,15 @@ def generatedoc(outputdir, chainoffiles, listoffunctions, listofscripts, listofc
 
             outputtext = template.render(templatevars)
 
-            with open(outspath[index]+".html", "w") as fh:
+            with open(os.path.join(outspath[index], outsnames[index]+".html"), "w") as fh:
 
                 if verbose:
                     if log is not None:
-                        var = '- Saving file to: ' + outspath[index]+".html" + ' ...'
+                        var = '- Saving file to: ' + os.path.join(outspath[index], outsnames[index]+".html") + ' ...'
                         log(var)
                     else:
-                        print('\t- Saving file to: ', outspath[index]+".html", ' ...', sep='')
+                        print('\t- Saving file to: ', os.path.join(outspath[index], outsnames[index]+".html"),
+                              ' ...', sep='')
 
                 fh.write(outputtext)
                 fh.close()

@@ -160,6 +160,13 @@ h3 {
 	color: #006699;
 }
 
+b.nm {
+
+  background: transparent;
+  color: #006699;
+
+}
+
 address {
 	font-size:small;
   max-height: 10px;
