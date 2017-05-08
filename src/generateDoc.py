@@ -34,7 +34,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     else:
         print('Step 3) Beginning preformatting:\n')
 
-    ver = 3.0
+    ver = 3.1
 
     listfuncmod = __preformparameters(listoffunctions, wh='functions', verbose=verbose, log=log, prgbr=prgbr)
     listclassmod = __preformparameters(listofclasses, wh='classes', verbose=verbose, log=log, prgbr=prgbr)
@@ -157,6 +157,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     outsnames = []
     outsroutes = []
     outspath = []
+    outsrel = []
 
     outputdirfiles = os.path.join(outputdir, "files")
 
@@ -184,12 +185,12 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
         if curdir is '':
             outspath.append(os.path.join(outputdirfiles, 'root'))
-            outsroutes.append([os.path.join(outputdirfiles, 'root'), namein[0:-2]])
+            outsrel.append('files/root')
+            outsroutes.append(['files/root', namein[0:-2]])
         else:
             outspath.append(os.path.join(outputdirfiles, curdir[1:]))
-            outsroutes.append([os.path.join(outputdirfiles, curdir[1:]), namein[0:-2]])
-
-    print(outsroutes[0][0]+'-----'+outspath[0])
+            outsrel.append('files/'+curdir[1:])
+            outsroutes.append(['files/'+curdir[1:], namein[0:-2]])
 
     # Template loader for Jinja2 templates
     templateloader = jinja2.FileSystemLoader(searchpath=base + "/templates/")
@@ -219,19 +220,19 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
             if funx.name in [outsnames[i] for i in indxs]:
                 funs.append(funx)
-                listoffunctions[ii].path = it
+                listoffunctions[ii].path = 'files/'+it.replace(cmmprfxout, '')
 
         for ii, scrx in enumerate(listofscripts):
 
             if scrx.name in [outsnames[i] for i in indxs]:
                 scrs.append(scrx)
-                listofscripts[ii].path = it
+                listofscripts[ii].path = 'files/'+it.replace(cmmprfxout, '')
 
         for ii, cl in enumerate(listofclasses):
 
             if cl.name in [outsnames[i] for i in indxs]:
                 clss.append(cl)
-                listofclasses[ii].path = it
+                listofclasses[ii].path = 'files/'+it.replace(cmmprfxout, '')
 
         # This constant string specifies the template file we will use.
         template_file = "indexFolderTemplate.jinja"
@@ -240,19 +241,19 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
         # This also constructs our Template object.
         template = templateenv.get_template(template_file)
 
-        templatevars = {"project_name": projectname,
+        bsst = it.replace(cmmprfxout, '').split()
+        bss = '../'*(len(bsst)+1)
+
+        templatevars = {"base": bss,
+                        "project_name": projectname,
                         "project_logo": projectlogo,
-                        "project_folders": sorted(list(set(outspath))),
+                        "project_folders": sorted(list(set(outsrel))),
                         "pathslist": outsroutes,
-                        "cmmprfxout": cmmprfxout,
-                        "style": basedircss,
                         "functions": funs,
-                        "dir": outputdir,
                         "classes": clss,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),
                         "scripts": scrs,
-                        "folderpath": it,
-                        "currfold": it.replace(cmmprfxout, ''),
+                        "currfold": 'files/'+it.replace(cmmprfxout, ''),
                         "version": ver
                         }
         try:
@@ -273,7 +274,6 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
                         log(var)
                     else:
                         print('\t- Saving file to: ', it, '\\index.html ...', sep='')
-                        print(it)
                 fh.write(outputtext)
                 fh.close()
 
@@ -294,12 +294,11 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
     # This also constructs our Template object.
     template = templateenv.get_template(template_file)
 
-    templatevars = {"project_name": projectname,
+    templatevars = {"base": './',
+                    "project_name": projectname,
                     "project_logo": projectlogo,
-                    "project_folders": sorted(list(set(outspath))),
+                    "project_folders": sorted(list(set(outsrel))),
                     "pathslist": outsroutes,
-                    "cmmprfxout": cmmprfxout,
-                    "style": basedircss,
                     "functions": listoffunctions,
                     "classes": listofclasses,
                     "date": time.strftime("%a %d/%m/%Y at %H:%S"),
@@ -396,14 +395,14 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
 
             code = __parsecode(current.code)
 
-        templatevars = {"project_name": projectname,
+        bsst = outspath[index].replace(cmmprfxout, '').split()
+        bss = '../' * (len(bsst)+1)
+
+        templatevars = {"base": bss,
+                        "project_name": projectname,
                         "project_logo": projectlogo,
-                        "project_folders": sorted(list(set(outspath))),
-                        "cmmprfxout": cmmprfxout,
-                        "style": basedircss,
+                        "project_folders": sorted(list(set(outsrel))),
                         "pathslist": outsroutes,
-                        "dir": outputdir,
-                        "currdir": outspath[index],
                         "currbase": outspath[index].replace(cmmprfxout, ''),
                         "fun": current,
                         "date": time.strftime("%a %d/%m/%Y at %H:%S"),
@@ -411,6 +410,7 @@ def generatedoc(outputdir, chainoffiles, chainofdirs, listoffunctions, listofscr
                         "code": code,
                         "version": ver
                         }
+
         try:
 
             if verbose:

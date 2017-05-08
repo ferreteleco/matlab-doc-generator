@@ -2,84 +2,85 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
+  <base href="{{base}}">
   <title>Description of {{fun.name}}</title>
   <meta name="keywords" content="{{fun.name}}">
   <meta name="description" content="{{fun.name}}">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="" content="PyMDoc documentation generator for Matlab v1.0 &copy; 2017 Andres Ferreiro">
   <meta name="robots" content="index, follow">
-  <link type="text/css" rel="stylesheet" href="{{style}}/style.css">
+  <link type="text/css" rel="stylesheet" href="utils/style.css">
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="{{style}}\{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+<header>{% if project_logo %}<center><img src="utils/{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
   <br><strong>{{project_name}} Project</strong></br>
   {% endif %}</header>
   <nav>
     <center><h3> File Navigation </h3></center>
     {% for item in project_folders %}
-    <a href="{{item+'\index.html'}}"><img alt="^" border="0" src="{{style}}/folder.ico"><b class='nm'> {{item.replace(cmmprfxout, '')}}</b></a>
+    <a href="{{item+'/index.html'}}"><img alt="^" border="0" src="utils/folder.ico"><b class='nm'> {{item.replace('files/', '')}}</b></a>
     {% for elm in pathslist %}
     {% if  elm[0] in item %}
-    <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="{{style}}/matlabicon.gif"><i> {{elm[1]}}</i></a>
+    <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="utils/matlabicon.gif"><i> {{elm[1]}}</i></a>
     {% endif %}
     {% endfor %}
     {% endfor %}
   </nav>
 <article>
   {% if project_name != '' %}
-  <div><a href="{{dir}}/{{project_name}}.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+  <div><a href="{{project_name}}.html">Home</a><a href="files/{{currbase}}/index.html">/{{currbase}}</a>/{{fun.name}}.m</div>
   {% else %}
-  <div><a href="{{dir}}/index.html">Home</a><a href="{{currdir}}/index.html">\{{currbase}}</a>\{{fun.name}}.m</div>
+  <div><a href="index.html">Home</a><a href="files/{{currbase}}/index.html">/{{currbase}}</a>/{{fun.name}}.m</div>
   {% endif %}
-<h1><img alt="^" border="0" src="{{style}}/matlabicon.gif"><strong> Script:</strong> {{fun.name}}</h1>
+<h1><img alt="^" border="0" src="utils/matlabicon.gif"><strong> Script:</strong> {{fun.name}}</h1>
 <h2><a name="_toc"></a>Table of Contents: </h2>
 <ul style="list-style:none">
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_description">Description</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_cri">Cross-reference Information</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_usedby">Used by</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_uses">Uses</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_misc">Miscellaneous information</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_author">Author</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_version">Current Version</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_date">Date</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_company">Company</a></li>
-  <li><img alt="mt" border="0" src="{{style}}/info.png"><a href="#_code">Source Code</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_description">Description</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_cri">Cross-reference Information</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_usedby">Used by</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_uses">Uses</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_misc">Miscellaneous information</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_author">Author</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_version">Current Version</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_date">Date</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_company">Company</a></li>
+  <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_code">Source Code</a></li>
 </ul>
 
-<h2><a name="_description"></a>Description: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+<h2><a name="_description"></a>Description: <a href=files/{{currbase}}/{{fun.name}}.html"#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <div class="box">{{fun.desc.replace('\n', '<br>')}}</div>
 
 {% if usage %}
-<h2><a name="_cri"></a>Cross-reference information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+<h2><a name="_cri"></a>Cross-reference information: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 
-<h3><a name="_usedby"></a>Used by: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<h3><a name="_usedby"></a>Used by: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
   {% for item in fun.usedby %}
   {% for element in pathslist %}
   {% if element[1] == item %}
-  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href= "{{element[0]}}\{{item}}.html"> {{item}}</a></li>
+  <li><img alt="mt" border="0" src="utils/matlabicon.gif"><a href= "{{element[0]}}/{{item}}.html"> {{item}}</a></li>
   {% endif %}
   {% endfor %}
   {% endfor %}
 </ul>
 </div>
 
-<h3><a name="_uses"></a>Uses: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h3>
+<h3><a name="_uses"></a>Uses: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
   {% for item in fun.uses %}
   {% for element in pathslist %}
   {% if element[1] == item %}
-  <li><img alt="mt" border="0" src="{{style}}/matlabicon.gif"><a href= "{{element[0]}}\{{item}}.html"> {{item}}</a></li>
+  <li><img alt="mt" border="0" src="utils/matlabicon.gif"><a href= "{{element[0]}}/{{item}}.html"> {{item}}</a></li>
   {% endif %}
   {% endfor %}
   {% endfor %}
   </ul>
 </div>
 {% endif %}
-<h2><a name="_misc"></a>Miscelaneous information: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+<h2><a name="_misc"></a>Miscelaneous information: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <ul>
   <li><a name="_author"></a><strong>Author: </strong> {{fun.author}}</li>
   <li><a name="_version"></a><strong>Version: </strong> {{fun.version}}</li>
@@ -88,7 +89,7 @@
 </ul>
 
 {% if code %}
-<h2><a name="_code"></a>Source Code: <a href="#_top"><img alt="^" border="0" src="{{style}}/up.png"></a></h2>
+<h2><a name="_code"></a>Source Code: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <div class="box"><pre class="code">
       {{'\n'.join(code)}}
 </pre></div>
