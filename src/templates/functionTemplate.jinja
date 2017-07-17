@@ -40,19 +40,25 @@
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_summary">Summary</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_usage">Function usage</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_description">Description</a></li>
+    {%if fun.refs -%}
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_references">References</a></li>
+    {% endif -%}
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_IO">I/O parameters</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_iparams">Input parameters</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_oparams">output parameters</a></li>
+    {%if usage -%}
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_cri">Cross-reference Information</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_usedby">Used by</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_uses">Uses</a></li>
+    {% endif -%}
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_misc">Miscellaneous information</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_author">Author</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_version">Current Version</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_date">Date</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_company">Company</a></li>
+    {%if code -%}
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_code">Source Code</a></li>
+    {% endif -%}
 </ul>
 
 <h2><a name="_summary"></a>Summary. <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
