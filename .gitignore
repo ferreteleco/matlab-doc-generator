@@ -1,1 +1,5 @@
 .idea/
+src/__pycache__/wizard.cpython-36.pyc
+src/__pycache__/scanFromFiles.cpython-36.pyc
+src/__pycache__/generateDoc.cpython-36.pyc
+src/__pycache__/docGeneratorClasses.cpython-36.pyc

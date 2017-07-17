@@ -13,33 +13,34 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="utils/{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+<header>{% if project_logo -%}<center><img src="utils/{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif -%} {% if project_name -%}
   <br><strong>{{project_name}} Project</strong></br>
-  {% endif %}</header>
+  {% endif -%}</header>
   <nav>
     <center><h3> File Navigation </h3></center>
-    {% for item in project_folders %}
+    {% for item in project_folders -%}
     <a href="{{item+'/index.html'}}"><img alt="^" border="0" src="utils/folder.ico"><b class='nm'> {{item.replace('files/', '')}}</b></a>
-    {% for elm in pathslist %}
-    {% if  elm[0] in item %}
+    {% for elm in pathslist -%}
+    {% if  elm[0] in item -%}
     <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="utils/matlabicon.gif"><i> {{elm[1]}}</i></a>
-    {% endif %}
-    {% endfor %}
-    {% endfor %}
+    {% endif -%}
+    {% endfor -%}
+    {% endfor -%}
   </nav>
 <article>
-  {% if project_name != '' %}
+  {% if project_name != '' -%}
   <div><a href="{{project_name}}.html">Home</a><a href="files/{{currbase}}/index.html">/{{currbase}}</a>/{{fun.name}}.m</div>
-  {% else %}
+  {% else -%}
   <div><a href="index.html">Home</a><a href="files/{{currbase}}/index.html">/{{currbase}}</a>/{{fun.name}}.m</div>
-  {% endif %}
+  {% endif -%}
 <h1><img alt="^" border="0" src="utils/matlabicon.gif"><strong> Function:</strong> {{fun.name}}</h1>
 
 <h2><a name="_toc"></a>Table of Contents: </h2>
 <ul style="list-style:none">
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_summary">Summary</a></li>
-    <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_description">Description</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_usage">Function usage</a></li>
+    <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_description">Description</a></li>
+    <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_references">References</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_IO">I/O parameters</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_iparams">Input parameters</a></li>
     <li><img alt="mt" border="0" src="utils/info.png"><a href="files/{{currbase}}/{{fun.name}}.html#_oparams">output parameters</a></li>
@@ -63,51 +64,62 @@
 <h2><a name="_description"></a>Description: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <div class="box">{{fun.desc.replace('\n', '<br>')}}</div>
 
+{%if fun.refs -%}
+<h2><a name="_references"></a>References: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
+<div class="box">
+<ol>
+{% for item in fun.refs -%}
+<li><a href= "{{item}}"> {{item}}</a></li>
+{% endfor -%}
+</ol>
+</div>
+{% endif -%}
+
 <h2><a name="_IO"></a>I/O parameters: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 
 <h3><a name="_iparams"></a>Input parameters: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box"><pre class="comment"> Here are the parameters used as inputs for this function:
-  {% for item in fun.iparams %}
+  {% for item in fun.iparams -%}
       <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}:</b> {{'\n'.join(item.desc)}}</li>
-  {% endfor %}
+  {% endfor -%}
 </pre></div>
 
 <h3><a name="_oparams"></a>Output parameters: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box"><pre class='comment'> Here are the parameters used as inputs for this function:
-  {% for item in fun.oparams %}
+  {% for item in fun.oparams -%}
       <li>[<b><FONT color="#0000FF">{{item.typ}}</FONT></b>] <b>{{item.name}}</b>: {{'\n'.join(item.desc)}}</li>
-  {% endfor %}
+  {% endfor -%}
 </pre></div>
 
-{% if usage %}
+{% if usage -%}
 <h2><a name="_cri"></a>Cross-reference information: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 
 <h3><a name="_usedby"></a>Used by: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
-  {% for item in fun.usedby %}
-  {% for element in pathslist %}
-  {% if element[1] == item %}
+  {% for item in fun.usedby -%}
+  {% for element in pathslist -%}
+  {% if element[1] == item -%}
   <li><img alt="mt" border="0" src="utils/matlabicon.gif"><a href= "{{element[0]}}/{{item}}.html"> {{item}}</a></li>
-  {% endif %}
-  {% endfor %}
-  {% endfor %}
+  {% endif -%}
+  {% endfor -%}
+  {% endfor -%}
 </ul>
 </div>
 
 <h3><a name="_uses"></a>Uses: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h3>
 <div class="box">
   <ul style="list-style:none">
-  {% for item in fun.uses %}
-  {% for element in pathslist %}
-  {% if element[1] == item %}
+  {% for item in fun.uses -%}
+  {% for element in pathslist -%}
+  {% if element[1] == item -%}
   <li><img alt="mt" border="0" src="utils/matlabicon.gif"><a href= "{{element[0]}}/{{item}}.html"> {{item}}</a></li>
-  {% endif %}
-  {% endfor %}
-  {% endfor %}
+  {% endif -%}
+  {% endfor -%}
+  {% endfor -%}
   </ul>
 </div>
-{% endif %}
+{% endif -%}
 <h2><a name="_misc"></a>Miscelaneous information: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <ul>
   <li><a name="_author"></a><strong>Author: </strong> {{fun.author}}</li>
@@ -116,12 +128,12 @@
   <li><a name="_company"></a><strong>Company: </strong> {{fun.company}}</a></li>
 </ul>
 
-{% if code %}
+{% if code -%}
 <h2><a name="_code"></a>Source Code: <a href="files/{{currbase}}/{{fun.name}}.html#_top"><img alt="^" border="0" src="utils/up.png"></a></h2>
 <div class="box"><pre class="code">
       {{'\n'.join(code)}}
 </pre></div>
-{% endif %}
+{% endif -%}
 </article>
 <footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v{{version}}">PyDoc documentation generator for Matlab v{{version}}</a></strong> &copy; 2017</address></footer>
 </body>

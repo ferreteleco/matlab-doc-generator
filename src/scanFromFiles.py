@@ -423,7 +423,7 @@ def __parsemscript(chunks, verbose=False, log=None):
 
             token = line[1:len(line) - 1].strip()
 
-            if current != '%%':
+            if current != '%%' and (current == '@ref' and token != ''):
 
                 try:
 
@@ -558,7 +558,7 @@ def __parsemfunct(chunks, verbose=False, log=None):
 
             token = line[1:len(line) - 1].strip()
 
-            if current != '%%':
+            if current != '%%' and (current == '@ref' and token != ''):
 
                 try:
 
@@ -709,7 +709,7 @@ def __parsemclass(chunks, verbose=False, log=None):
 
             token = line[1:len(line) - 1].strip()
 
-            if current != '%%':
+            if current != '%%' and (current == '@ref' and token != ''):
 
                 try:
 

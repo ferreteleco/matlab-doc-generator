@@ -13,53 +13,53 @@
 </head>
 <body>
 <a name="_top"></a>
-<header>{% if project_logo %}<center><img src="utils/{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif %} {% if project_name %}
+<header>{% if project_logo -%}<center><img src="utils/{{project_logo}}" alt="Project Logo" border="2px" style="width:10%;height:10%;"></center>{% endif -%} {% if project_name -%}
   <br><strong>{{project_name}} Project</strong></br>
-  {% endif %}</header>
+  {% endif -%}</header>
 
   <nav>
     <center><h3> File Navigation </h3></center>
-    {% for item in project_folders %}
+    {% for item in project_folders -%}
     <a href="{{item+'\index.html'}}"><img alt="^" border="0" src="utils/folder.ico"><b class='nm'> {{item.replace('files/', '')}}</b></a>
-    {% for elm in pathslist %}
-    {% if  elm[0] in item %}
+    {% for elm in pathslist -%}
+    {% if  elm[0] in item -%}
     <a href="{{'/'.join(elm)}}.html">&nbsp;&nbsp;&nbsp;&nbsp;<img alt="^" border="0" src="utils/matlabicon.gif"><i> {{elm[1]}}</i></a>
-    {% endif %}
-    {% endfor %}
-    {% endfor %}
+    {% endif -%}
+    {% endfor -%}
+    {% endfor -%}
   </nav>
 
 <article>
-{% if project_name != '' %}
+{% if project_name != '' -%}
 <div><a href="{{project_name}}.html">Home</a>/{{currfold.replace('files/', '')}}</div>
-{% else %}
+{% else -%}
 <div><a href="index.html">Home</a>\{{currfold.replace('files/', '')}}</div>
-{% endif %}
+{% endif -%}
 <h1><img alt="^" border="0" src="utils/matlabicon.gif"><strong> Index of '{{currfold.replace('files/', '')}}' folder</strong></h1>
-{% if functions %}
+{% if functions -%}
 <h2><a name="_toc"></a>Documented functions: </h2>
 <ul style="list-style:none">
-  {% for fun in functions %}
+  {% for fun in functions -%}
     <li><img alt="mt" border="0" src="utils/matlabicon.gif"> <a href="{{currfold+'/'+fun.name}}.html">{{fun.name}}</a>: {{fun.summ}}</li>
-    {% endfor %}
+    {% endfor -%}
 </ul>
-{% endif %}
-{% if scripts %}
+{% endif -%}
+{% if scripts -%}
 <h2><a name="_toc"></a>Documented scripts: </h2>
 <ul style="list-style:none">
-  {% for scr in scripts %}
+  {% for scr in scripts -%}
     <li><img alt="mt" border="0" src="utils/matlabicon.gif"> <a href="{{currfold+'/'+scr.name}}.html">{{scr.name}}</a>: {{scr.desc}}</li>
-    {% endfor %}
+    {% endfor -%}
 </ul>
 {% endif %}
-{% if classes %}
+{% if classes -%}
 <h2><a name="_toc"></a>Documented classes: </h2>
 <ul style="list-style:none">
-    {% for cls in classes %}
+    {% for cls in classes -%}
     <li><img alt="mt" border="0" src="utils/matlabicon.gif"> <a href="{{currfold+'/'+cls.name}}.html">{{cls.name}}</a>: {{cls.summ}}</li>
-    {% endfor %}
+    {% endfor -%}
 </ul>
-{% endif %}
+{% endif -%}
 </article>
 <footer><address>Generated on {{date}} by <strong><a href="https://bitbucket.org/ferreteleco/pymdoc-generator" title="PyMDoc documentation generator for Matlab v{{version}}">PyDoc documentation generator for Matlab v{{version}}</a></strong> &copy; 2017</address></footer>
 </body>
