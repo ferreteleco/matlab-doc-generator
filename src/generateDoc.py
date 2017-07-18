@@ -490,7 +490,7 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for oparam in clas.oparams:
                 for idx, line in enumerate(oparam.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
                     p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
@@ -502,7 +502,7 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for iparam in clas.iparams:
                 for idx, line in enumerate(iparam.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
                     p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
@@ -532,7 +532,7 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for event in clas.events:
                 for idx, line in enumerate(event.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
                     p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
@@ -544,7 +544,7 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for attribute in clas.attributes:
                 for idx, line in enumerate(attribute.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
                     p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
@@ -556,9 +556,9 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for prop in clas.properties:
                 for idx, line in enumerate(prop.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
-                    p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
+                    p = re.compile('{ ( [^} ]*) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
                     p = re.compile('\( ( [a-zA-Z\'\d^) ]* ) \)', re.VERBOSE)
                     linemod = p.sub(r'(<i>\1</i>)', linemod)
@@ -568,7 +568,7 @@ def __preformparameters(listin, wh='...', verbose=False, log=None, prgbr=None):
 
             for method in clas.methods:
                 for idx, line in enumerate(method.desc):
-                    p = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
+                    p = re.compile('\[([^\]]*)\]', re.VERBOSE)
                     linemod = p.sub(r'[<b><font color="#0000FF">\1</font></b>]', line)
                     p = re.compile('{ ( [^} ]* ) }', re.VERBOSE)
                     linemod = p.sub(r'{<u>\1</u>}', linemod)
