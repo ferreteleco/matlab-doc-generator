@@ -78,7 +78,7 @@ class FuncDefinition:
         if iparams is None:
             self._iparams = []
         else:
-            tokens = iparams.split(' ')
+            tokens = iparams.split(']')
             self._iparams = [ParamDefinition(name=tokens[1], typ=tokens[0].replace('[', '')
                                              .replace(']', ''),
                                              desc=''.join(tokens[2:len(tokens)]))]
@@ -134,11 +134,12 @@ class FuncDefinition:
         try:
 
             pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-            var = ''.join(pin.findall(param))
+            typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
 
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''
-                                  .join(tokens[2:]))
+            par = ParamDefinition(name=nam, typ=typ, desc=param[indx + 1:])
             self._iparams.append(par)
         except IndexError:
             self._iparams.append(ParamDefinition())
@@ -771,11 +772,12 @@ class ClassDefinition:
         try:
 
             pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-            var = ''.join(pin.findall(param))
+            typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
 
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''
-                                  .join(tokens[2:]))
+            par = ParamDefinition(name=nam, typ=typ, desc=param[indx + 1:])
             self._methods.append(par)
         except IndexError:
             self._methods.append(ParamDefinition())
@@ -794,11 +796,12 @@ class ClassDefinition:
         try:
 
             pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-            var = ''.join(pin.findall(param))
+            typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
 
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''
-                                  .join(tokens[2:]))
+            par = ParamDefinition(name=nam, typ=typ, desc=param[indx + 1:])
             self._properties.append(par)
         except IndexError:
             self._properties.append(ParamDefinition())
@@ -817,11 +820,12 @@ class ClassDefinition:
         try:
 
             pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-            var = ''.join(pin.findall(param))
+            typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
 
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[1].replace(':', ''), typ=var, desc=''
-                                  .join(tokens[2:]))
+            par = ParamDefinition(name=nam, typ=typ, desc=param[indx + 1:])
             self._events.append(par)
         except IndexError:
             self._events.append(ParamDefinition())
@@ -840,11 +844,12 @@ class ClassDefinition:
         try:
 
             # pin = re.compile('\[ ( [^\]]* ) \]', re.VERBOSE)
-            # var = ''.join(pin.findall(param))
+            # typ = ''.join(pin.findall(param))
+            pin = re.compile('\] ( [^:]* ) :', re.VERBOSE)
+            nam = pin.findall(param)[0]
+            indx = param.find(':')
 
-            tokens = param.split(' ', 2)
-            par = ParamDefinition(name=tokens[0].replace(':', ''), typ='logical', desc=''
-                                  .join(tokens[1:]))
+            par = ParamDefinition(name=nam, typ='logical', desc=param[indx + 1:])
             self._attributes.append(par)
         except IndexError:
             self._attributes.append(ParamDefinition())
